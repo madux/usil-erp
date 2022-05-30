@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_maach_hr_id" model="ir.module.category">
+        <field name="name">Maach Appraisal</field>
+        <field name="description">Appraisal Application </field>
+        <field name="sequence">35</field>
+    </record>
+
+    <record id="group_appraisal_officer_id" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="maach_hr_appraisal.module_category_maach_hr_id"/>
+    </record>
+
+    <record id="group_appraisal_manager_id" model="res.groups">
+        <field name="name">HR Manager</field>
+        <field name="category_id" ref="maach_hr_appraisal.module_category_maach_hr_id"/>
+    </record>
+
+    <record id="group_appraisal_user_id" model="res.groups">
+        <field name="name">Appraisal Employee</field>
+        <field name="comment">Ensure Employee with Manager level is not checked for this</field>
+        <field name="category_id" ref="maach_hr_appraisal.module_category_maach_hr_id"/>
+    </record>
+
+    <record id="group_supervisor" model="res.groups">
+        <field name="name">Supervior</field>
+        <field name="category_id" ref="maach_hr_appraisal.module_category_maach_hr_id"/>
+    </record>
+</odoo>

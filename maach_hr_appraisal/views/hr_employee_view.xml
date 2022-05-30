@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="hr_view_employee_form_for_appraisal_inherited" >
+            <field name="name">hr.employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml"> 
+
+                    <div name="button_box" position="inside">
+                         
+                        <button name="open_employee_appraisals" class="oe_stat_button" groups="hr.group_hr_user" icon="fa-group" type="object">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="number_appraisal" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Appraisals
+                                </span>
+                            </div>
+                        </button>
+  
+                        <button name="stat_button_query" type="object" groups="hr.group_hr_user" string="Queries: " class="oe_stat_button" icon="fa-archive">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="number_queries" readonly="1" force_save="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Queries
+                                </span>
+                            </div>
+                        </button>
+
+                        <button name="stat_button_warning" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="number_warning" readonly="1" force_save="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Warnings
+                                </span>
+                            </div>
+                        </button>
+
+                        <button name="stat_button_absent" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="number_absent" readonly="1" force_save="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Absents
+                                </span>
+                            </div>
+                        </button>
+
+                        <button name="stat_button_number_commendation" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-plus">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="number_commendation" readonly="1" force_save="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Commends
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+            </field>
+        </record>
+    </data>
+</odoo>

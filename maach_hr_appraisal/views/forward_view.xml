@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="memo_hr_appraisal_model_forward_wizard" model="ir.ui.view">
+            <field name="name">Memo forward</field>
+            <field name="model">memo.appraisal.foward.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Forward">
+					<p style="color: red;">* User to direct to are users with Manager and supervisor roles</p>
+                    <group>
+                        <group>
+                            <field name="memo_record" readonly="1"/> 
+                            <field name="resp" readonly="1" invisible="0"/>
+                            <field name="directed_user_id" string="To" required="1" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/> 
+                            <field name="date"/>
+                        </group>
+                        <group> 
+                            <field name="description_two" required="1" placeholder="Add Comment ..." colspan="20"/>
+                        </group>
+                    <footer>
+                        <button name="confirm_action" type="object" string="Forward" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
