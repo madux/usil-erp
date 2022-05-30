@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Custom Report -->
+<openerp>
+	<data>
+	<!-- statement of account report -->
+		<report
+			id="report_account_statement"
+			model="sale.order"
+			string="Account Statement"
+			report_type="qweb-pdf"
+			name="property_sale.report_accountstatement"
+			file="property_sale.report_accountstatement"
+			attachment_use="False"
+		/>
+		<template id="statement_account_document">
+			<t t-call="web.external_layout">
+				<div class="page" t-as="o">
+					<div class="row mt32 mb32">
+						<div class="col-xs-8">
+							<h1>Statement</h1>
+						</div>
+						<div class="col-xs-4">
+							<table>
+								<tr>
+									<td>Date:</td>
+									<td><span t-esc="date_order"/></td>
+								</tr>
+								<tr>
+									<td>Statement#:</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Offer ID:</td>
+									<td><span t-field="o.name"/></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="row mt32 mb32">
+						<div class="col-xs-3 left">
+							<p style="background-color: brown; color: white;">
+								Bill To:
+							</p>
+							<p>
+								<strong><span t-field="o.name"/></strong><br/>
+								<span t-field="o.date_order"/>
+							</p>
+							<p>
+								<strong><span t-field="o.partner_id.name"/></strong>
+								<span t-field="o.partner_id.street"/>,<br/>
+								<span t-field="o.partner_id.street2"/>,<br/>
+								<span t-field="o.partner_id.city"/>,<br/>
+								<span t-field="o.partner_id.state_id.name"/><br/>
+							</p>
+						</div>
+						<div class="col-xs-4">
+						</div>
+						<div class="col-xs-5 ">
+							<p style="background-color: brown; color: white;">
+								Account Summary:
+							</p>
+							<table>
+								<tr>
+									<td><strong>Offer Amount: </strong></td>
+									<td><span t-field="o.amount_total"/></td>
+								</tr>
+								<tr>
+									<td>Amount paid: </td>
+									<td><span t-field="o.amount_paid"/></td>
+								</tr>
+								<tr>
+									<td>Outstanding: </td>
+									<td><span t-field="o.outstanding"/></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Due date: </td>
+									<td><span t-field="o.date_validity"/></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<table class="table condensed">
+								<thead style='color: white; background-color: brown;'>
+									<tr>
+										<th>Date </th>
+										<th>Offer Reference: #</th>
+										<th>Bank</th>
+										<th>Amount</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr t-foreach="o.payment_idss" t-as="p">
+										<td><span t-field="p.date"/></td>
+										<td><span t-field="p.name"/></td>
+										<td><span t-field="p.journal_id.name"/></td>
+										<td><span t-field="p.amount"/></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td><strong>Current Balance</strong></td>
+										<td><span t-field="o.outstanding"/></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						
+					</div>
+				</div>
+			</t>
+		</template>
+		
+		<template id="report_accountstatement">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="property_sale.statement_account_document" t-lang="o.partner_id.lang"/>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

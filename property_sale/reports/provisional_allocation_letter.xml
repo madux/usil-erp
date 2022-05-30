@@ -1,0 +1,176 @@
+<odoo>
+  <data>
+	<report
+        id = "final_provision_offer_letter_prop"
+        model= "sale.order"
+        report_type = "qweb-pdf"
+        string="Print Provisional Letter"
+        name ="property_sale.report_final_provision_letter_prop"
+        file ="property_sale.report_final_provision_letter_prop"
+        attachment_use="True"/>
+
+	<template id="report_final_provision_letter_prop">
+	<t t-call="web.html_container">
+		<t t-foreach="docs" t-as="o">
+			<div class="header">
+				<div class="row">
+					<div class="col-xs-3">
+						<!-- <img t-att-src="'data:image/png;base64,'+ o.create_uid.company_id.logo" style="max-height: 80px;max-width:100"/> -->
+						<img t-att-src="o.create_uid.company_id.logo" style="max-height: 80px;max-width:100"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-3">
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:10px;">
+							<strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:10px;" t-field="o.create_uid.company_id.name"/></strong><br/>
+							<t t-if="o.create_uid.company_id.street">
+								<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:10px;" t-field="o.create_uid.company_id.street"/>,<br/>
+							</t>
+							<t t-if="o.create_uid.company_id.city">
+								<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:10px;" t-field="o.create_uid.company_id.city"/>, <span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:8px;" t-field="o.create_uid.company_id.state_id.name"/><br/>
+							</t>
+							<t t-if="o.create_uid.company_id.country_id">
+							    <span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:10px;" t-field="o.create_uid.company_id.country_id.name"/>,
+							</t>
+						</p>
+					</div>
+				</div>
+				<hr/>
+			</div>
+				<br/><br/>
+			<div class="page" style="max-width: 660px; margin: auto;">
+				<div class="row mt32 mb32">
+					<div class="col-xs-12 text-right">
+						<p>
+							<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.date_order"/><br/>
+						</p>
+					</div>
+					<p></p>
+					<div class="col-xs-9 text-left" >
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;">
+							<strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.partner_id.name"/></strong><br/>
+							<t t-if="o.partner_id.street">
+								<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.partner_id.street"/>,<br/>
+							</t>
+							<t t-if="o.partner_id.city">
+								<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.partner_id.city"/>, <span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.partner_id.state_id.name"/><br/>
+							</t>
+							<!-- <t t-if="o.create_uid.company_id.country_id">
+								ccc
+							</t> -->
+						</p>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-3 text-left">
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;"><strong>Dear Sir/Ma</strong></p>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<br/>
+					<p style="padding-left:15px; padding-right:10px;text-transform: uppercase; text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 24px;"><strong>PROVISIONAL ALLOCATION LETTER FOR HOUSE <span t-esc="o.order_line[0].product_id.name"/> AT  <span t-field="o.location_project.name"/>,  <span t-field="o.location_project.address"/></strong></p>
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+					<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.create_uid.company_id.name"/> Limited is the holder of Legal Title in respect of the area covered under Certificate of Occupancy File No. MISC: 51824 Granted on 15th day of July 1993 by the Honourable Minister of Federal Capital Territory, Measuring 6.41 Hectares. The Plot has being developed into housing Estate of different units / Shops for sale to the public.<br/><br/> Following your interest in the purchase of a House - <span t-field="o.order_line[0].product_id.name"/> at -<span t-field="o.location_project.name"/>- <span t-field="o.location_project.address"/>, <span t-field="o.create_uid.company_id.name"/> Limited is pleased to allocate above mentioned unit to you subject to the following terms and conditions:  </p>
+				</div>
+
+				<div class="row">
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+						<strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">a. TYPE: </strong> <span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.order_line[0].product_id.name"/><br/>
+						
+						<strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">b.	DESCRIPTION: </strong>
+						<!-- Houses <span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.name"/>,  -->
+						
+						<t t-foreach="o.order_line" t-as="ol">
+							<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="ol.product_id.name"/> : House Number: <br/>
+							<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="ol.house_number"/>, 
+						</t> - <strong>PHASE: </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.location_project.phase"/><br/>
+						<br/>
+						<strong style=" text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">c.	TERM:</strong> An Assignment of an Un-expired Tenure of Seventy-seven (77) years Lease less one (1) day.<br/>
+
+						<strong style=" text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">d.	UNIT SALES PRICE: </strong><strong>₦<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.order_line[0].price_unit"/></strong>
+						<br/>
+						<strong style=" text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">e.	DEPOSIT DUE / PAYMENT TO BE MADE:</strong> <strong>₦<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.amount_total"/></strong>
+						<br/>
+						<strong style=" text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">f.	BALANCE PAYABLE: </strong> <strong>₦<span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.outstanding"/></strong>
+						<br/>
+					</p>
+				</div>
+
+				<div class="row">
+					<p style="text-align: left; font-family: 'Times New Roman', Times, serif; font-size: 24px;"><strong>CONDITIONS OF SALE</strong></p>
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">1.   The Allotee must at all times comply with general terms and conditions as contained in the said Certificate and other Title Documents<br/>
+													The purchaser shall contribute to the maintenance of the estate through the Facility Managers.
+						</p>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">2.   There shall be no alteration or addition or attachment in the structure. </p>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">3.	The purchased property must be used for the purpose that it was meant for.</p><br/>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Other conditions for the sale shall be contained in the Deed of Assignment which will be executed in your favour, after you have made full payment.</p><br/>
+
+
+					</p>
+				</div>
+
+				<div class="row">
+					<p style="text-align: left; font-family: 'Times New Roman', Times, serif; font-size: 24px;"><strong><u>DEFECT LIABILITY PERIOD (DLP)</u></strong></p>
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">1.   Urban shelter Infrastructure Limited (USIL) shall fix any defects that may come after handover, for a period of six (6) months after handover, so long as the defect is not caused by any alterations, or changes, etc by the owner/resident.
+												</p>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">2.   During the defect liability period USIL shall bear the cost of materials and labour to fix the defect, </p>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">3.	Beyond the specified liability period, owners/residents shall thenceforth fix any<br/>defect in their homes, whatsoever, with all costs therein borne by the owner.</p><br/>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">4.	In the event of a defect within the DLP, owners/residents should contact USIL either by phone or in writing to point out the defect so that action will be taken by USIL; owners should allow a response time of between one (1) to four (4) weeks (depending on the nature of defect), and a reasonable amount of time as determined by the contractor/subcontractor employed by USIL to fix the defect(s).</p><br/>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">5.	Beyond the specified defect liability period, owners/residents shall be borne by the owner(s)/resident(s).</p><br/>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">6.	USIL shall only fix those defects that may have been caused during the course of construction.</p><br/>
+
+						<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">7.	USIL shall not be responsible, or liable for any defect, whatsoever caused due to extreme or severe acts of nature, those may include: severe torrents, floods, lightning strikes, thunders, earthquakes, tsunamis, typhoons, tornadoes, or the like that may occur after the Defect Liability Period. </p><br/>
+
+					</p>
+				</div>
+				<div class="row">
+					<!--<p style="padding-left: 15px; text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">We thank you for the interest shown in our property and trust you will accept and ensure prompt compliance with the conditions of this offer. Please note that this offer is valid for 7 days.</p>
+					<br/><br/>  -->
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Congratulations.<br/></p>
+					<p><br/></p>
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Yours faithfully,<br/></p>
+					<p><br/></p>
+
+					<p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+						<strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">SA’ADIYA  AMINU</strong>
+					<br/><br/>
+						<!--<img src='/allocation/static/img/baschi.jpg' style="max-height: 120px;"/>
+						<br/>-->
+						<strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">GENERAL MANAGER</strong>  <br/><br/><br/><br/>
+					</p>
+
+
+					<p style="padding-left: 15px; text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+					<strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><u>DECLARATION</u></strong><br/>
+
+					I / We ...................................................................  Agree with the foregoing terms and conditions set out in this Allocation Letter, and agree to be bound by the said terms and conditions.<br/>
+							Signature: <br/>
+							.........................<br/>
+							Date:<br/>....................</p>
+
+				</div>
+			</div>
+
+			</t>
+		</t>
+
+
+	</template>
+
+
+</data>
+</odoo>
+

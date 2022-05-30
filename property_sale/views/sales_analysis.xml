@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="property_report_kanban_view" model="ir.ui.view">
+            <field name="name">property.report.kanban</field>
+            <field name="model">property.report</field>
+            <field name="arch" type="xml">
+                <kanban create="false" class="oe_background_grey o_kanban_dashboard o_account_kanban">
+                <field name="id"/>
+                <field name="datefrom"/>
+                <field name="dateto"/> 
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color)}">
+                            <!-- <t t-value="JSON.parse(record.kanban_dashboard)" t-set="dashboard"/> -->
+                            <!-- <t t-value="record.report_type" t-set="report_type"/> -->
+                            
+                            <t t-call="PropertyTopDashboard"/>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <t t-if="record.report_type == 'all'" t-call="reportalldashboard"/>
+
+                                    <t t-if="record.report_type == 'single'" t-call="reportsingledashboard"/>
+                                    <t t-if="record.report_type == 'all'">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button type="object" name="open_action" class="btn btn-primary">
+                                                <span>View Selected Projects</span>
+                                            </button>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                <t t-call="PropertyMenuManage"/>
+                            </div>
+                        </div>
+                    </t>
+
+                    <t t-name="PropertyTopDashboard">
+                        <div t-attf-class="o_kanban_card_header">
+                            <div class="o_kanban_card_header_title">
+                                <div class="o_primary">
+                                    <a type="object" name="open_action">
+                                    Report Dashboard for 
+                                    <field name="name"/></a>
+                                </div>
+                                <div class="o_secondary">
+                                    <h2>Reports</h2>
+                                </div>
+                            </div>
+                            <div class="o_kanban_manage_button_section">
+                                <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" aria-label="Selection" role="img" title="Selection"/></a>
+                            </div>
+                        </div>
+                    </t>
+
+                    <t t-name="PropertyMenuManage">
+
+                        <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
+                            <div class="o_kanban_card_manage_title">
+                                <span role="separator">View</span>
+                            </div>
+                            <div>
+                                <a role="menuitem" type="object" name="open_action">Projects</a>
+                            </div>
+                            <div>
+                                <a role="menuitem" type="object" name="open_action">Building Types</a>
+                            </div>
+                            
+                                
+                        </div>
+
+                        <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                            <div class="o_kanban_card_manage_title">
+                                <span role="separator">Units</span>
+                            </div>
+                            <div>
+                                <a role="menuitem" type="object" name="open_action">Sold Units</a>
+                            </div>
+                            <div>
+                                <a role="menuitem" type="object" name="open_action">UnSold Units</a>
+                            </div>
+                            <div>
+                                <a role="menuitem" type="object" name="open_action">Reserved</a>
+                            </div>
+                        </div> 
+                    </t>
+
+                        
+                    <t t-name="reportalldashboard" id="reportalldashboard">
+                        
+                        <div class="col-7 o_kanban_primary_right">
+                            
+                            <div class="row">
+                                <div class="col-7">
+                                    <a type="object" t-if="record.report_type == 'all'" name="open_action" id="report_type_all">
+                                        Project Report <t t-esc="record.report_type"/>  
+                                    </a>
+
+                                </div>
+                                <div class="col-5 text-right">
+                                    <span>Total project Amount: <t t-esc="record.total_amount_projects"/></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                    
+                                <div class="col-5 text-right">
+                                    <span>Total Sold Amount: <t t-esc="record.total_amount_sold"/></span>
+                                    <span>Total Unsold Amount: <t t-esc="record.total_amount_unsold"/></span>
+                                    <span>Total Reserved Amount: <t t-esc="record.total_amount_reserved"/></span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <t t-name="reportsingledashboard" id="reportsingledashboard">
+                        
+                        <div class="col-7 o_kanban_primary_right">
+                            
+                            <div class="row">
+                                <div class="col-7">
+
+                                    <a type="object" t-if="record.report_type == 'single'" name="open_action" id="report_type_single">
+                                        Report Type<t t-esc="record.report_type"/> 
+                                    </a>
+                                </div>
+                                <div class="col-5 text-right">
+                                    <span>Total project Amount: <t t-esc="record.total_amount_projects"/></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                    
+                                <div class="col-5 text-right">
+                                    <span>Total Sold Amount: <t t-esc="record.total_amount_sold"/></span>
+                                    <span>Total Unsold Amount:  <t t-esc="record.total_amount_sold"/></span>
+                                    <span>Total Reserved Amount: <t t-esc="record.total_amount_reserved"/> </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <!-- <t t-name="JournalBodyGraph">
+                        <field name="kanban_dashboard_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"/>
+                    </t> -->
+                </templates>
+            </kanban>
+        
+            </field>
+        </record>
+        
+        <record id ="property_analysis_report_form_view" model ="ir.ui.view">
+            <field name="name">Property Report</field>
+            <field name="model">property.report</field>
+            <field eval="1" name="priority"/>
+            <field name ="arch" type="xml">
+                <form string="Property">
+                <header> 
+                    <button name="open_bireport" class="oe_highlight" string="BI View" type="object"/>
+                </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="report_type" required="1"/>
+                                <field name="report_by"/>
+                                <field name="datefrom" string="Date From" required="0"/> 
+                                <field name="dateto" string="Date To" required="0"/> 
+                            </group>
+                            <group>
+                                <field name="project_ids" required="1" widget="many2many_tags"/>
+                                <field name="buildingtype" widget="many2many_tags"/> 
+                            </group>
+                            <div class="clearfix"/>
+                        </group>
+
+                        <div class="row mt-5 mb-5">
+                            <div class="col-md-4">
+                               <button class="btn btn-sm" name="button_action_total_sold_view" type="object"> <h5><u>Total Units Sold</u></h5> </button>
+
+                                <!-- <h5><u>Total Units Sold</u></h5> -->
+                                <h3 style="color:Tomato;font-size: 50px">
+                                    <field name="total_unit_sold"/>
+                                </h3>
+                            </div>
+
+                            <div class="col-md-4">
+                               <button name="button_action_total_unsold_view" type="object"> <h5><u>Total Units Unsold</u></h5> </button>
+                                <!-- <h5><u>Total Units Unsold</u></h5> -->
+                                <h3 style="color:Tomato;font-size: 50px">
+                                    <field name="total_unit_unsold"/>
+                                </h3>
+                            </div>
+
+                            <div class="col-md-4">
+                               <button name="button_action_total_reserved_view" type="object"> <h5><u>Total Reserved Sold</u></h5> </button>
+                                <!-- <h5><u>Total Unit Reserved</u></h5> -->
+                         
+                                <h3 style="color:Tomato;font-size: 50px">
+                                    <field name="total_unit_reserved"/>
+                                </h3>
+                            </div>
+
+
+                        </div>
+
+                         <div class="row mt-5 mb-5"> 
+                            <div class="col-md-4">
+                               <button name="button_action_total_sold_view" type="object"> <h5><u>Total Amount Sold</u></h5> </button>
+                                <h3 style="color:Tomato;font-size: 30px">
+                                    <b><field name="total_amount_sold"/></b>
+                                </h3>
+                            </div> 
+                             
+                            <div class="col-md-4">
+                               <button name="button_action_total_unsold_view" type="object"> <h5><u>Total Amount Unsold</u></h5> </button>
+                                <!-- <h5><u>Total Amount Unsold</u></h5>  -->
+                                <h3 style="color:Tomato;font-size: 30px">
+                                    <field name="total_amount_unsold"/>
+                                </h3>
+                            </div> 
+                            <div class="col-md-4" id="amountreserve_div">
+                               <button name="button_action_total_reserved_view" type="object"> <h5><u>Total Amount Reserved</u></h5> </button>
+                                <!-- <h5><u>Total Amount Reserved</u></h5>  -->
+                                <h3 style="color:Tomato;font-size: 30px">
+                                    <field name="total_amount_reserved"/>
+                                </h3>
+                            </div>
+                        </div><p/>
+
+                        <div class="row mt-5 mb-5">
+                            <div class="col-md-2 oe_right">
+                                <!-- <label string="Grand Total"/> -->
+                                <h5><u>Grand Total</u></h5> 
+                                <h3 style="color:Tomato;font-size: 30px">
+                                    <field name="total_amount_projects"/>
+                                </h3>
+                            </div> 
+                        </div>
+                        
+                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="property_report_tree">
+            <field name="name">Property Types</field>
+            <field name="model">property.report</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Property Types">
+                    <field name="report_type"/>
+                    <field name="datefrom"/>
+                    <field name="dateto"/>
+                    <field name="total_unit_sold" sum="Total"/> 
+                    <field name="total_unit_unsold" sum="Total"/> 
+                    <field name="total_unit_reserved" sum="Total"/> 
+                    <field name="total_amount_projects" sum="Total"/> 
+                     
+                </tree>
+            </field>
+        </record>
+ 
+        <record model="ir.actions.act_window" id="action_property_analysis_report">
+            <field name="name">Property Analysis Report</field>
+            <field name="res_model">property.report</field>
+           <field name="domain">[]</field> 
+             <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <record id="open_bi_report_action" model="ir.actions.act_url">
+            <field name="name">Charts</field>
+            <field name="type">ir.actions.act_url</field>
+            <field name="target">new</field>
+            <field name="url">/bi-summary</field>
+        </record>
+
+        <menuitem name="Reports"
+            id="menu_property_report_main" parent="property_sale.menu_property_sorder"
+            sequence="9" groups="property_sale.director,base.group_system"/>
+
+            <!-- <menuitem name="Building Sales"
+                id="menu_property_building_type_report_main" parent="menu_property_report_main"
+                sequence="1" action="property_sale.action_property_buildingtype_report" groups="property_sale.director,base.group_system"/> -->
+
+            <menuitem name="Analysis Reports"
+                id="menu_property_aanalysis_main" parent="menu_property_report_main"
+                sequence="2" action="action_property_analysis_report" groups="property_sale.director,base.group_system"/>
+            <menuitem name="Chart Reports"
+                id="menu_property_charts_main" parent="menu_property_report_main"
+                sequence="3" action="open_bi_report_action" groups="property_sale.director,base.group_system"/>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,146 @@
+<odoo>
+    <record id="project_configs_kanban_action" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.configs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a project.
+              </p><p>
+                Create projects
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="project_configs_kanban_action"
+            id="project_configs_dashboard_menu"
+            parent="property_sale.menu_property_sorder" sequence="0"
+            name="Dashboard"/>
+    <record id="project_configs_kanban_view" model="ir.ui.view">
+        <field name="name">project.configs.kanban</field>
+        <field name="model">project.configs</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban" create="0">
+                    <field name="color"/>
+                    <field name="phase"/>
+                    <field name="total_unit"/>
+                    <field name="total_sold"/>
+                    <field name="total_remain"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div>
+                                    <div t-attf-class="o_kanban_card_header">
+                                        <div class="o_kanban_card_header_title">
+                                            <div class="o_primary">
+                                                <a type="object" name="get_reference_record">
+                                                    <field name="name"/>
+                                                </a>
+                                            </div>
+                                            
+                                            <div class="o_secondary"><field class="o_secondary" name="phase"/></div>
+                                        </div>
+                                        <div class="o_kanban_manage_button_section">
+                                            <a class="o_kanban_manage_toggle_button" href="#">More<i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                        </div>
+                                    </div>
+                                    <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_primary_left">
+                                                <button class="btn btn-primary" name="get_remaining_record_action" type="object">
+                                                    <span t-if="record.total_unit.raw_value"><t t-esc="record.total_unit.value"/> Available Unit</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 o_kanban_primary_right">
+                                                <div t-if="record.total_unit.value > 0" class="row">
+                                                </div>
+
+                                                <div t-if="record.total_unit.value > 0" class="row">
+                                                    <div class="col-xs-9">
+                                                        <a name="get_the_action_record" type="object">
+                                                            Total : <field name="total_unit"/>
+                                                        </a>
+                                                    </div>
+                                                    <!-- <div class="col-xs-3">
+                                                        <field name="total_unit"/>
+                                                    </div> -->
+                                                </div>
+
+                                                <div t-if="record.total_sold.value > 0" class="row">
+                                                    <div class="col-xs-9">
+                                                        <a class="oe_kanban_stock_picking_type_list" name="get_the_sold_record_action" type="object">
+                                                            Total Sold : <field name="total_sold"/>
+                                                        </a>
+                                                    </div>
+                                                    <!-- <div class="col-xs-3">
+                                                        <field name="total_sold"/>
+                                                    </div> -->
+                                                </div>
+
+                                                <div t-if="record.total_remain.value > 0" class="row">
+                                                    <div class="col-xs-9">
+                                                        <a class="oe_kanban_stock_picking_type_list" name="get_remaining_record_action" type="object">
+                                                            Total Remaining: <field name="total_remain"/>
+                                                        </a>
+                                                    </div>
+                                                    <!-- <div class="col-xs-3">
+                                                        <field name="total_remain"/>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>View</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_the_action_record" type="object">All</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_the_sold_record_action" type="action">Allocated</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_the_sold_record_action" type="object">Sold</a>
+                                            
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_remaining_record_action" type="object">Remaining</a>
+                                            
+                                                </div>
+                                            </div>
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>New</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="%(property_sale.action_property_draft_buildingtype)d" type="action" >Add Building</a>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                            <div class="col-8" role="menuitem" aria-haspopup="true">
+                                                <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                            </div>
+                                            <div role="menuitem" class="col-4">
+                                                <a class="dropdown-item" role="menuitem" type="edit">Settings</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                    </templates>
+                </kanban>
+        </field>
+    </record>
+
+    
+</odoo>

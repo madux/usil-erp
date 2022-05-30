@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_payment_property_form_view" >
+            <field name="name">account.payment</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="modes_payment"/>
+                    <field name="banker"/>
+                    <field name="narration_text"/>
+                    
+                </xpath>
+
+                <xpath expr="//button[@name='action_post']" position="after">
+                    <button name="sent_to_post" class="oe_highlight" states="first_draft" string="Post to Accounts" 
+                    type="object" groups="account.group_account_invoice,property_sale.accounts_prop,property_sale.officer,
+                    account.group_account_manager,account.group_account_manager"/>
+
+                    <button name="cancel" class="oe_highlight" states="draft" confirm="Are you sure you want to cancel" string="Cancel Payment" 
+                        type="object" groups="account.group_account_invoice,property_sale.accounts_prop,
+                        account.group_account_manager,account.group_account_manager,base.group_system"/>
+
+                    <button name="set_draft_prop" states="cancelled" string="Set to Draft" 
+                    type="object" groups="account.group_account_invoice,property_sale.accounts_prop,property_sale.officer,
+                    account.group_account_manager,account.group_account_manager,base.group_system"/>
+
+                </xpath>
+                <!-- <xpath expr="//button[@name='action_post']" position="attributes">
+                    <attribute name="groups">"account.group_account_manager,property_sale.accounts_prop"</attribute>
+                </xpath> -->
+                <xpath expr="//button[@name='action_post']" position="replace">
+                    <button name="action_post" class="oe_highlight" states="draft" string="Confirm" type="object"
+                    groups="account.group_account_manager,property_sale.accounts_prop"/>
+                </xpath>
+
+                <xpath expr="//field[@name='payment_type']" position="replace">
+                    <field name="payment_type" widget="radio" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_type']" position="replace">
+                    <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" nolabel="1" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', 'not in', ['first_draft','draft'])]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                </xpath>
+                <xpath expr="//field[@name='journal_id']" position="replace">
+                    <!-- <field name="journal_id" widget="selection" domain="[]" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/> -->
+                </xpath>
+                <xpath expr="//field[@name='payment_method_id']" position="before">
+                    <field name="journal_id" widget="selection" domain="[('type', 'in', ('bank', 'cash'))]" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                    <!-- <field name="journal_id" widget="selection" domain="[]" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/> -->
+                </xpath>
+                <xpath expr="//field[@name='destination_account_id']" position="replace">
+                    <!-- <field name="destination_account_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', 'not in', ['first_draft','draft'])]}"/> -->
+                    <field name="destination_account_id" options="{'no_create': True}" required="1" attrs="{'readonly': ['|',('state', 'not in', ['first_draft','draft']), ('is_internal_transfer', '=', True)]}"/>
+                                
+                
+                </xpath>
+                <xpath expr="//field[@name='payment_method_id']" position="replace">
+                                <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                </xpath>
+                <xpath expr="//div[@name='amount_div']" position="replace">
+                    <div name="amount_div" class="o_row">
+                        <field name="amount" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                        <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                    </div>
+                </xpath>
+
+                <xpath expr="//field[@name='date']" position="replace">
+                        <field name="date" attrs="{'readonly': [('state', 'not in', ['first_draft','draft'])]}"/>
+                </xpath>
+                 
+            </field>
+        </record>
+
+        <!-- <record model="ir.ui.view" id="account_payment_invoice_property_form_view" >
+            <field name="name">account.payment.invoice</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="modes_payment"/>
+                    <field name="banker"/>
+                    <field name="narration_text"/>
+                    <button name="sent_to_post" class="oe_highlight" states="draft" string="Confirm" 
+                    type="object" groups="account.group_account_invoice,property_sale.accounts_prop,property_sale.officer
+                    account.group_account_manager,account.group_account_manager"/>
+
+                </xpath>
+
+                <xpath expr="//button[@name='action_post']" position="before">
+                    <button name="sent_to_post" class="oe_highlight" states="first_draft" string="Post to Accounts" type="object"/>
+
+                </xpath>
+                <xpath expr="//button[@name='action_post']" position="attributes">
+                    <attribute name="groups">"account.group_account_manager,account.group_account_manager"</attribute>
+                        
+                </xpath>
+
+            </field>
+        </record> -->
+
+        <record id="action_property_account_payments" model="ir.actions.act_window">
+            <field name="name">Property Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer', 'search_default_today_grp': 1}</field>
+            <field name="domain">[('is_property', '=', True)]</field>
+            <field name="view_id" ref="account.view_account_payment_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Register a payment
+                </p><p>
+                  Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+        <record id="account.view_account_payment_search" model="ir.ui.view">
+            <field name="name">account.payment.search</field>
+            <field name="model">account.payment</field>
+            <!-- <field name="inherit_id" ref="account.view_account_payment_search"/> -->
+            <field name="arch" type="xml">
+                <search string="Payments">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('communication','ilike',self)]" string="Description"/>
+                    <separator/>
+                    <field name="partner_id" />
+                    <field name="journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <filter string="Vendor Payments" domain="[('payment_type','=','outbound')]" name="outbound_filter"/>
+                    <filter string="Customer Payments" domain="[('payment_type','=','inbound')]" name="inbound_filter"/>
+                    <filter string="Transfers" domain="[('payment_type','=','transfer')]" name="transfers_filter"/>
+                    <separator/>
+                    <filter name="today_grp" string="Today"
+                    domain="[('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))),
+                    ('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]" />
+
+                    <filter string="Past Week" name="Past_Week"
+                    domain="[('date','&gt;',(context_today()+relativedelta(weeks=-1)).strftime('%Y-%m-%d')),
+                     ('date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Month" name="Past_Month"
+                    domain="[('date','&gt;',(context_today()+relativedelta(weeks=-4)).strftime('%Y-%m-%d')),
+                     ('date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Year" name="Past_year"
+                    domain="[('date','&gt;',(context_today()+relativedelta(weeks=-48)).strftime('%Y-%m-%d')),
+                     ('date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <separator/>
+                    <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
+                    <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
+                    <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
+                    <filter string="Reconciled" name="reconciled" domain="[('state','=','reconciled')]"/>
+                    <separator/>
+                    <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                    <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
+                    <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+        <menuitem name="Payments"
+            id="menu_property_payment" parent="menu_property_sorder"
+            sequence="2" groups="property_sale.director,property_sale.officer,base.group_system"/>
+
+        <menuitem action="action_property_account_payments" name="Customer Payments"
+            id="menu_property_account_payments" parent="menu_property_payment"
+            sequence="1" groups="property_sale.director,property_sale.officer,base.group_system"/>
+
+    </data>
+</odoo>

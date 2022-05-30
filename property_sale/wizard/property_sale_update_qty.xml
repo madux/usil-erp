@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="property_building_view_change_product_quantity" model="ir.ui.view">
+            <field name="name">Change Product Quantity</field>
+            <field name="model">stock.change.product.qty</field>
+            <field name="arch" type="xml">
+                <form string="Update Quantity">
+                    <group>
+                        <field name="building_id" widget="selection"/>
+                        <field name="new_quantity"/>
+                        <p class="oe_grey">
+                            When you select a building type, the new quantity you set will affect the available units of that building
+                        </p>
+                    </group>
+                    <footer>
+                        <button name="change_product_qty" string="_Apply" type="object" class="btn-primary"/>
+                        <button string="_Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_property_building_view_change_product_quantity" model="ir.actions.act_window">
+            <field name="name">Update Quantity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">property.change.product.qty</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_product_quantity"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
+

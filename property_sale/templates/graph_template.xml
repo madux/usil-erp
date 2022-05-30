@@ -1,0 +1,976 @@
+<odoo>
+    <data>
+    <template id="graph_template">              
+        <t t-call="website.layout">
+        
+            <head>
+                <title>Property Sale Graph View</title>               
+            </head>
+       
+            <body> 
+
+                <div class="container">   
+                    <div class="page">
+                        <link rel="stylesheet" href="/property_sale/static/src/css/property_sale.scss"/>
+                        <!-- <div class="row">
+                            <canvas id="line-chart" width="200" height="50"/>
+                        </div> -->
+                        <div class="grider">
+                            <div name="bar_graph" class = "bar_graph">Bar Graph
+                                <canvas id="bar-chart2" width="200" height="50"/>
+                            </div>
+                            <div name="pie_graph" class = "pie_graph">Pie Graph
+                                <canvas id="pie-chart" width="200" height="50"/>
+                            </div>
+                            <div name="donut_graph" class = "donut_graph">Donut Graph
+                                <canvas id="donut-chart" width="200" height="50"/>
+                            </div>
+                            <div name="line_graph" class = "line_graph">Line Graph
+                                 <canvas id="line-chart" width="200" height="50"/>
+                            </div>
+                            <div name="bar_horizon_graph" class = "bar_horizon_graph">Horizon Graph
+                                <!-- line graph -->
+                            </div>
+                        </div>
+                    </div> 
+                </div> 
+
+                 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"/>
+                <script>
+                    var x_axis = <t t-esc="sales_x"/>;
+                    var y_axis = <t t-esc="count_y"/>;
+
+                    new Chart(document.getElementById("bar-chart2"), {
+                    type: 'bar',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("donut-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });
+                    
+                    new Chart(document.getElementById("pie-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("donut-chart"), {
+                    type: 'doughnut',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: false,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });             
+                </script>
+                                          
+            </body>
+        </t>
+    </template>
+
+    <template id="bireport_template">              
+        <t t-call="website.layout">
+        
+            <head>
+                <title>Property Sale Report</title>               
+            </head>
+       
+            <body> 
+
+                <div class="container">   
+                    <div class="page">
+                        <link rel="stylesheet" href="/property_sale/static/src/css/property_sale.css"/>
+                        <!-- <div class="row">
+                            <canvas id="line-chart" width="200" height="50"/>
+                        </div> -->
+                        
+                        
+                      <div class="row mt-5 mb-5">
+                          <div class="col-md-9">
+                              <h5>
+                                  Urban shelter Infrastructure Limited Report Analysis.
+                              </h5>
+                              <p>Kindly ensure you have enough data to visualize.</p>
+                          </div>
+                          <div class="col-md-3 feedback-button text-center">
+                              <h5>Want to know more?</h5>
+                              <a class="btn-primary block mt-2 text-center" href="#feedback">GET IN TOUCH</a>
+                          </div>
+                      </div>
+                      
+                      <div class="row mt-5 mb-5">
+                        
+                        <div class="col-md-4">
+                            <label>
+                                Analysis For: - 
+                            </label>
+                            <select id="sales_by_analysis_select" placeholder="Select Type" class="form-control o_website_form_input" name="sales_by_analysis">
+                                <option id="1">Project</option>
+                                <option id="2">Customer</option>
+                                <option id="3">Sales Person</option>
+                                             
+                            </select>
+                        </div> 
+                        <div class="col-md-2">
+                            <label>
+                                Group / Filter By: - 
+                            </label>
+                            <select id="filter_based_on_general" placeholder="Filter Options" class="form-control o_website_form_input" name="filter_based_on_general">
+                                <option id="general_filter_id">General Filter</option>
+                                <option id="date_pr_filter" value="Filter By Date/ Project">Filter By Date/ Project</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label>
+                                Project: - 
+                            </label>
+                            <select id="sales_by_project_select" placeholder="Select by Project" class="form-control o_website_form_input" name="sales_by_project_select">
+                                <option></option>
+                                             
+                            </select>
+                        </div>
+                        
+                         <div class="col-md-2">
+                            <label>
+                                Date From: - 
+                            </label>        
+                            <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                
+                                <input type="date" placeholder="Date From" class="form-control datetimepicker-input o_website_form_input" id="datepicker1" data-target="#datepicker1" name="Date From"/>
+                                <!-- <div class="input-group-append" data-target="#datepicker1" data-toggle="datepicker1">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar" id="" data-original-title="" title="" aria-describedby="tooltip118921"/>
+                                    </div>
+                                </div>  -->
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>
+                                Date To: - 
+                            </label>      
+                            <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                 
+                                <input type="date" placeholder="Date To" class="form-control datetimepicker-input o_website_form_input" id="datepicker2" data-target="#datepicker2" name="Date To"/>
+                                <!-- <div class="input-group-append" data-target="#datepicker2" data-toggle="datetimepicker2">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar" id="" data-original-title="" title="" aria-describedby="tooltip118921"/>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                      </div>
+                        <p>
+                            <!-- Another div for sold filtering -->
+                            <div class="row mt-5 mb-5">
+                                <div class="col-md-2">
+                                    <label>
+                                        View By: - 
+                                    </label>
+                                    <select id="view_by_analysis_select" placeholder="View Type" class="form-control o_website_form_input" name="view_by_analysis_select">
+                                        <option id="bar_view" value="bar">Bar</option>
+                                        <option id="doughnut_view" value="doughnut">Doughnut</option>
+                                        <option id="line_view" value="line">Line</option>
+                                        <option id="horizon_view" value="horizon">Horizon</option>
+                                        <option id="pie_view" value="pie">Pie</option>
+                                        <option id="all_view" value="All">All</option> 
+                                    </select>
+                                </div>
+                            
+                                <div class="col-md-4">
+                                    <label>
+                                        Category: - 
+                                    </label><p/>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_sold_filter" rel="is_sold_filter" name="is_sold_filter" value="Sold"/>  Sold  
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_unsold_filter" rel="is_unsold_filter" name="is_unsold_filter" value="UnSold"/>  UnSold  
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_reserved_filter" rel="is_reserved_filter" name="is_reserved_filter" value="Reserved"/> Reserved  
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_option_all" rel="is_option_all" name="is_option_all" value="All"/> All  
+                                    </label>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label>
+                                        Set Limit: - 
+                                    </label>
+                                    <input type="number" value="100" placeholder="100" class="form-control" id ="setlimit" name="setlimit"></input>
+                                </div>
+                                <a class="button-summary buttonradius block mt-2 text-center" href="http://41.242.57.15:8069/bi-summary">Summary Report</a>
+
+                            </div>
+                        </p>
+                       
+                        <div class="grider" id="griderId">
+                            <div name="bar_graph" id="bar-div" class="bar_graph"> 
+                                <a class="btn-primary block mt-2 text-center" href="#feedback">Bar Graph</a>
+                                <canvas id="bar-chart2" width="200" height="80"/><p/>
+                            </div><p/>
+                            <div name="line_graph" id="line-div" class="line_graph">  
+                            <a class="btn-primary block mt-2 text-center" href="#feedback">Line Graph</a>
+                                 <canvas id="line-chart" width="200" height="50"/><p/>
+                            </div><p/>
+                            <div name="pie_graph" id="pie-div" class="pie_graph mb-3"> 
+                            <a class="btn-primary block mt-2 text-center" href="#feedback">Pie Graph</a>
+                                <canvas id="pie-chart" width="200" height="100"/> 
+                            </div> 
+                            <div name="donut_graph" id="donut-div" class="donut_graph mb-3"> 
+                             <a class="btn-primary block mt-2 text-center" href="#feedback">Donut Graph</a>
+                                <canvas id="donut-chart" width="200" height="100"/> 
+                            </div> 
+                            
+                            <div name="bar_horizon_graph" id="horizon-div" class="bar_horizon_graph">
+                                <a class="btn-primary block mt-2 text-center" href="#feedback">Horizon Graph</a>
+                               <canvas id="hori-chart" width="200" height="50"/>
+                            </div>
+                        </div>
+                    </div> 
+                </div> 
+
+                 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"/>
+                <script>
+                    var x_axis = [];
+                    var y_axis = [];
+                     
+                    new Chart(document.getElementById("bar-chart2"), {
+                    type: 'bar',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Report",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("donut-chart"), {
+                    type: 'doughnut',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });
+                    
+                    new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("pie-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: false,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });             
+                </script>
+                                          
+            </body>
+        </t>
+    </template>
+
+<!-- SUMMARY PAGE -->
+        <template id="summary_page_view" name="Property Summary">
+            <t t-name="eha_website.summary_page_view">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                        <!-- <div class="topbar">
+                            <ul class="top-steps">
+                            <li><span class="badge">1</span>Summary Chart</li>
+                            </ul>
+                        </div> -->
+                        <section id="summary-section">
+                            <div class="container test-section mt-5">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="testing-img">
+                                            <img src="/property_sale/static/description/icon.png"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h2 class="section-title">Property Sales Chart&amp;nbsp;<span class="text-primary">Summary</span></h2>
+                                        <h5>Details of sales and allocation of Buildings</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row container mt-5 mb-5"> -->
+                            <div class="row" style="margin-left: 6px;">
+                                <div class="col-md-4">
+                                    <label>
+                                        Analysis For: - 
+                                    </label>
+                                    <select id="sales_by_analysis_select" placeholder="Select Type" class="form-control o_website_form_input" name="sales_by_analysis">
+                                        <option id="1">Other</option>
+                                        <option id="2">Projects</option> 
+                                                    
+                                    </select>
+                                </div> 
+                                <div class="col-md-2">
+                                    <label>
+                                        Group / Filter By: - 
+                                    </label>
+                                    <select id="filter_based_on_general" placeholder="Filter Options" class="form-control o_website_form_input" name="filter_based_on_general">
+                                        <option id="general_filter_id">General Filter</option>
+                                        <option id="date_pr_filter" value="Filter By Date/ Project">Filter By Date/ Project</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label>
+                                        Project: - 
+                                    </label>
+                                    <select id="sales_by_project_select_summ" placeholder="Select by Project" class="form-control o_website_form_input" name="sales_by_project_select_summ">
+                                        <option></option>
+                                                    
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <label>
+                                        Date From: - 
+                                    </label>        
+                                    <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                        
+                                        <input type="date" placeholder="Date From" class="form-control datetimepicker-input o_website_form_input" id="datepicker1summ" data-target="#datepicker1summ" name="Date From"/>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>
+                                        Date To: - 
+                                    </label>      
+                                    <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                        
+                                        <input type="date" placeholder="Date To" class="form-control datetimepicker-input o_website_form_input" id="datepicker2summ" data-target="#datepicker2summ" name="Date To"/>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                            <!-- Another div for sold filtering -->
+                            <!-- <div class="row container mt-5 mb-5"> -->
+                            <div class="row" style="margin-left: 6px;">
+                                <div class="col-md-2 limit-div">
+                                    <label>
+                                        View By: - 
+                                    </label>
+                                    <select id="view_by_analysis_select" placeholder="View Type" class="form-control o_website_form_input" name="view_by_analysis_select">
+                                        <option id="bar_view" value="bar">Bar</option>
+                                        <option id="doughnut_view" value="doughnut">Doughnut</option>
+                                        <option id="line_view" value="line">Line</option>
+                                        <option id="horizon_view" value="horizon">Horizon</option>
+                                        <option id="pie_view" value="pie">Pie</option>
+                                        <option id="all_view" value="All">All</option> 
+                                    </select>
+                                </div>
+                            
+                                <div class="col-md-4">
+                                    <label>
+                                        Category: - 
+                                    </label><p/>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_sold_filter_summ" rel="is_sold_filter_summ" name="is_sold_filter_summ" value="Sold"/>  Sold  
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_unsold_filter_summ" rel="is_unsold_filter_summ" name="is_unsold_filter_summ" value="UnSold"/>  UnSold  
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_reserved_filter_summ" rel="is_reserved_filter_summ" name="is_reserved_filter_summ" value="Reserved"/> Reserved  
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="o_website_form_input" id="is_option_all_summ" rel="is_option_all_summ" name="is_option_all_summ" value="All"/> All  
+                                    </label>
+                                </div>
+
+                                <a class="button-summary buttonradius block mt-2 text-center" href="http://41.242.57.15:8069/bireport">Dynamic Report</a>
+
+                                <div class="col-md-2 limit-div">
+                                    <label>
+                                        Set Limit: - 
+                                    </label>
+                                    <input type="number" value="100" placeholder="100" class="form-control" id ="setlimit" name="setlimit"></input>
+                                </div>
+                            </div>
+                        </p>
+                        </section>
+                        <section >
+                            <!-- <script type="text/javascript" src="/property_sale/static/src/js/summary_chart.js"></script> -->
+                    
+                        <!-- <div class="container mt-5"> -->
+                        <div class="container" style="margin-left: 6px;">
+                            <div class="row">
+                                <div class="col-md-3 test-details">
+                                    <div>
+                                        <label>Actual Sales</label>
+                                        <p id="actual_sales_id">-</p>
+                                    </div>
+                                    <div>  
+                                        <label>Deposit Received</label>
+                                        <p id="deposit_received">- </p>
+                                    </div>
+                                    <div>
+                                        <label>Diff. in Actual Price</label>
+                                        <p id="actual_sale_diff">- </p>
+                                    </div>
+                                    <div>
+                                        <label>Balance Collectible</label>
+                                        <p id="balance_collectible">- </p>
+                                    </div>
+                                    <div>
+                                        <label>% Received</label>
+                                        <p id="percent_recieved">- </p>
+                                    </div>
+                                    <div>
+                                        <label>Total % discount</label>
+                                        <p id="total_discount">- </p>
+                                    </div>
+                                    <!-- <div>
+                                        <label>% of Balance</label>
+                                        <p id="percent_balance_collected">- </p>
+                                    </div> -->
+                                    <div>
+                                        <label><u>Building Section</u></label><br/>
+                                        <strong>Total Units: </strong><p id="tot_units">- </p>
+                                        <strong>Total Amount sellable: </strong><p id="tot_sellable">- </p>
+                                        <strong>Total Sold: </strong><p id="tot_sold"> - </p>
+                                        <strong>Total Unsold: </strong><p id="tot_unsold"> -</p>
+                                        <strong>Total Reserved:</strong> <p id="tot_reserved">- </p>
+                                    </div>
+                                </div>
+                            <div class="grider" id="grider_summid">
+                            </div>
+                        </div>
+                        </div>
+                    </section>
+                    </div>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"/>
+                <script>
+                    var x_axis = [];
+                    var y_axis = [];
+
+                                
+                </script>
+                </t>
+            </t>
+        </template>
+    <template id="bi_filtered_report">              
+        <t t-call="website.layout">
+        
+            <head>
+                <title>Property Sale Report</title>               
+            </head>
+       
+            <body> 
+
+                <div class="container">   
+                    <div class="page">
+                        <link rel="stylesheet" href="/property_sale/static/src/css/property_sale.scss"/>
+                        <!-- <div class="row">
+                            <canvas id="line-chart" width="200" height="50"/>
+                        </div> -->
+                        
+                        
+                      <div class="row mt-5 mb-5">
+                          <div class="col-md-9">
+                              <h5>
+                                  Urban shelter Infrastructure Limited Report Analysis.
+                              </h5>
+                              <p>Kindly ensure you have enough data to visualize.</p>
+                          </div>
+                          <div class="col-md-3 feedback-button text-center">
+                              <h5>Want to know more?</h5>
+                              <a class="btn-primary block mt-2 text-center" href="#feedback">GET IN TOUCH</a>
+                          </div>
+                      </div>
+                      
+                      <div class="row mt-5 mb-5">
+                        
+                        <div class="col-md-4">
+                            <select id="sales_by_analysis_select" placeholder="Select Type" class="form-control o_website_form_input" name="sales_by_analysis">
+                                <option id="1">Project</option>
+                                <option id="2">Customer</option>
+                                <option id="3">Sales Person</option>
+                                             
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select id="sales_by_project_select" placeholder="Select by Project" class="form-control o_website_form_input" name="sales_by_project_select">
+                                <option></option>
+                                             
+                            </select>
+                        </div>
+                        
+                         <div class="col-md-2">
+                                         
+                            <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                
+                                <input type="date" placeholder="Date From" class="form-control datetimepicker-input o_website_form_input" id="datepicker1" data-target="#datepicker1" name="Date From"/>
+                                <!-- <div class="input-group-append" data-target="#datepicker1" data-toggle="datepicker1">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar" id="" data-original-title="" title="" aria-describedby="tooltip118921"/>
+                                    </div>
+                                </div>  -->
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                                         
+                            <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                 
+                                <input type="date" placeholder="Date To" class="form-control datetimepicker-input o_website_form_input" id="datepicker2" data-target="#datepicker2" name="Date To"/>
+                                <!-- <div class="input-group-append" data-target="#datepicker2" data-toggle="datetimepicker2">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar" id="" data-original-title="" title="" aria-describedby="tooltip118921"/>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select id="view_by_analysis_select" placeholder="View Type" class="form-control o_website_form_input" name="view_by_analysis_select">
+                                <option id="1">Doughnut</option>
+                                <option id="2">Bar</option>
+                                <option id="3">Line</option>
+                                <option id="4">Horizon</option>
+                                <option id="5">Pie</option>
+                                <option id="6">All</option> 
+                            </select>
+                        </div>
+                      </div>
+                       
+                        <div class="grider">
+                            <div name="bar_graph" id="bar-div" class="bar_graph"> 
+                                <a class="btn-primary block mt-2 text-center" href="#feedback">Bar Graph</a>
+                                <canvas id="bar-chart2" width="200" height="80"/><p/>
+                            </div><p/>
+                            <div name="line_graph" id="line-div" class="line_graph">  
+                            <a class="btn-primary block mt-2 text-center" href="#feedback">Line Graph</a>
+                                 <canvas id="line-chart" width="200" height="50"/><p/>
+                            </div><p/>
+                            <div name="pie_graph" id="pie-div" class="pie_graph mb-3"> 
+                            <a class="btn-primary block mt-2 text-center" href="#feedback">Pie Graph</a>
+                                <canvas id="pie-chart" width="200" height="100"/> 
+                            </div> 
+                            <div name="donut_graph" id="donut-div" class="donut_graph mb-3"> 
+                             <a class="btn-primary block mt-2 text-center" href="#feedback">Donut Graph</a>
+                                <canvas id="donut-chart" width="200" height="100"/> 
+                            </div> 
+                            
+                            <div name="bar_horizon_graph" id="horizon-div" class="bar_horizon_graph">
+                                <a class="btn-primary block mt-2 text-center" href="#feedback">Horizon Graph</a>
+                               <canvas id="hori-chart" width="200" height="50"/>
+                            </div>
+                        </div>
+                    </div> 
+                </div> 
+
+                 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"/>
+                <script>
+                    var x_axis = <t t-esc="measure_horizontal"/>;
+                    var y_axis = <t t-esc="measure_vertical"/>;
+
+                    new Chart(document.getElementById("bar-chart2"), {
+                    type: 'bar',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Report",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("donut-chart"), {
+                    type: 'doughnut',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });
+                    
+                    new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("pie-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: false,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });             
+                </script>
+                                          
+            </body>
+        </t>
+    </template>
+    </data>
+</odoo> 

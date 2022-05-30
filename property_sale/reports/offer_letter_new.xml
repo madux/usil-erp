@@ -1,0 +1,159 @@
+<odoo>
+  <data>
+
+    <report
+            id="offer_letter_report"
+            model="sale.order"
+            string="Offer Letter"
+            report_type="qweb-pdf"
+            name="property_sale.offer_letter"
+            file="property_sale.offer_letter"
+            attachment_use="False"
+        />
+
+    <template id="offer_letter">
+        <div class="header">
+            <div class="row">
+                <div class="col-xs-3">
+                    .<!-- <img src="https://imgur.com/gLIZY9S.jpg" style="max-height: 150px;" /> -->
+                </div>
+                <div class="col-xs-offset-2 text-right">
+                    <img src='/property_sale/static/description/icon.png' style="max-height: 70px;"/>
+                </div>
+            </div>
+            <hr/>
+        </div>
+        <t t-foreach="docs" t-as="o">
+            <div class="page" style="max-width: 660px; margin: auto;">
+
+                <style>
+                    body {
+                        line-height: 180%;
+                        font-size: 18px;
+                        font-family: 'EB Garamond';
+                    }
+
+                    page {
+                        margin-bottom: -30px;
+                    }
+
+                    p {
+                    text-align: justify;
+                        margin: 0;
+                    }
+
+                    .abc {
+                            margin-left: 40px;
+                            list-style-type: lower-alpha;
+                            }
+
+                    li {
+                    text-align: justify;
+                        padding-top: 2%;
+                        padding-bottom: 20px;
+                    }
+                </style>
+
+                <!-- <p><t t-esc="datetime.datetime.now().strftime('%B %d, %Y')" /></p> -->
+                <p><t t-esc="o.date_order" /></p>
+
+                <br />
+
+                <span t-field="o.partner_id.name"/>,<br/>
+                <span t-field="o.partner_id.street"/>,<span t-field="o.partner_id.street2"/>,<br/>
+                <span t-field="o.partner_id.city"/>,<span t-field="o.partner_id.state_id.name"/>,<br/>
+                <span t-field="o.partner_id.country_id.name"/> <br/>
+
+                <p align="justify">
+                    Dear Sir/Madam,
+                </p>
+
+                <h4 style="text-align: center;"><strong><u>OFFER LETTER <span t-esc="o.order_line[0].product_id.name" /> AT <span t-esc="o.location_project.name" />, <span t-esc="o.location_project.address" /></u></strong></h4>
+
+                <p>Following your satisfactory inspection of our <strong><span t-esc="o.order_line[0].product_id.name" /></strong> Estate mentioned above and expression of interest to purchase a <span t-esc="o.order_line[0].product_id.name" /></p>
+                we hereby offer you the property on the following terms and conditions, <br/>
+                <strong>SUBJECT TO CONTRACT:</strong>
+                <p>Property: - <strong><span t-esc="o.order_line[0].product_id.name"/></strong>  Naira only. exclusive of taxes and VAT.</p>
+                <p>Unit(s): - <strong><span t-esc="o.order_line[0].product_uom_qty"/></strong></p>
+
+                <p>Total: - &#8358;<strong><span t-esc="'{0:,}'.format(int(o.amount_total))"/></strong>  Naira only. exclusive of taxes and VAT.</p>
+                <p style="padding-left: 25px;text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;" >
+                    ✓ Payment to be Paid in Full<br/>
+                    ✓ Upgrade feature and interior architecture changes are available on request and at additional cost.
+                </p>
+
+                <p><strong>See Brochure for details</strong></p>
+                <br/>
+                <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px; font-style: italic;">
+                    <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px; font-style: normal;" >Title: </strong>Deed of Assignment under the terms and conditions stated in the Certificate of Occupancy number 1996w-e018z02907r-de6bu-10, File No. MISC 53568, Plot No. 1702, Cadastral Zone CO2, and under the Provisions of the Land Use Act No. 5 of 1978
+                </p>
+                <div class="row">
+                    <p style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 24px;"><strong><u>GENERAL OFFER CONDITIONS</u></strong></p>
+                        <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">1. This offer letter is hereby given to you as a pre-condition for the purchase of a house. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">2. This offer letter is NOT indefinite, and may be nullified or rendered void if the conditions provided therein are not met. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">3. A provisional letter of Allocation will be issued by Urban Shelter Ltd upon making a deposit of 30%. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">4. Prior to handing over of keys, both parties shall execute sales agreement and other title Deeds. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">5. Prospective buyers who have been provided an offer letter must make an initial deposit before a house is allocated. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">6. A Deed of Assignment shall be provided to the owner/allotee upon completion of ALL payments. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">7. The owner/allotees SHALL be responsible for all costs associated with the perfection of Land titles of the allotted property upon completion of the development. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">8. The owner/allotee SHALL PAY ALL GOVERNMENT COSTS associated with their allotted property: these may include ground rent, taxes, assessment fees, levies, and ALL other property costs and fees due to the Federal Government of Nigeria, The Federal Capital Territory, and/or local/municipal authorities. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">9. The payment of Government charges shall start immediately upon handing over of property to the owner/allotee. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">10. The property allotted to the owner/allotee shall be used for residential purposes only. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">11. Structural alterations of any sort shall not be carried out on the allotted property without the expressed written consent of URBAN SHELTER LTD (if during construction); any structural alteration after completion is prohibited, except by the approval of FCDA Development Control Unit. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">12. Accepting this offer letter means accepting the terms of payment specified therein and the consequences in the event of default by the owner/allotee. </p> <br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">13. Urban Shelter shall NOT be held liable for delays in construction, which are caused by factors outside of its control; owners/allottees are expected to consistently make payments according to payment schedules. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">14. Failure to meet the agreed payment schedules SHALL result in REVOCATION of the allotted property. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">15. Allotees / Owners may request for refund of their deposits in writing, addressed to the MD/CEO of Urban Shelter, Ltd. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">16. Refunds shall be given to customers after their allotted house has been repossessed and sold to another customer. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">17. Defect Liability period is 6 months from the date of handover. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">18. The owners / allottee shall commence payment of facility management fees once their house has been completed, and Urban Shelter has officially written to that effect (even if the owner / allottee has not moved into the house), as costs of maintenance are incurred even when houses are not occupied. </p><br/>
+
+                            <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">19. If the above conditions are found acceptable, please indicate so by appending your signature to this Offer Letter. </p><br/>
+                        </p>
+                </div>
+
+                <div class="row">
+                    <p style="padding-left: 15px; text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">We thank you for the interest shown in our property and trust you will accept and ensure prompt compliance with the conditions of this offer. Please note that this offer is valid for 7 days.</p>
+                    <br/><br/>
+                    <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Yours faithfully,<br/><br/><br/></p>
+                    <p><br/></p>
+                    <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">
+                        <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">ENGR.BASHIR ABBA</strong>
+                        <br/><br/>
+                                    <img src='/property_sale/static/img/baschi.jpg' style="max-height: 120px;"/>
+                            <br/>
+                        <br/>
+                        <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">GENERAL MANAGER</strong>
+                    </p>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--<template id="galadimawa_carcas_offer_letter_report">
+		<t t-call="report.offer_letter">
+			<t t-foreach="doc_ids" t-as="doc_id">
+				<t t-raw="translate_doc(doc_id,doc_model,'building','construction_rewrite.galadimawa_carcas_offer_letter_report_document')"/>
+			</t>
+		</t>
+		</template>-->
+
+  </data>
+</odoo>

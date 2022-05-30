@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+         
+		<record id="ir_cron_scheduler_reminder_date_property_action" model="ir.cron">
+            <field name="name">Send Payment Reminder</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <!-- <field eval="'sale.order'" name="model"/> -->
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="code">model.send_reminder_mail()</field>
+            <!-- <field eval="'send_reminder_mail'" name="function"/> -->
+        </record>
+ 
+
+        <record id="ir_cron_check_expired_allocation_property_action" model="ir.cron">
+            <field name="name">Send Payment Reminder</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <!-- <field eval="'sale.order'" name="model"/>
+            <field eval="'cron_check_expired_allocation'" name="function"/> -->
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="code">model.cron_check_expired_allocation()</field>
+        </record>
+	</data>
+</openerp>

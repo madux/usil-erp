@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sale_order_form_view_inherits">
+            <field name="name">sale.order.inherits</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sale_order_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_total']" position="after">
+                    <field name="location_project" type="row"/>
+                    <field name="buildingtype_id" type="row"/>
+                    <field name="offer_price" type="measure"/>
+                    <field name="amount_paid" type="measure"/>
+                    <field name="outstanding" type="measure"/>
+                    <field name="discounts" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+
+        
+
+        <record model="ir.ui.view" id="sale_order_form_view_inherites">
+            <field name="name">property.sale.order.form.inherits</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="sale_type" string="Operation Type" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='team_id']" position="before">
+                    <field name="team_id"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="location_project" string="Project" options="{'no_create': True, 'no_open': True}"
+                    attrs="{'invisible': [('sale_type', '!=','property')],
+                    'required': [('sale_type', '=','property')]}"/>
+
+                    <field name="prop_payment_count" invisible="1" string="Payment Count"/>
+                    <field name="date_validity" string="Validity Date"
+                    attrs="{'invisible': [('sale_type', '!=','property')],
+                    'required': [('sale_type', '=','property')], 'readonly': [('state', 'in', ['sale', 'done'])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='validity_date']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('state', 'in', ['sale', 'done']), ('sale_type','=','property')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ['sale', 'done'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="buildingtype_id" invisible="0" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="offer_price" invisible="0"/>
+                    <field name="discounts" invisible="0"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{&quot;always_reload&quot;: True}"/>
+                </xpath>
+                <xpath expr="//notebook//page[1]" position="after">
+                    <page name ="breakdown_ids" attrs="{'invisible': [('sale_type', '!=','property')]}" string="Payment Breakdowns">
+                        <field name="breakdown_ids" attrs="{'readonly': [('state', 'in', ['sale', 'done'])]}">
+                            <p style="color: red;">* Breakdowns According to Payment Terms</p>
+                            <tree string="Breakdowns" editable="bottom">
+                                <field name="name"/>
+                                <field name="amount_to_pay" string="Amount to Pay"/>
+                                <field name="next_payment_date"/>
+                                <field name="status"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name ="payment_idss" string="Payment Lines" attrs="{'invisible': [('sale_type', '!=','property')]}">
+                        <field name="payment_idss" readonly="0"/>
+                            <!-- <p style="color: red;">* See invoice Payments</p>
+                                <tree string="Payments" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="suitable_journal_ids" invisible="1"/>
+                                    
+                                    <field name="journal_id"/>
+                                    <field name="amount" string="Paid Amount"/>
+                                    <field name="date"/>
+                                    <field name="reference"/>
+                                </tree>
+                        </field> -->
+                    </page>
+
+                </xpath>
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="context">{'default_location_project': location_project,
+                    'default_date_validity': date_validity}</attribute>
+                    <attribute name="attrs">{'readonly': [('state', 'in', ['sale', 'done']),]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']" position="before">
+                    <field name="sale_status" widget="statusbar" class="oe_right"
+                    attrs="{'invisible': [('sale_type', '!=','property')], 'readonly': ['|', ('state', 'in', ['sale', 'done']),('sale_status','!=','Sold')]}"
+                        />
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="replace">
+                    <field name="product_id" options="{'no_create': True, 'no_open': True}"
+                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                    attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                        />
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="before">
+                    <field name="location_project" invisible="1"/>
+                    <field name="date_validity" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="house_number" invisible="0"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_total']" position="after">
+                    <field name="amount_paid" nolabel="0" class="oe_subtotal_footer_separator"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"
+                    widget='monetary' options="{'currency_field': 'currency_id'}" readonly="1"/>
+
+                    <field name="percentage_paid" nolabel="0" class="oe_subtotal_footer_separator"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}" readonly="1"/>
+                    <field name="outstanding" nolabel="0" class="oe_subtotal_footer_separator"
+                        attrs="{'invisible': [('sale_type', '!=','property')]}" readonly="1"/>
+                </xpath>
+    
+                <xpath expr="//button[@name='action_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('sale_type','=','property')]}</attribute>
+                    <attribute name="states"></attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                    <attribute name="confirm">Do you want to confirm?</attribute>
+                    <attribute name="attrs">
+                    {'invisible': ['|',('sale_type','=','property'),('state','!=','draft')]}
+                    </attribute>
+                    <attribute name="states"></attribute>
+
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="confirm">Do you want to Cancel?</attribute>
+                
+                    <attribute name="states">sent,sale</attribute>
+
+                </xpath>
+                
+                <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('sale_type','=','property')]}</attribute>
+                    <attribute name="states"></attribute>
+
+                </xpath>
+                <xpath expr="//button[@name='action_quotation_send'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('sale_type','=','property')]}</attribute>
+                    <attribute name="states"></attribute>
+
+                </xpath>
+
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="send_mail_officers" confirm="Are you sure you send this Mail?"
+                    type="object" class="oe_stat_button" icon="fa-envelope" groups="property_sale.director,property_sale.officer,base.group_system"
+                    attrs="{'invisible': ['|',('sale_type','!=','property'),('sale_status','!=','Sold')]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Notify</span>
+                            <span class="o_stat_text">Staff</span>
+                        </div>
+                    </button>
+
+                    <button name="send_mail_click" confirm="Are you sure you send this Mail?"
+                        type="object" class="oe_stat_button" icon="fa-envelope" groups="property_sale.director,property_sale.officer,base.group_system"
+                        attrs="{'invisible': ['|', ('sale_type','!=','property'),('sale_status','!=','Sold')]}" >
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Send Remainder</span>
+                            <span class="o_stat_text">Mail</span>
+                        </div>
+                    </button>
+
+                    <button name="view_payment_history" type="object" class="oe_stat_button"
+                    groups="property_sale.director,property_sale.officer,base.group_system" icon="fa-eye"
+                    attrs="{'invisible': ['|', ('sale_type','!=','property'),('percentage_paid','&lt;', 1)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">View Payment</span>
+                            <span class="o_stat_text">Payments</span>
+                        </div>
+                    </button>
+
+                    <button name="print_offer_payment_statement" 
+                    type="object" class="oe_stat_button" icon="fa-print" groups="property_sale.director,property_sale.officer,base.group_system"
+                    attrs="{'invisible': ['|', ('sale_type','!=','property'),('percentage_paid','&lt;', 1)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Print Account</span>
+                            <span class="o_stat_text">Statement</span>
+                        </div>
+                    </button>
+
+                    <button type="object"
+                        attrs="{'invisible': ['|',('sale_type','!=','property'),('percentage_paid','&lt;', 29)]}"
+                        name="print_provisional_allocation_letter" 
+                        class="oe_stat_button" icon="fa-print"
+                        groups="property_sale.director,property_sale.officer,base.group_system"
+                    >
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Print Provision Letter</span>
+                            <span class="o_stat_text">Letter</span>
+                        </div>
+                    </button>
+
+                    <button type="object"
+                        attrs="{'invisible': ['|', ('sale_type','!=','property'),('sale_status','!=','Sold')]}"
+                        name="edit_offer_letter"
+                        class="oe_stat_button" icon="fa-edit"
+                        groups="property_sale.director,property_sale.officer,base.group_system">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Edit Offer</span>
+                            <span class="o_stat_text">Letter</span>
+                        </div>
+                    </button>
+
+                    <button type="object"
+                        attrs="{'invisible': ['|',('sale_type','!=','property'),('sale_status','!=','Sold')]}"
+                        name="print_offer_letter"
+                        class="oe_stat_button" icon="fa-print"
+                        groups="property_sale.director,property_sale.officer,base.group_system">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Print Offer</span>
+                            <span class="o_stat_text">Letter</span>
+                        </div>
+                    </button>
+
+                    <button type="object"
+                        attrs="{'invisible': ['|', ('sale_type','!=','property'),('percentage_paid','&lt;', 99)]}"
+                        name="print_final_allocation_letter"
+                        class="oe_stat_button" icon="fa-print"
+                        groups="property_sale.director,property_sale.officer,base.group_system"
+                    >
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Print Final</span>
+                            <span class="o_stat_text">Letter</span>
+                        </div>
+                    </button>
+                 </xpath>
+
+    
+                <xpath expr="//button[@name='action_confirm']" position="before">
+                    <button name="confirm_offer" string="Approve" confirm="Are you sure you want to confirm"
+                        class="oe_highlight" type="object" groups="property_sale.director,property_sale.officer,base.group_system"
+                        attrs="{'invisible': ['|',('sale_type','!=','property'),('sale_status','!=','Draft')]}"
+                    />
+                    
+                    <button name="Register_Payment" string="Register Payment"
+                    type="object" class="oe_highlight" groups="property_sale.director,property_sale.officer,base.group_system"
+                    attrs="{'invisible': ['|', ('sale_status','in',['Draft']), ('percentage_paid','&gt;=', 100)]}"/>
+ 
+
+                    <button name="print_receipt" string="Print Receipt"
+                    type="object" groups="property_sale.director,property_sale.officer,base.group_system"
+                    attrs="{'invisible':  ['|', ('sale_type','!=','property'),('percentage_paid','&lt;', 1)]}"/>
+
+                    <button name="cancel_expired_allocation" string="Cancel Allocation" confirm="Are you sure you want to confirm"
+                    type="object" groups="property_sale.director,property_sale.officer,base.group_system"
+                    attrs="{'invisible': ['|',('sale_type','!=','property'),('sale_status','in',['Draft', 'Allocated', 'Cancel'])]}"/>
+                </xpath>
+
+                <!-- <xpath expr="//button[@name='action_cancel']" position="before">
+                    <button type="object"
+                        attrs="{'invisible': ['|', ('sale_type','!=','property'),('sale_status','!=','Sold')]}"
+                        name="edit_offer_letter" string="Edit Offer Letter"
+                        class="oe_stat_button" icon="fa-edit"
+                        groups="property_sale.director,property_sale.officer,base.group_system"
+                    />
+                     
+                     
+                    <button type="object"
+                        attrs="{'invisible': ['|', ('sale_type','!=','property'),('percentage_paid','&lt;', 99)]}"
+                        name="print_final_allocation_letter" string="Final Letter"
+                        class="oe_stat_button" icon="fa-print"
+                        groups="property_sale.director,property_sale.officer,base.group_system"
+                    />
+                </xpath>  -->
+                </field>
+            </record>
+
+            
+            <!-- <record model="ir.ui.view" id="view_sales_order_filter">
+                <field name="name">sale.order.filter_inherited</field>
+                <field name="model">sale.order</field>
+                <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//group[1]/filter[3]" position="after">
+                        <filter string="Project" domain="[]" context="{'group_by':'location_project'}"/>
+                    </xpath>
+                    <xpath expr="//filter[1]" position="before">
+                        <separator/>
+                            <filter string="Project" domain="[]" context="{'group_by':'location_project'}"/>
+                            <filter string="Type(Property Sales)" name="sale_type" domain="[('sale_type','=','property')]" context="{'group_by':'sale_type'}"/>
+                            <field name="buildingtype_id" invisible="0"/>
+                            <field name="offer_price" invisible="0"/>
+                            <field name="discounts" invisible="0"/>
+                        <separator/>
+                    </xpath>
+                </field>
+            </record> -->
+            <record id="view_sales_order_property_list" model="ir.ui.view">
+                <field name="name">sale.order.list.select</field>
+                <field name="model">sale.order</field>
+                <field name="inherit_id" ref="sale.view_order_tree"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="phone_number"/>
+                        <field name = "location_project"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='amount_total']" position="before">
+                        <field name="buildingtype_id" invisible="0"/>
+                        <field name="offer_price" invisible="0"/>
+                        <field name="discounts" invisible="0"/>
+
+                    </xpath>
+
+                    <xpath expr="//field[@name='amount_total']" position="after">
+                        <field name="outstanding"/>
+
+                    </xpath>
+
+                    <xpath expr="//field[@name='name']" position="attributes">
+                        <attribute name="string">Offer Number</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='amount_total']" position="attributes">
+                        <attribute name="string">Total Amount</attribute>
+                    </xpath>
+
+                </field>
+            </record>
+
+            <record id="action_orders_property" model="ir.actions.act_window">
+                <field name="name">Offer Letter</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">sale.order</field>
+                <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+                <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+                <field name="context">{'default_sale_type': 'property', 'search_sale_type': 1}</field>
+                <field name="domain">[('sale_type', '=', 'property')]</field>
+                <field name="help" type="html">
+                    <p class="oe_view_nocontent_create">
+                        Create a Property Sales, the first step of a new sale.
+                    </p><p>
+                        Once the quotation is confirmed, it becomes a sales order.
+                        You'll be able to invoice it and collect payments.
+                        From the <i>Sales Orders</i> menu, you can track
+                        orders or services.
+                    </p>
+                </field>
+            </record>
+
+            <record id="action_orders_property" model="ir.actions.act_window">
+                <field name="name">Offer Letter</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">sale.order</field>
+                <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+                <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+                <field name="context">{'default_sale_type': 'property', 'search_sale_type': 1}</field>
+                <field name="domain">[('sale_type', '=', 'property')]</field>
+                <field name="help" type="html">
+                    <p class="oe_view_nocontent_create">
+                        Create a Property Sales, the first step of a new sale.
+                    </p><p>
+                        Once the quotation is confirmed, it becomes a sales order.
+                        You'll be able to invoice it and collect payments.
+                        From the <i>Sales Orders</i> menu, you can track
+                        orders or services.
+                    </p>
+                </field>
+            </record>
+        <menuitem action="action_orders_property" name="Manage Offers"
+            id="menu_manage_offers_property_sale" parent="menu_sub_property_sale"
+            sequence="1" groups="property_sale.director,property_sale.officer,base.group_system"/>
+    </data>
+</odoo>

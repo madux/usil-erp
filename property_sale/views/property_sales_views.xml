@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="project_configs_form_view" model="ir.ui.view">
+            <field name="name">project.configs</field>
+            <field name="model">project.configs</field>
+            <field name="arch" type="xml">
+                <form string="Project Configuration">
+                    <header>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" required="1" placeholder="e.g. Lake view Estate"/>
+                            <field name="address" string="Location" placeholder="e.g. Newyork" required="1"/>
+                            <field name="phase" required="0" placeholder="e.g. Phase 1"/>
+                            <field name="payment_term_id" required="1"/>
+                            <field name="project_site" required="0"/>
+
+                        </group>
+                         <group>
+                            <field name="total_unit" readonly="1"/>
+                            <!--<field name="total_sold" readonly="1"/>
+                            <field name="total_remain" readonly="1"/> -->
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name="unit_line_page" string="Units">
+                            <field name="unit_line" readonly="1" context="{'default_location_project': active_id}">
+                                <p style="color: red;">* Project Units</p>
+                                <tree string="Units">
+                                    <field name="name"/>
+                                    <field name="list_price"/>
+                                    <field name="location_project"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_configs_tree_view">
+            <field name="name">Project Configs</field>
+            <field name="model">project.configs</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Project">
+                     <field name="name" required="1"/>
+                    <field name="total_unit" readonly="1" invisible="1" string="Total Building Type"/>
+                    <field name="total_sold" readonly="1" invisible="1"/>
+                    <field name="total_remain" readonly="1" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_property_project_configs" model="ir.actions.act_window">
+            <field name="name">Project Configs</field>
+            <field name="res_model">project.configs</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="project_configs_tree_view"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a Project
+                </p>
+                <p>
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_property_change_qty">
+            <field name="name">Quantity</field>
+            <field name="res_model">stock.change.product.qty</field>
+            <field name="context">{'default_product_id': product_id, 'default_new_quantity': qty_available}</field>
+             <field name="view_mode">tree,form,pivot,graph</field>
+             <field name="target">new</field>
+        </record>
+
+        <record id ="building_type_form_view" model ="ir.ui.view">
+            <field name="name">Building Record</field>
+            <field name="model">building.type</field>
+            <field eval="1" name="priority"/>
+            <field name ="arch" type="xml">
+                <form string="Building">
+                <header>
+                    <button name="validate_building" id="validate_building" string="Validate" icon="fa-forward" attrs="{'invisible':[('state','not in',['draft'])]}" type="object" class="oe_highlight fwm"/>
+                    <button name="validate_reserved_building" id="validat_reserve_building" string="Confirm reserved" attrs="{'invisible':[('state','in',['draft'])]}" type="object" class="oe_highlight fwm"/>
+                    <button name="unvalidate_reserved_building" id="unvalidat_reserve_building" string="Deduct From reserved" attrs="{'invisible':['|', ('state','not in',['validate']), ('reserved_units_stored', '&lt;', 1)]}" type="object" class="oe_highlight fwm"/>
+                    <button name="generate_house_number" id="generate_house_number_button_id" string="Generate house number" attrs="{'invisible':[('state','in',['draft'])]}" type="object" class="btn_primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validate"/>
+                </header>
+                    <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                            <h1 style="color:Tomato;">
+                                <field name="name" required="1" placeholder="e.g. Description"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="location_project" required="1"/>
+
+                                <field name="product_id" readonly="1"/>
+                                <field name="default_code" readonly="1"/>
+                                <field name="allocation_buildingtype" readonly="1"/>
+                                <field name="units" required="1" string="Available Units"/>
+                                <field name="prefix" required="1"/>
+                                <field name="total_units"/>
+                                <field name="last_gen_no" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="list_price" required="1" string="Sales Price per unit"/>
+                                 <field name="count_sold"/>
+                                <field name="count_unsold"/>
+                                <field name="reserved_units_stored"/>
+                                <field name="reserved_units" string="Enter Reserve Units"/>
+                                <field name="deduct_reserve"/>
+                                <field name="expected_sold_amount" invisible="0"/>
+                                <field name="expected_paid_amount" invisible="0"/>
+                                <field name="expected_outstandings_amount" invisible="0"/>
+                                <field name="expected_capital_amount" invisible="0"/>
+                                <field name="expected_unsold_amount" invisible="0"/>
+                                <!-- <field name="expected_revenue_amount" invisible="0"/> -->
+                                <field name="cost_of_available" invisible="0"/>
+                                <field name="expected_diff_amount" invisible="0"/>
+
+                            </group>
+                             <group>
+                                <div>
+                                    <button name="validate_building"
+                                    type="object"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':[('state','not in',['draft'])]}"
+                                    icon="fa-pencil-square-o" string="Validate">
+                                    </button>
+                                </div>
+                            </group>
+                            <notebook colspan="4">
+                                <page name="building_sale_line_page" string="Units Lines">
+                                    <field name="building_sale_line" readonly="1" context="{'default_location_project': location_project,
+                                    'default_product_id': product_id}">
+                                        <p style="color: red;">* Project Units</p>
+                                        <tree string="Units">
+                                            <field name="name"/>
+                                            <field name="building_type"/>
+                                            <field name="house_number"/>
+                                            <field name="list_price"/>
+                                            <field name="customer_id" string = "Allocated To"/>
+                                            <field name="customer_reallocate" string = "DeAllocated To"/>
+
+                                            <field name="sales_team" string="Sales Team"/>
+                                            <field name="purchase_date" string="Purchase Date"/>
+                                            <field name="location_project" invisible="1"/>
+
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                            <field colspan="4" name="description" placeholder="Add a description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="property_building_type_search_viewx">
+            <field name="name">property.buiding.type.search</field>
+            <field name="model">building.type</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <search string="Property Types">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+                    <field name="default_code"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter name ="project_type_grp" string='Project' domain="[]" context="{'group_by' : 'location_project'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="building_type_line_tree">
+            <field name="name">Property Types</field>
+            <field name="model">building.type</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Property Types">
+                    <field name="name"/>
+                    <field name="default_code" readonly="1"/>
+                    <field name="location_project"/>
+                    <field name="list_price" sum="Total"/>
+                    <field name="reference" invisible="1"/>
+                    <field name="reserved_units_stored"/>
+		            <field name="total_units" sum="Total" invisible="0"/>
+                    <field name="count_sold" sum="Total" invisible="0"/>
+                    <field name="count_unsold" sum="Total" invisible="0"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_building_type_graph">
+            <field name="name">building.type.graph</field>
+            <field name="model">building.type</field>
+            <field name="arch" type="xml">
+                <graph string="Units" sample="1">
+                    <field name="location_project"/>
+                    <field name="expected_sold_amount" type="measure"/>
+                    <field name="expected_capital_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_building_type_pivot">
+            <field name="name">building.type.pivot</field>
+            <field name="model">building.type</field>
+            <field name="arch" type="xml">
+                <pivot string="Report" display_quantity="false">
+                    <field name="location_project" type="row"/>
+                    <field name="name" type="row"/>
+                    <field name="total_units" type="measure"/>
+                    <field name="units" type="measure" string="Available Unit(s)"/>
+                    <field name="count_sold" type="measure"/>
+                    <field name="count_unsold" type="measure"/>
+                    <field name="reserved_units_stored" type="measure"/>
+                    <field name="overall_amount" type="measure"/>
+                    <field name="cost_of_available" type="measure"/>
+                    <field name="expected_sold_amount" type="measure"/>
+                    <field name="expected_unsold_amount" type="measure"/>
+                    <field name="expected_paid_amount" type="measure"/>
+                    <field name="expected_outstandings_amount" type="measure"/>
+                    <field name="expected_diff_amount" type="measure"/>
+                    <field name="expected_capital_amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id ="building_model_form_view_3" model ="ir.ui.view">
+            <field name="name">Building Record</field>
+            <field name="model">building.type.model</field>
+            <field eval="1" name="priority"/>
+            <field name ="arch" type="xml">
+                <form string="Building">
+                <header>
+                    <button name="validate_building" id="validate_building" string="Validate" icon="fa-forward" invisible="1"/>
+                    <!-- attrs="{'invisible':[('state','not in',['draft'])]}" type="object" class="oe_highlight fwm"/> -->
+                    <!-- <button name="action_property_change_qty" id="update_product_qty"
+                    confirm="Please Check the Available Units Before updating.!" type="object" string="Update Units" icon="fa-forward" attrs="{'invisible':[('state','in',['draft'])]}" class="oe_highlight fwm"/> -->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validate"/>
+                </header>
+                    <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                            <h1 style="color:Tomato;">
+                                <field name="name" required="1" placeholder="e.g. Description"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="location_project"/>
+                                <field name="building_type" invisible="1" string="Building Type" required="0"/>
+                                <field name="customer_id" readonly="0"/>
+                                <field name="house_number"/>
+                                <field name="reserved"/>
+
+                                <field name="mark_sold"/>
+                            </group>
+                            <group>
+                               <field name="purchase_date" />
+                               <field name="default_code" readonly="1"/>
+                                <field name="property_sale_order_id" readonly="1"/>
+                                <field name="list_price" string="Sales Price"/>
+                                <field name="discount"/>
+                                <field name="sales_team"/>
+                                <field name="reallocate" invisible="1"/>
+                                <field name="customer_reallocate" readonly="1" string="Reallocated To"
+                                attrs="{'invisible':[('reallocate','!=',True)]}" options="{&quot;no_open&quot;: True,'no_quick_create':False,'no_create_edit':True,'limit': 1}"/>
+                                <field name="reallocation_date" attrs="{'invisible':[('reallocate','!=',True)]}" string="Reallocation Date"/>
+                                <field name="count_sold" invisible="1"/>
+                                <field name="count_unsold" invisible="1"/>
+                            </group>
+                            <field colspan="4" name="description" placeholder="Add a description..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_building_type_search_filter" model="ir.ui.view">
+			<field name="name">Buildingtype</field>
+			<field name="model">building.type.model</field>
+			<field name="arch" type="xml">
+				<search string="Search modules">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+                    <field name="default_code"/>
+                    <field name="customer_id"/>
+                    <field name="house_number" filter_domain="[('house_number','ilike',self)]" string="House #"/>
+                    <filter name="reservd" string='Reserved' domain="[('reserved','=', True)]"/>
+                    <filter name="sold" string='Sold' domain="[('mark_sold','=', True)]"/>
+                    <separator/>
+                    <filter name="today_grp" string="Today"
+                    domain="[('purchase_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))),
+                    ('purchase_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]" />
+
+                    <filter string="Past Week" name="Past_Week"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-1)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Month" name="Past_Month"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-4)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Two Month" name="Past_TwoMonth"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-8)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Three Months" name="Past Month"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-12)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Year" name="Past_year"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-48)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter name ="project_type_grp" string='Project' domain="[]" context="{'group_by' : 'location_project'}"/>
+                        <filter name ="building_type_grp" string='Building Type' domain="[]" context="{'group_by' : 'building_type'}"/>
+                        <filter name ="monthly_sales_grp" string='Monthly Sales' domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-4)).strftime('%Y-%m-%d')),
+                            ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]" context="{'group_by' : 'purchase_date'}"/>
+                        <filter name ="weekly_grp" string='Weekly Sales' domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-1)).strftime('%Y-%m-%d')),
+                            ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]" context="{'group_by' : 'purchase_date'}"/>
+                        <filter name ="sale_teams_grp" string='Sales Team' domain="[]" context="{'group_by' : 'sales_team'}"/>
+                        <filter name ="house_number_grp" string='House Number' domain="[]" context="{'group_by' : 'house_number'}"/>
+                        <filter name ="reserved_grp" string='Reserved' domain="[('reserved','=', True)]" context="{'group_by' : 'reserved'}"/>
+                        <filter name ="sold_grp" string='Sold' domain="[('mark_sold','=', True)]" context="{'group_by' : 'mark_sold'}"/>
+                        <filter name ="unsold_grp" string='UnSold' domain="[('mark_sold','=', False)]" context="{'group_by' : 'mark_sold'}"/>
+                        <filter name ="remaining_grp" string='Remaining Unit(s)' domain="[('mark_sold','=', False)]" context="{'group_by' : 'mark_sold'}"/>
+                        <filter name ="totalUnit_grp" string='Total Unit(s)' domain="[]" context="{'group_by' : 'mark_sold'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="building_type" string="Categories" enable_counters="1"/>
+                    </searchpanel>
+               </search>
+			</field>
+		</record>
+
+        <record id="view_building_type_search_filter" model="ir.ui.view">
+            <field name="name">Buildingtype</field>
+            <field name="model">building.type.model</field>
+            <field name="arch" type="xml">
+                <search string="building Types">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+                    <field name="building_type" operator="child_of"/>
+                    <field name="default_code"/>
+                    <field name="customer_id"/>
+                    <field name="house_number" filter_domain="[('house_number','ilike',self)]" string="House #"/>
+                    <separator string="Sales"/>
+                     <filter  name="building_type_filter_1" string='Reserved' domain="[('reserved','=', True)]"/>
+                     <filter name="building_type_filter_2" string='Sold' domain="[('mark_sold','=', True)]"/>
+                     <filter name="building_type_filter_3" string='UnSold' domain="[('mark_sold','=', False)]"/>
+                    <separator/>
+                    <filter name="today_grp" string="Today"
+                    domain="[('purchase_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))),
+                    ('purchase_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]" />
+
+                    <filter string="Past Week" name="Past_Week"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-1)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Month" name="Past_Month"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-4)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Two Month" name="Past_TwoMonth"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-8)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Three Months" name="Past Month"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-12)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                    <filter string="Past Year" name="Past_year"
+                    domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-48)).strftime('%Y-%m-%d')),
+                     ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter name ="project_type_grp" string='Project' domain="[]" context="{'group_by' : 'location_project'}"/>
+                        <filter name ="building_type_grp" string='Building Type' domain="[]" context="{'group_by' : 'building_type'}"/>
+                        <filter name ="building_type_monthlysale" string='Monthly Sales' domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-4)).strftime('%Y-%m-%d')),
+                            ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]" context="{'group_by' : 'purchase_date'}"/>
+                        <filter name="building_type_filter_weeksale" string='Weekly Sales' domain="[('purchase_date','&gt;',(context_today()+relativedelta(weeks=-1)).strftime('%Y-%m-%d')),
+                            ('purchase_date','&lt;=',context_today().strftime('%Y-%m-%d'))]" context="{'group_by' : 'purchase_date'}"/>
+                        <filter name="building_type_filter_saleteam" string='Sales Team' domain="[]" context="{'group_by' : 'sales_team'}"/>
+                        <filter name="building_type_filter_housenumber" string='House Number' domain="[]" context="{'group_by' : 'house_number'}"/>
+                        <filter name="building_type_filter_reserved" string='Reserved' domain="[('reserved','=', True)]" context="{'group_by' : 'reserved'}"/>
+                        <filter name="building_type_filter_sold" string='Sold' domain="[('mark_sold','=', True)]" context="{'group_by' : 'mark_sold'}"/>
+                        <filter name="building_type_filter_unsold" string='UnSold' domain="[('mark_sold','=', False)]" context="{'group_by' : 'mark_sold'}"/>
+                        <filter name="building_type_filter_marksold" string='Remaining Unit(s)' domain="[('mark_sold','=', False)]" context="{'group_by' : 'mark_sold'}"/>
+                        <filter name="building_type_filter_totalunits" string='Total Unit(s)' domain="[]" context="{'group_by' : 'mark_sold'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="property_products_treex">
+            <field name="name">Property Types</field>
+            <field name="model">building.type.model</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Property Types">
+                    <field name="name"/>
+                    <field name="default_code" readonly="1"/>
+                    <field name="building_type"/>
+                    <field name="location_project"/>
+                    <field name="list_price" sum="Total"/>
+                    <field name="discount" sum="Total"/>
+                    <field name="customer_id" string="Allocated To"/>
+                    <field name="customer_reallocate" string="Reallocated To"/>
+                    <!-- attrs="{'column_invisible': [('reallocate', '=', True)]}"/>  -->
+                    <field name="purchase_date"/>
+                    <field name="reference"/>
+                    <field name="house_number"/>
+                    <field name="mark_sold"/>
+                    <field name="reserved"/>
+                    <field name="count_sold" sum="Total" invisible="0"/>
+                    <field name="count_unsold" sum="Total" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_building_type_model_graph">
+            <field name="name">buildingtypemodelgraph</field>
+            <field name="model">building.type.model</field>
+            <field name="arch" type="xml">
+                <graph string="Units">
+                    <field name="location_project"/>
+                    <field name="building_type" type="row"/>
+                     <field name="list_price" string="Units" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_building_type_model_pivot">
+            <field name="name">building.type.model.pivot</field>
+            <field name="model">building.type.model</field>
+            <field name="arch" type="xml">
+                <pivot string="Units" display_quantity="false">
+                    <field name="location_project" type="row"/>
+                    <field name="list_price" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <menuitem name="Property"
+            id="menu_property_sorder"
+            sequence="1" groups="property_sale.director,property_sale.officer,base.group_system"/>
+ <!-- parent="sales_team.menu_sales" -->
+
+            <menuitem name="Property Sales"
+                id="menu_sub_property_sale" parent="menu_property_sorder"
+                sequence="1" groups="property_sale.director,property_sale.officer,base.group_system"/>
+                
+            <!-- MENU ITEM FOR SALES ORDER -->
+            <menuitem name="Configuration &amp; Settings"
+                id="menu_property_sconfiguration" parent="menu_property_sorder"
+                sequence="200" groups="property_sale.director,base.group_system"/>
+
+                <menuitem action="account.action_payment_term_form" name="Payment Terms"
+                    id="menu_property_payment_term" parent="menu_property_sconfiguration"
+                    sequence="2" groups="property_sale.director,base.group_system"/>
+
+                <menuitem action="action_property_project_configs" name="Project"
+                    id="menu_property_project_config_main" parent="menu_property_sconfiguration"
+                    sequence="4" groups="property_sale.director,base.group_system"/>
+
+        <record model="ir.actions.act_window" id="action_property_buildingunitline">
+            <field name="name">Property Types</field>
+            <field name="res_model">building.type.model</field>
+            <field name="type">ir.actions.act_window</field>
+           <field name="domain">[('is_house','=',True)]</field>
+            <field name="context">{'search_default_project_type_grp': 1, 'search_default_building_type_grp': 1}</field>
+            <field name="search_view_id" ref="view_building_type_search_filter"/>
+             <field name="view_mode">tree,form,pivot,graph</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_property_buildingtype">
+            <field name="name">Property Types</field>
+            <field name="res_model">building.type</field>
+            <field name="domain">[('is_house','=',True)]</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="context">{'search_default_project_type_grp': 1}</field>
+            <field name="search_view_id" ref="property_building_type_search_viewx"/>
+             <field name="view_mode">tree,form,pivot,graph</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_property_buildingtype_report">
+            <field name="name">Property Reports</field>
+            <field name="res_model">building.type</field>
+            <field name="type">ir.actions.act_window</field>
+           <field name="domain">[('is_house','=',True)]</field>
+            <field name="context">{'search_default_project_type_grp': 1}</field>
+            <field name="search_view_id" ref="property_building_type_search_viewx"/>
+             <field name="view_mode">pivot,graph</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_property_sold_buildingtype">
+            <field name="name">Property Types</field>
+            <field name="res_model">building.type.model</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="domain">[('mark_sold','=',True)]</field>
+            <field name="context">{'search_default_project_type_grp': 1, 'search_default_building_type_grp': 1}</field>
+            <field name="search_view_id" ref="view_building_type_search_filter"/>
+             <field name="view_mode">tree,form,pivot,graph</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_property_reserved_buildingtype">
+            <field name="name">Reserved Building Types</field>
+            <field name="res_model">building.type.model</field>
+            <field name="type">ir.actions.act_window</field>
+           <field name="domain">[('reserved','=',True)]</field>
+            <field name="context">{'search_default_project_type_grp': 1, 'search_default_building_type_grp': 1}</field>
+            <field name="search_view_id" ref="view_building_type_search_filter"/>
+             <field name="view_mode">tree,form,pivot,graph</field>
+        </record>
+        <record id="action_property_draft_buildingtype" model="ir.actions.act_window">
+            <field name="name">Property Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">building.type.model</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="search_view_id" ref="view_building_type_search_filter"/>
+            <field name="context">{'search_default_project_type_grp': 1, 'search_default_building_type_grp': 1}</field>
+            <field name="domain">[('state','=',True)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new record!
+                </p> 
+            </field>
+        </record>
+
+         <menuitem name="Building"
+            id="menu_property_building_type_products" parent="property_sale.menu_property_sconfiguration"
+            sequence="5" action="action_property_buildingtype" groups="property_sale.director,base.group_system"/>
+
+        <menuitem name="Unit Lines"
+            id="menu_property_products_main" parent="property_sale.menu_property_sconfiguration"
+            sequence="6" action="action_property_buildingunitline" groups="property_sale.director,base.group_system"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,260 @@
+<odoo>
+    <data>
+    <template id="analysis_template">              
+        <t t-call="website.layout">
+        
+            <head>
+                <title>Property Sale Report</title>               
+            </head>
+       
+            <body> 
+
+                <div class="container">   
+                    <div class="page">
+                        <link rel="stylesheet" href="/property_sale/static/src/css/property_sale.scss"/>
+                        <!-- <div class="row">
+                            <canvas id="line-chart" width="200" height="50"/>
+                        </div> -->
+                        
+                        
+                      <div class="row mt-5 mb-5">
+                          <div class="col-md-9">
+                              <h5>
+                                  Urban shelter Infrastructure Limited Report Analysis.
+                              </h5>
+                              <p>Kindly ensure you have enough data to visualize.</p>
+                          </div>
+                          <div class="col-md-3 feedback-button text-center">
+                              <h5>Want to know more?</h5>
+                              <a class="btn-primary block mt-2 text-center" href="#feedback">GET IN TOUCH</a>
+                          </div>
+                      </div>
+                      
+                      <div class="row mt-5 mb-5">
+                        
+                        <div class="col-md-4">
+                            <select id="sales_by_analysis_select" class="form-control o_website_form_input" name="sales_by_analysis">
+                                <option id="1">Project</option>
+                                <option id="2">Customer</option>
+                                <option id="3">Sales Person</option>
+                                             
+                            </select>
+                        </div>
+                        
+                         <div class="col-md-2">
+                                         
+                            <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                
+                                <input type="text" class="form-control datetimepicker-input o_website_form_input" id="datepicker1" data-target="#datepicker1" name="Date From"/>
+                                <div class="input-group-append" data-target="#datepicker2" data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar" id="" data-original-title="" title="" aria-describedby="tooltip118921"/>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                                         
+                            <div class="o_website_form_date input-group date" id="datepicker2div" data-target-input="nearest">
+                                 
+                                <input type="text" class="form-control datetimepicker-input o_website_form_input" id="datepicker1" data-target="#datepicker1" name="Date From"/>
+                                <div class="input-group-append" data-target="#datepicker2" data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar" id="" data-original-title="" title="" aria-describedby="tooltip118921"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      
+                       
+                        
+                   
+                        <div class="grider">
+                            <div name="bar_graph" class="bar_graph"> 
+                                <a class="btn-primary block mt-2 text-center" href="#feedback">Bar Graph</a>
+                                <canvas id="bar-chart2" width="200" height="80"/><p/>
+                            </div><p/>
+                            <div name="line_graph" class="line_graph">  
+                            <a class="btn-primary block mt-2 text-center" href="#feedback">Line Graph</a>
+                                 <canvas id="line-chart" width="200" height="50"/><p/>
+                            </div><p/>
+                            <div name="pie_graph" class="pie_graph mb-3"> 
+                            <a class="btn-primary block mt-2 text-center" href="#feedback">Pie Graph</a>
+                                <canvas id="pie-chart" width="200" height="100"/> 
+                            </div> 
+                            <div name="donut_graph" class="donut_graph mb-3"> 
+                             <a class="btn-primary block mt-2 text-center" href="#feedback">Donut Graph</a>
+                                <canvas id="donut-chart" width="200" height="100"/> 
+                            </div> 
+                            
+                            <div name="bar_horizon_graph" class="bar_horizon_graph">
+                                <a class="btn-primary block mt-2 text-center" href="#feedback">Horizon Graph</a>
+                               <canvas id="hori-chart" width="200" height="50"/>
+                            </div>
+                        </div>
+                    </div> 
+                </div> 
+
+                 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"/>
+                <script>
+                    var x_axis = <t t-esc="measure_horizontal"/>;
+                    var y_axis = <t t-esc="measure_vertical"/>;
+
+                    new Chart(document.getElementById("bar-chart2"), {
+                    type: 'bar',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Report",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("donut-chart"), {
+                    type: 'doughnut',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });
+                    
+                    new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    }); 
+                    
+                    new Chart(document.getElementById("pie-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: x_axis,
+                        datasets: [{ 
+                            data: y_axis,
+                            label: "Actual Curve",
+                            borderColor: "#000000",
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)',
+                                            'rgba(75, 192, 192, 0.2)',
+                                            'rgba(153, 102, 255, 0.2)',
+                                            'rgba(255, 159, 64, 0.2)'
+                                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            fill: true,
+                        }                      
+                        ]
+                    },
+
+                    options: {
+                        title: {
+                        display: false,
+                        text: 'Number of Sales made'
+                        }
+                    }
+                    });             
+                </script>
+                                          
+            </body>
+        </t>
+    </template>
+
+     
+    </data>
+</odoo> 

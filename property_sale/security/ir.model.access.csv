@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_id_sale_order,access_name_sale_order,sale.model_sale_order,,1,1,1,1
+access_id_project_configs,access_name_project_configs,model_project_configs,,1,1,1,1
+access_id_building_type_model,access_name_building_type,model_building_type_model,base.group_user,1,1,1,1
+access_id_building_type,access_name_building_type,model_building_type,,1,1,1,1
+access_id_house_payment_breakdown,access_name_house_payment_breakdown,model_house_payment_breakdown,,1,1,1,1
+access_id_property_account_payment,access_name_account_payment,account.model_account_payment,,1,1,1,1
+access_id_report_xml,access_name_report_xml,base.model_ir_actions_report,,1,1,1,1
+access_id_sale_deallocation,access_name_sale_deallocation,model_sale_deallocation,,1,1,1,1

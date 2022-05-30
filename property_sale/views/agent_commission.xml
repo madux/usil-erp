@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+
+        <record id="payagent_form" model="ir.ui.view">
+            <field name="name">pay.agent.form</field>
+            <field name="model">pay.agent2</field>
+            <field name="arch" type="xml">
+                <form string="Commission Payment">
+                <header>
+                    <button name="send_to_GM" states="draft" string="Submit to GM" type="object" class="btn-primary"/>
+                    <button name="send_GM_to_account" states="gm" string="Send to Account" type="object" class="btn-primary" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+                    <button name="send_account_to_MD" states="account" string="Send to MD" type="object" class="btn-primary"  groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+                    <button name="Send_MD_to_post" states="md" string="Approve for Payment " type="object" class="btn-primary"  groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+
+                    <button name="Send_Account_to_Pay" states="post" string="Validate Payment" type="object" class="btn-primary" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+                    <button name="setdraft" string="Set to Draft" states="cancel" type="object" class="btn-primary"/>
+                    <button name="cancel" states="gm,md" string="Cancel" type="object" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,gm,account,md,post" /><!--statusbar_visible="draft,reported,done,refused"-->
+
+                </header>
+                <sheet>
+                 <div class="oe_title">
+                        <h1>
+                            <field name="agent_name" required="1" readonly="0"/>
+                        </h1>
+                </div>
+                        <group>
+                            <separator string="Agent Commission" colspan="4"/>
+                            <group>
+                                <field name="branch_id" required="0"/>
+                                <field name="user" required="0"/>
+                                <field name="payment_invoice" required="1"/>
+                                <field name="house_num" required="1"/>
+                                <field name="project" required="1"/>
+                                <field name="offer_amount" required="1"/>
+                                <field name="discount" required="0"/>
+                            </group>
+                            <group>
+                                <field name="unit" required="1"/>
+                                <field name="agent_commission" required="1"/>
+                                <field name="vat_amount" required="1"/>
+                                <field name="payment_method" required="1"/>
+                                <field name="advance_account" required="1"/>
+                                <field name="date" required="1"/>
+                                <field name="users_followers" required="1" widget="many2many_tags"/>
+                                <field name="commission_amount" required="1"/>
+                            </group>
+
+                        </group>
+                        <notebook>
+                        <page string="Payment History">
+
+                        <separator string="Payment History" colspan="4"/>
+                        <field name="payment_history_plot">
+                            <tree>
+                                <field name="communication"/>
+                                <field name="partner_id"/>
+                                <field name="amount"/>
+                                <field name="journal_id"/>
+                                <field name="payment_method_id"/>
+                            </tree>
+                        </field>
+                        </page>
+                        </notebook>
+
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+         <record model="ir.ui.view" id="pay_agent_tree2">
+            <field name="name">pay.agent.tree2</field>
+            <field name="model">pay.agent2</field>
+            <field name="arch" type="xml">
+               <tree string="Agent Commission Lists">
+                    <field name="agent_name" readonly="0"/>
+                    <field name="branch_id" required="1"/>
+                    <field name="project" required="1"/>
+                    <field name="offer_amount" required="1"/>
+                    <field name="date" required="1"/>
+                    <field name="commission_amount" required="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <act_window id="agent_payment_actionx2"
+        name="Agent Commission Payment"
+        res_model="pay.agent2"
+        view_mode="tree,form"/>
+
+          <menuitem id="agent_main_menu_viewx2" name="Agent Commission Payment" parent="sales_team.menu_base_partner" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman" sequence = "30" action="agent_payment_actionx2"/>
+
+    </data>
+</odoo>

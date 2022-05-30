@@ -1,0 +1,122 @@
+
+
+.tag_filter {
+    width: 850px;
+    padding: 25px;
+    border: 1px solid black;
+    margin: 25px;
+}    
+.cols {
+   width: 160px;
+   float: left;
+   margin-right: 10px;
+}
+
+.button-summary {
+    background-color: #698cd8;
+    border: none;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 1px 1px;
+  }
+
+.buttonradius {
+    border-radius: 12px;
+}
+ 
+
+.grider {
+    display: grid;
+    grid-template-columns: 1fr 500px 500px 1fr;
+    grid-template-rows: 1fr 500px 500px 1fr;
+    grid-template-areas: 
+    ". bar_graph bar_graph"
+    ". pie_graph donut_graph"
+    ". line_graph line_graph"
+    ". bar_horizon_graph bar_horizon_graph";
+
+}
+.bar_graph {
+    grid-area: bar_graph;
+}
+.pie_graph {
+    grid-area: pie_graph;
+    margin-bottom: 30px;
+}
+
+.donut_graph {
+    grid-area: donut_graph;
+}
+.line_graph {
+    grid-area: line_graph;
+    
+}
+
+.bar_horizon_graph {
+    grid-area: bar_horizon_graph;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 500px, 500px, 1fr;
+    grid-template-rows: 1fr 500px 500px 1fr;
+    grid-template-areas: 
+    ". units-area-sold units-area-unsold" 
+    ". units-area-reserve ."
+    ". amount-area-sold amount-area-unsold"
+    ". amount-area-reserved amount-area-reserved";
+    grid-gap: 10px;
+}
+
+.units-area-sold {
+    grid-area: units-area
+}
+ 
+.units-area-unsold {
+    grid-area: units-area-unsold
+}
+
+.units-area-reserve {
+    grid-area: units-area-reserve
+}
+
+.amount-area-sold {
+    grid-area: amount-area-sold;
+}
+
+.amount-area-unsold {
+    grid-area: amount-area-unsold;
+}
+
+.amount-area-reserved {
+    grid-area: amount-area-reserved;
+}
+
+.amount-total-area {
+    grid-area: amount-total-area;
+}
+
+.testing-img {
+    width: 80%;
+    object-fit: contain;
+}
+
+.section-title {
+    font-weight: 600;
+    font-size: 2.4rem;
+    margin: 2rem auto 1rem;
+    color: #405352
+}
+
+.test-details {
+    font-weight: 200;
+    font-size: 1.4rem;
+    color: #405352;
+    margin: 1.5rem 0;
+    }
+
+
