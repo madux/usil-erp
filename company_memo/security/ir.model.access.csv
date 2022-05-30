@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_id_main_memo,access_name_main_memo,model_memo_model,,1,1,1,1
+access_id_memo_back,access_name_memo_back,model_memo_back,,1,1,1,1
+access_id_memo_foward,access_name_memo_foward,model_memo_foward,,1,1,1,1
+access_id_memo_account_main,access_name_account_main,account.model_account_payment,,1,1,1,1
+access_id_memo_users_id,access_name_all_users,base.model_res_users,,1,1,1,1
+access_report_memo_id,access_report_memo_name,base.model_ir_actions_report,,1,1,1,1
+access_main_memo_id,access_report_memo_name,base.model_ir_actions_report,,1,1,1,1
+mail.access_mail_mail_user,mail.mail.user,mail.model_mail_mail,base.group_user,1,1,1,0

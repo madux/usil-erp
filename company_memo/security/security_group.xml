@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="category_main_memo_app_group">
+           <field name="name">Main Memo</field>
+           <field name="description">Main Memo</field>
+           <field name="sequence">33</field>
+        </record>
+
+        <record id="mainmemo_officer" model="res.groups">
+            <field name="name">Memo User</field>
+            <field name="category_id" ref="category_main_memo_app_group"/>
+             <field name="users" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+	<record id="mainmemo_audit" model="res.groups">
+            <field name="name">Memo Auditor</field>
+            <field name="category_id" ref="category_main_memo_app_group"/>
+             <field name="users" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+
+        <record id="mainmemo_manager" model="res.groups">
+            <field name="name">Memo Manager</field>
+            <field name="category_id" ref="category_main_memo_app_group"/>
+            <field name="users" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+        <record id="mainmemo_account" model="res.groups">
+            <field name="name">Memo Account Manager</field>
+            <field name="category_id" ref="category_main_memo_app_group"/>
+            <field name="users" eval="[(4, ref('base.group_system'),ref('account.group_account_manager'))]"/>
+        </record>
+ 
+
+        <record id="memo_employee_see_own_rule33" model="ir.rule">
+            <field name="name">Memo to Enable All Employee Access to their records</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_manager'),ref('mainmemo_officer')])]"/>
+
+            <field name="domain_force">['|', '|', ('users_followers.user_id','in', [user.id]), ('employee_id.user_id.id','=', user.id), ('direct_employee_id.user_id.id','=', user.id)]</field>
+            <!-- <field name="groups" eval="[(4, [ref('group_memo_xx_emp'), ref('group_memo_xx_manager'),ref('group_memo_xx_direct'), ref('group_memo_xx_coo'),ref('group_memo_xx_ed'),ref('group_memo_xx_account')])]"/> -->
+            
+        </record>
+        <record id="account_memo_see_account_record" model="ir.rule">
+            <field name="name">Memo Account Users See Records in Account</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_account')])]"/>
+            <field name="domain_force"> ['|','|',('users_followers.user_id','in', [user.id]), ('direct_employee_id.user_id.id','=', user.id),('state','in', ['Approve'])]</field>
+        </record> 
+        
+	<record id="audit_see_done_records" model="ir.rule">
+            <field name="name">Memo Audit See Records in Done</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_audit')])]"/>
+            <field name="domain_force"> [('state','in', ['Done'])]</field>
+        </record> 
+	<!-- <record id="memo_user_see_own_rule" model="ir.rule">
+            <field name="name">Memo User See Own Record</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(4 , [ref('mainmemo_officer')])]"/>
+            <field name="domain_force">['|','|',('direct_employee_id.user_id.id','=', user.id),('employee_id.user_id.id','=', user.id),('users_followers.user_id','in', [user.id])]</field>
+        </record>
+
+        <record id="account_memo_see_account_record" model="ir.rule">
+            <field name="name">Memo Account Users See Records in Account</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_account')])]"/>
+            <field name="domain_force">['|','|',('direct_employee_id.user_id.id','=', user.id),('employee_id.user_id.id','=', user.id),('state','in',['Approve','Done', 'refuse'])]</field>
+        </record> 
+        <record id="memo_managers_see_all_record" model="ir.rule">
+            <field name="name">Memo Managers See all Records in except Draft</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_manager')])]"/>
+            <field name="domain_force">[('state','not in',['submit'])]</field>
+        </record>
+
+        <record id="memo_root_see_all_record" model="ir.rule">
+            <field name="name">Admin Users See All Memo Records</field>
+            <field name="model_id" ref="model_memo_model"/>
+            <field name="groups" eval="[(6, 0, [ref('base.group_system')])]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record> -->
+    </data>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <record id="memo_model_forward_wizard" model="ir.ui.view">
+            <field name="name">Memo forward</field>
+            <field name="model">memo.foward</field>
+            <field name="arch" type="xml">
+                <form string="Forward Memo">
+                    <group>
+                        <group>
+                            <field name="memo_record" readonly="1"/> 
+                            <field name="resp" readonly="1" invisible="0"/>
+                            <field name="direct_employee_id" string="To" required="1" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/> 
+                            <!-- <field name = "users_followers" widget="many2many_tags" required="0"/> -->
+
+                            <!-- <field name="amountfig"/> -->
+                            <field name="date"/>
+                        </group>
+                        <group> 
+                            
+                            <field name="description_two" required="0" placeholder="Please Add Comment ..." colspan="20"/>
+                        </group>
+                                
+                    <footer>
+                        <button name="forward_memo" type="object" string="Forward" class="oe_highlight"/>
+                        <!-- <button string="Cancel" class="oe_link" special="cancel"/> -->
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        
+    </data>
+</odoo>

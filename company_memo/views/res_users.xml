@@ -1,0 +1,15 @@
+<odoo>
+  <data>
+    <!-- <record id="res_users_memo_view_form" model="ir.ui.view">
+            <field name="name">base_view_users_memo_form_view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                   <field name="memo_oflag" readonly="0"/>
+                </xpath> 
+            </field>
+        </record> -->
+ 
+  </data>
+</odoo>

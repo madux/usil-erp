@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <record id="memo_model_backrefuse_wizard" model="ir.ui.view">
+            <field name="name">Memo Reject</field>
+            <field name="model">memo.back</field>
+            <field name="arch" type="xml">
+                <form String="Reason for Refusal">
+                    <group>
+                        <group>
+                            <field name="memo_record" readonly="1"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="resp" readonly="0" invisible="1"/>
+                            <field name="direct_employee_id" invisible="0" required ="1"/>
+                        </group>
+                            <field name="reason" required="1" placeholder="Please Add Reason(s) ..." colspan="20"/>
+                    <footer>
+                        <button name="post_refuse" type="object" string="Refuse" class="oe_highlight"/>
+                            <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

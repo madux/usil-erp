@@ -1,0 +1,130 @@
+<odoo>
+  <data> 
+    <report
+        id = "print_memo_model_report"
+        model= "memo.model"
+        string="Print Memo"
+        report_type = "qweb-pdf"
+        name ="company_memo.memomodel_print_template"
+        file ="company_memo.memomodel_print_template"
+        attachment_use="True"
+    />
+    <template id="memomodel_print_template">
+      <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <div class="header">
+              <div class="row">
+                <!-- <div class="col-xs-3" style="font-size: 9px;"> 
+                              <h3><b><span> Urban Shelther Limited</span></b></h3><br/>
+                                  <b><span t-esc="o.create_uid.company_id.street"/></b>,<br/><span t-esc="o.create_uid.company_id.street2"/><br/>
+                                  <b><span t-esc="o.create_uid.state_id.name"/></b>, <b><span t-esc="o.create_uid.country_id.name"/></b><br/>
+                                  <b><span t-esc="o.create_uid.company_id.website"/></b><br/>
+                </div> -->
+                <!-- <div class="col-xs-offset-2 text-right">
+                      
+                      <img t-if="o.create_uid.company_id.logo" style="max-height:80px;max-width:60px;" t-att-src="'data:image/png;base64,%s' %o.create_uid.company_id.logo"/>
+                </div> -->
+              
+                <!-- <div class="col-xs-offset-2 text-right">
+                  <img src="/company_memo/static/img/usl.png" style="max-height:250px;max-width:170px;"/>
+                </div>                -->
+              
+
+              </div>
+            </div>
+            <div class="page" style="padding-top: 100px;">
+              <style>
+                table {
+                  border-collapse: collapse;
+                  margin-bottom: 40px;
+                }
+
+                th {
+                  background-color: #333;
+                  color: #fff;
+                }
+
+                table, th, tr, td {
+                  border:1px solid #999;
+                  font-family: Trebuchet MS
+                }
+
+                tr:nth-child(odd){
+                  background-color: #ccc;
+                }
+
+                th, td{
+                  padding: 5px;
+                }
+
+                td:nth-child(4) {
+                  color: green;
+                }
+
+                .outstanding {
+                  color: red;
+                }
+              </style>
+                <p style="text-align: right; font-weight: bold; font-size: 18px;"><t t-esc="datetime.datetime.now().strftime('%B %d, %Y')" /></p>
+              <p style="text-align: right; font-weight: bold; font-size: 18px;">Memo Number: <t t-esc="o.code" /></p>
+              
+              <p style="text-align: left; font-weight: bold; font-size: 18px;"><b>Dear, </b> <span t-field="o.set_staff.name"/></p>
+              <br /><br />
+              <h4 style="font-weight: bold; text-align: center;font-size: 18px;"><u>Memo Notification For <span t-field="o.memo_type"/> </u></h4>
+              <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Memo Subject:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.name"/>
+              <p/>
+            
+              <t t-if="o.description">
+                  <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Description:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.description"/>
+                  <p/>
+              </t>
+
+              <t t-if="o.reason_back">
+                  <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Refusal Reason: </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.reason_back"/>
+                  <p/>
+              </t>
+
+              <t t-if="o.comments"> 
+                  <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Comments:  </strong><br/><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.comments"/><br/>
+              <p/>
+              </t>
+
+              <t t-if="o.memo_type=='Payment'">
+              <table style="width: 100%; text-align: left;">
+                  <tr>
+                      <th>VENDOR</th>
+                      <th>INVOICE REF</th>
+                      <th>DATE</th>
+                      <th>AMOUNT</th>
+                  </tr>
+                  <tr>
+                      <td><t t-esc="o.vendor_id.name"/></td>
+                      <td><t t-esc="o.invoice_id.name"/></td>
+                      <td><t t-esc="o.date" /></td>
+                      <td>N<t t-esc="'{0:,}'.format(float(o.amountfig))" /></td>
+                  </tr>
+              </table>  </t><br /><br />
+              <strong style="font-size: 13px;">Memo Followers:</strong><u/> <br />
+              <t t-foreach="o.users_followers" t-as="user">
+                  
+                <strong style="font-size: 13px;"><t t-esc="user.name" />,</strong><p/>
+              </t>
+              <!-- <div class="row">
+                  <div class="col-xs-3" style="font-size: 17px;">
+                      <strong>Signature: .....................</strong><br/>
+                      <strong>Sender</strong>
+                  </div>
+                  <div class="col-xs-4 pull-right mt8" name ="right_name" style="font-size: 17px;">
+                      <strong>Signature: .....................</strong><br/>
+                      <strong>Manager</strong>
+                  </div>
+              </div>  -->
+            </div>
+          </t>
+        </t>
+
+    </template>
+
+ 
+  </data>
+</odoo>
