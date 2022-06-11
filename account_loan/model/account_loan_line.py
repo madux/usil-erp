@@ -48,7 +48,7 @@ class AccountLoanLine(models.Model):
         required=True, readonly=True, help="Date when the payment will be accounted",
     )
     long_term_loan_account_id = fields.Many2one(
-        "account.account", readony=True, related="loan_id.long_term_loan_account_id",
+        "account.account", readonly=True, related="loan_id.long_term_loan_account_id",
     )
     currency_id = fields.Many2one("res.currency", related="loan_id.currency_id",)
     rate = fields.Float(required=True, readonly=True, digits=(8, 6),)
