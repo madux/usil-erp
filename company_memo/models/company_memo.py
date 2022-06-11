@@ -68,7 +68,7 @@ class Memo_Model(models.Model):
     compute="employee_department", readonly = True, store =True)
     description = fields.Char('Note')
     project_id = fields.Many2one('account.analytic.account', 'Project')
-    vendor_id = fields.Many2one('res.partner', 'Vendor', domain=[('supplier','=',True)])
+    vendor_id = fields.Many2one('res.partner', 'Vendor')
     amountfig = fields.Float('Budget Amount', store=True, default=1.0)
     description_two = fields.Text('Reasons')
     reason_back = fields.Char('Return Reason')
@@ -324,7 +324,7 @@ class Memo_Model(models.Model):
     def user_approve_memo(self): # Always available to Some specific groups
         if self.memo_type == "Internal":
             type = "loan request" if self.memo_type == "loan" else "memo"
-            body = "%s APPROVAL NOTIFICATION: -Approved By ;\n %s on %s" %(type.capitaize(), self.env.user.name, fields.Date.today())
+            body = "%s APPROVAL NOTIFICATION: -Approved By ;\n %s on %s" %(type.capitalize(), self.env.user.name, fields.Date.today())
             bodyx = "Dear {}, </br>I wish to notify you that a {} with description, '{}',\n \
                     from {} department have been approved by {}. Kindly review. </br> </br>Kindly {} </br>\
                     Yours Faithfully</br>{}".format(self.employee_id.name, type,

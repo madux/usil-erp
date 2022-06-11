@@ -37,15 +37,19 @@ class SaleDeallocation(models.Model):
                 rec.location_project = rec.property_sale_order_id.location_project.id
                 rec.customer_id = rec.property_sale_order_id.partner_id.id
                 
+                
     @api.depends('property_sale_order_id')
     def compute_lines(self):
         if self.property_sale_order_id:
             building_ids = self.env['building.type.model'].search([
                         ('reference', '=', self.property_sale_order_id.name)])
+                        
             if building_ids:
                 self.building_line = [(6, 0, [rex.id for rex in building_ids])]
             else:
                 self.building_line = False
+        else:
+            self.property_sale_order_idgit = False
 
     def action_forward_reallocation(self):
         self.state = "sent"
