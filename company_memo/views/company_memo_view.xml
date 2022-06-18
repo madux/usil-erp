@@ -82,10 +82,10 @@
                                   <field name="demo_staff" invisible="1"/>
                                 <field name="dept_ids" widget="selection" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" readonly="1"/>
                                 <field name="loan_type" attrs="{'invisible':[('memo_type','!=','loan')], 'required':[('memo_type','=','loan')]}"/>
-                                <field name="loan_amount" attrs="{'invisible':[('loan_type','=', False)],'required':[('memo_type','=','loan')]}"/>
-                                <field name="periods" attrs="{'invisible':[('loan_amount','=', False)],'required':[('memo_type','=','loan')]}"/>
+                                <field name="loan_amount" attrs="{'invisible':[('memo_type','!=','loan')],'required':[('memo_type','=','loan')]}"/>
+                                <field name="periods" attrs="{'invisible':[('memo_type','!=','loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="method_period" attrs="{'invisible':[('method_period','=', False)],'required':[('memo_type','=','loan')]}"/>
-                                <field name="start_date" attrs="{'invisible':[('loan_type','=', 'loan')],'required':[('memo_type','=','loan')]}"/>
+                                <field name="start_date" attrs="{'invisible':[('memo_type','!=', 'loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="invoice_id" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>
                                 <field name="vendor_id" string="Vendor" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>

@@ -13,10 +13,8 @@
                     type="object" class="oe_highlight fwm"/>
                     <button name="action_reallocation" id="action_reallocation" string="Reallocate" 
                     attrs="{'invisible':[('state','not in',['sent'])]}" type="object" class="oe_highlight"/>
-                    
-                    
+                    <button name="see_sale_order_reference" string="See Related Sale offer" type="object" class="oe_highlight" icon="fa-shirtsinbulk" attrs="{'invisible': [('state','in',['draft'])]}"></button>
                     <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,sent" /><!--statusbar_visible="draft,reported,done,refused"-->
-                
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -24,17 +22,13 @@
                     </div>
                     <group>
                         <group>
-                            
                             <field name="number" readonly="1"/>
-
                             <field name="property_sale_order_id" required="1"
                             options="{&quot;no_open&quot;: True,'no_quick_create':False,'no_create_edit':True,'limit': 1}"/>
                             <field name="location_project" string="Project" readonly="0"/> 
                             <field name="customer_id" string="Allocated Customer" readonly="0"/> 
-
                             <field name="binary_attachment" filename="binary_fname" invisible="0"/>
                             <field name="binary_fname" required="0" invisible="1" />
-
                         </group>
                         <group>
                             <field name="customer_reallocate" required="1" options="{&quot;no_open&quot;: True,'no_quick_create':False,'no_create_edit':True,'limit': 1}"/>
@@ -42,7 +36,7 @@
                             <field name="reference" readonly="1"/>
 
                         </group>
-                        <field name="building_line" readonly="0" option="{'no_open': True}">
+                        <field name="building_line" readonly="1" store="1" option="{'no_open': True}">
                             <tree string="Units">
                                 <field name="name"/>
                                 <field name="building_type"/>
