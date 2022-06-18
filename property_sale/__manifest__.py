@@ -10,12 +10,21 @@
 #--------------------------------------------------------------------
 {
     'name': 'Property Sales',
-    'version': '10.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'Maduka Sopulu',
     'description': """ERP Application for managing
                      the Estate management activities of a company""",
     'category': 'Sales',
-    'depends': ['base', 'sale', 'account', 'l10n_uk', 'account_accountant', 'account_payment', 'mass_mailing', 'website'],
+    'depends': [
+                'base', 
+                'sale', 
+                'account', 
+                'l10n_uk', 
+                'account_accountant', 
+                'account_payment', 
+                'mass_mailing', 
+                'website'
+                ],
     'data': [
         'sequence/sequence.xml',
         'security/security_group.xml',
@@ -40,6 +49,6 @@
     'currency': 'EUR',
     'sequence': 1,
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'application': True,
 }
