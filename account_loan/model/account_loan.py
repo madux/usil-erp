@@ -6,8 +6,9 @@ import math
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import ValidationError
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 try:
@@ -22,20 +23,23 @@ class AccountLoan(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def _default_company(self):
-        return self.env.company
+        force_company = self._context.get("force_company")
+        if not force_company:
+            return self.env.user.company_id.id
+        return force_company
 
     name = fields.Char(
         copy=False,
         required=True,
         readonly=True,
-        default=lambda self: _("New"),
+        default="/",
         states={"draft": [("readonly", False)]},
     )
     partner_id = fields.Many2one(
         "res.partner",
         required=True,
-        string="Lender",
-        help="Company or individual that lends the money at an interest rate.",
+        string="Beneficiary",
+        # help="Company or individual that lends the money at an interest rate.",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
@@ -57,11 +61,20 @@ class AccountLoan(models.Model):
         copy=False,
         default="draft",
     )
-    line_ids = fields.One2many(
-        "account.loan.line",
-        readonly=True,
-        inverse_name="loan_id",
+    loan_status = fields.Selection(
+        [
+        ("running", "running"),
+        ("closed", "Closed"),
+        ("cancelled", "Cancelled"),
+        ("completed", "Paid Completed"),
+        ],
         copy=False,
+        default="running",
+        compute="_compute_loan_status"
+    )
+
+    line_ids = fields.One2many(
+        "account.loan.line", readonly=True, inverse_name="loan_id", copy=False,
     )
     periods = fields.Integer(
         required=True,
@@ -88,7 +101,7 @@ class AccountLoan(models.Model):
         default=0.0,
         digits=(8, 6),
         help="Currently applied rate",
-        tracking=True,
+        track_visibility="always",
     )
     rate_period = fields.Float(
         compute="_compute_rate_period",
@@ -114,23 +127,15 @@ class AccountLoan(models.Model):
         help="Method of computation of the period annuity",
         readonly=True,
         states={"draft": [("readonly", False)]},
-        default="fixed-annuity",
+        default="interest",
     )
     fixed_amount = fields.Monetary(
-        currency_field="currency_id",
-        compute="_compute_fixed_amount",
+        currency_field="currency_id", compute="_compute_fixed_amount",
     )
     fixed_loan_amount = fields.Monetary(
-        currency_field="currency_id",
-        readonly=True,
-        copy=False,
-        default=0,
+        currency_field="currency_id", readonly=True, copy=False, default=0,
     )
-    fixed_periods = fields.Integer(
-        readonly=True,
-        copy=False,
-        default=0,
-    )
+    fixed_periods = fields.Integer(readonly=True, copy=False, default=0,)
     loan_amount = fields.Monetary(
         currency_field="currency_id",
         required=True,
@@ -161,9 +166,7 @@ class AccountLoan(models.Model):
         help="When checked, the first payment will be on start date",
     )
     currency_id = fields.Many2one(
-        "res.currency",
-        compute="_compute_currency",
-        readonly=True,
+        "res.currency", compute="_compute_currency", readonly=True,
     )
     journal_type = fields.Char(compute="_compute_journal_type")
     journal_id = fields.Many2one(
@@ -200,9 +203,7 @@ class AccountLoan(models.Model):
         states={"draft": [("readonly", False)]},
     )
     is_leasing = fields.Boolean(
-        default=False,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        default=False, readonly=True, states={"draft": [("readonly", False)]},
     )
     leased_asset_account_id = fields.Many2one(
         "account.account",
@@ -224,8 +225,7 @@ class AccountLoan(models.Model):
     )
     move_ids = fields.One2many("account.move", copy=False, inverse_name="loan_id")
     pending_principal_amount = fields.Monetary(
-        currency_field="currency_id",
-        compute="_compute_total_amounts",
+        currency_field="currency_id", compute="_compute_total_amounts",
     )
     payment_amount = fields.Monetary(
         currency_field="currency_id",
@@ -244,6 +244,18 @@ class AccountLoan(models.Model):
     _sql_constraints = [
         ("name_uniq", "unique(name, company_id)", "Loan name must be unique"),
     ]
+
+    @api.depends('payment_amount', 'loan_amount')
+    def _compute_loan_status(self):
+        for rec in self:
+            if rec.loan_amount and rec.payment_amount:
+                if rec.payment_amount >= rec.loan_amount:
+                    rec.loan_status = completed 
+                else:
+                    rec.loan_status = 'running'
+
+            else:
+                rec.loan_status = 'running'
 
     @api.depends("line_ids", "currency_id", "loan_amount")
     def _compute_total_amounts(self):
@@ -265,6 +277,7 @@ class AccountLoan(models.Model):
         """
         for record in self:
             if record.loan_type == "fixed-annuity":
+                raise ValidationError('Currently we do not support and fixed-annuity for now')
                 record.fixed_amount = -record.currency_id.round(
                     numpy_financial.pmt(
                         record.loan_rate() / 100,
@@ -274,6 +287,7 @@ class AccountLoan(models.Model):
                     )
                 )
             elif record.loan_type == "fixed-annuity-begin":
+                raise ValidationError('Currently we do not support fixed-annuity-begin for now')
                 record.fixed_amount = -record.currency_id.round(
                     numpy_financial.pmt(
                         record.loan_rate() / 100,
@@ -346,12 +360,12 @@ class AccountLoan(models.Model):
         ) = self.long_term_loan_account_id = False
 
     def get_default_name(self, vals):
-        return self.env["ir.sequence"].next_by_code("account.loan") or _("New")
+        return self.env["ir.sequence"].next_by_code("account.loan") or "/"
 
     @api.model
     def create(self, vals):
-        if vals.get('name', _("New")) == _("New"):
-            vals['name'] = self.get_default_name(vals)
+        if vals.get("name", "/") == "/":
+            vals["name"] = self.get_default_name(vals)
         return super().create(vals)
 
     def post(self):
@@ -360,6 +374,8 @@ class AccountLoan(models.Model):
             self.start_date = fields.Date.today()
         self.compute_draft_lines()
         self.write({"state": "posted"})
+        memo_ref = self.env['memo.model'].search([('name', '=', self.name)], limit=1)
+        memo_ref.loan_reference = self.id
 
     def close(self):
         self.write({"state": "closed"})
@@ -451,7 +467,7 @@ class AccountLoan(models.Model):
         self.ensure_one()
         action = self.env.ref("account.action_move_out_invoice_type")
         result = action.read()[0]
-        result["domain"] = [("loan_id", "=", self.id), ("move_type", "=", "in_invoice")]
+        result["domain"] = [("loan_id", "=", self.id), ("type", "=", "in_invoice")]
         return result
 
     @api.model
