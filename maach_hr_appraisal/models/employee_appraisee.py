@@ -180,10 +180,10 @@ class HrEmployeeAppraisal(models.Model):
     def _compute_days_remaining(self):
         for rec in self:
             if rec.deadline:
-                now = datetime.now()
-                deadline = datetime.strptime(
-                    rec.deadline, '%Y-%m-%d')
-                difference = deadline - now
+                now = fields.Date.today()
+                # deadline = datetime.strptime(
+                #     rec.deadline, '%Y-%m-%d')
+                difference = self.deadline - now
                 rec.days_remaining = difference.days
 
             else:

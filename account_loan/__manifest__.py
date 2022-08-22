@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Account Loan management",
-    "version": "13.0.1.1.0",
+    "version": "14.0.1.0.2",
     "author": "Creu Blanca,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/account-financial-tools",
     "license": "AGPL-3",
@@ -16,7 +16,7 @@
         "wizard/account_loan_pay_amount_view.xml",
         "wizard/account_loan_post_view.xml",
         "views/account_loan_view.xml",
-        # "views/account_move_view.xml",
+        "views/account_move_view.xml",
     ],
     "installable": True,
     "external_dependencies": {"python": ["numpy", "numpy-financial<=1.0.0"]},
