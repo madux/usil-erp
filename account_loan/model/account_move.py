@@ -8,19 +8,14 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     loan_line_id = fields.Many2one(
-        "account.loan.line",
-        readonly=True,
-        ondelete="restrict",
+        "account.loan.line", readonly=True, ondelete="restrict",
     )
     loan_id = fields.Many2one(
-        "account.loan",
-        readonly=True,
-        store=True,
-        ondelete="restrict",
+        "account.loan", readonly=True, store=True, ondelete="restrict",
     )
 
-    def action_post(self):
-        res = super().action_post()
+    def post(self):
+        res = super().post()
         for record in self:
             loan_line_id = record.loan_line_id
             if loan_line_id:

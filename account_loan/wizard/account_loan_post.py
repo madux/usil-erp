@@ -22,15 +22,11 @@ class AccountLoanPost(models.TransientModel):
             if loan.is_leasing:
                 return loan.leased_asset_account_id.id
             else:
-                return loan.partner_id.with_company(
-                    loan.company_id
+                return loan.partner_id.with_context(
+                    force_company=loan.company_id.id
                 ).property_account_receivable_id.id
 
-    loan_id = fields.Many2one(
-        "account.loan",
-        required=True,
-        readonly=True,
-    )
+    loan_id = fields.Many2one("account.loan", required=True, readonly=True,)
     journal_id = fields.Many2one(
         "account.journal", required=True, default=lambda r: r._default_journal_id()
     )
@@ -40,7 +36,9 @@ class AccountLoanPost(models.TransientModel):
 
     def move_line_vals(self):
         res = list()
-        partner = self.loan_id.partner_id.with_company(self.loan_id.company_id)
+        partner = self.loan_id.partner_id.with_context(
+            force_company=self.loan_id.company_id.id
+        )
         line = self.loan_id.line_ids.filtered(lambda r: r.sequence == 1)
         res.append(
             {
@@ -90,4 +88,4 @@ class AccountLoanPost(models.TransientModel):
             raise UserError(_("Only loans in draft state can be posted"))
         self.loan_id.post()
         move = self.env["account.move"].create(self.move_vals())
-        move.action_post()
+        move.post()
