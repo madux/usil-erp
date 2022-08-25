@@ -3,8 +3,8 @@
 <odoo>
     <data>
         <record model="ir.module.category" id="category_main_memo_app_group">
-           <field name="name">Main Memo</field>
-           <field name="description">Main Memo</field>
+           <field name="name">Memo Application</field>
+           <field name="description">Memo Application</field>
            <field name="sequence">33</field>
         </record>
 
