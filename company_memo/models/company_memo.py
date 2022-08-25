@@ -198,7 +198,7 @@ class Memo_Model(models.Model):
      
     def Cancel(self):
         for rec in self:
-            rec.write({'state': "submit", 'direct_employee_id': False, 'partner_id':False, 'user_followers': False})
+            rec.write({'state': "submit", 'direct_employee_id': False, 'partner_id':False, 'users_followers': False})
 
     def get_url(self, id, name):
         base_url = http.request.env['ir.config_parameter'].sudo().get_param('web.base.url')

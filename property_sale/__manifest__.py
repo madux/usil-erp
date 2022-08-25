@@ -23,7 +23,8 @@
                 'account_accountant', 
                 'account_payment', 
                 'mass_mailing', 
-                'website'
+                'website',
+                'stock'
                 ],
     'data': [
         'sequence/sequence.xml',

@@ -12,15 +12,15 @@
                 <header>
                     <button name="forward_memo" id="forward_memo" string="Forward" icon="fa-forward" attrs="{'invisible':[('state','in',['Approve','Done','refuse'])]}" type="object" class="oe_highlight fwm"/>
                     <button name="print_memo" string="Print Memo" icon="fa-print" attrs="{'invisible':[('state','in',['submit','refuse'])]}" type="object"/>
-                    <button name="approve_memo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent','Approve'])]}" string="Approve" type="object" class="oe_highlight" groups="company_memo.mainmemo_manager,base.group_system"/>
-                    <button name="return_memo" id="return_id" string="Reject Memo" icon="fa-redo" attrs="{'invisible':[('state','in', ['submit', 'Approve','Done','refuse'])]}" type="object" groups="company_memo.mainmemo_account,account.group_account_manager,base.group_system"/>
-                    <button name="Register_Payment" string="Register Payment" type="object" class="oe_highlight" confirm="Are you sure you want to make Payment?" groups="company_memo.mainmemo_account,base.group_system,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']), ('memo_type','not in',['Payment'])]}"/>
-                    <button name="generate_loan_entries" string="Generate Loan Entry" type="object" class="oe_highlight" confirm="Are you sure you want to generate a loan entry?" groups="company_memo.mainmemo_account,base.group_system,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']),('memo_type','not in',['loan'])]}"/>
+                    <button name="approve_memo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent','Approve2','Done','refuse'])]}" string="Approve" type="object" class="oe_highlight" groups="company_memo.mainmemo_manager"/>
+                    <button name="return_memo" id="return_id" string="Reject Memo" icon="fa-redo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent','Approve2','Done','refuse'])]}"  type="object" groups="company_memo.mainmemo_account,account.group_account_manager"/>
+                    <button name="Register_Payment" string="Register Payment" type="object" class="oe_highlight" confirm="Are you sure you want to make Payment?" groups="company_memo.mainmemo_account,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']), ('memo_type','not in',['Payment'])]}"/>
+                    <button name="generate_loan_entries" string="Generate Loan Entry" type="object" class="oe_highlight" confirm="Are you sure you want to generate a loan entry?" groups="company_memo.mainmemo_account,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']),('memo_type','not in',['loan'])]}"/>
 
                     
                     <!-- attrs="{'invisible':['&amp;',('memo_type','!=','Payment'),('state','in',['Approve'])]}"/> -->
                     <button name="set_draft" states="refuse" string="Set to Draft" type="object" class="btn-primary"/>
-                    <button name="Cancel" states="Sent" string="Cancel" type="object" class="btn-primary"/>
+                    <button name="Cancel" states="Sent" string="Cancel" type="object" class="btn-primary" attrs="{'invisible':[('state','!=',['sent'])]}" />
                     <button name="user_done_memo" class="oe_stat_button oe_highlight" icon="fa-calendar" states="Approve2" help="Click to move to Done." type="object" confirm="Are you sure you want to Complete?" string="Complete"/>
                     <field name="state" widget="statusbar" statusbar_visible="submit,Sent,Approve,Done"/><!--statusbar_visible="draft,reported,done,refused"-->
 
@@ -36,19 +36,20 @@
                                     class="oe_stat_button oe_highlight"
                                     icon="fa-calendar" 
                                     attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
-
-                                    type="object" confirm ="Are you sure you want to approve?" string="Approve Memo">
+                                    type="object" confirm ="Are you sure you want to approve?" string="Approve Memo"
+                                    groups="base.group_system,company_memo.mainmemo_manager">
                                 </button>
+                                <button name="return_memo"
+                                    class="btn-danger oe_stat_button"
+                                    icon="fa-redo"
+                                    attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
+                                    type="object" string="Return Memo"
+                                    groups="base.group_system,company_memo.mainmemo_manager">
+                            </button>
                             </div> 
                         </div>
                         <br/>
                         <div class="oe_button_box">
-                            <button name="return_memo"
-                                class="oe_stat_button"
-                                icon="fa-redo"
-                                attrs="{'invisible':[('state','in',['submit', 'Approve','Approve2','Done'])]}"
-                                type="object" string="Return Memo">
-                            </button>
                             <button name="action_get_attachment_view"
                                 class="oe_stat_button"
                                 icon="fa-book" 
@@ -84,7 +85,7 @@
                                 <field name="loan_type" attrs="{'invisible':[('memo_type','!=','loan')], 'required':[('memo_type','=','loan')]}"/>
                                 <field name="loan_amount" attrs="{'invisible':[('memo_type','!=','loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="periods" attrs="{'invisible':[('memo_type','!=','loan')],'required':[('memo_type','=','loan')]}"/>
-                                <field name="method_period" attrs="{'invisible':[('method_period','=', False)],'required':[('memo_type','=','loan')]}"/>
+                                <field name="method_period" attrs="{'invisible':[('memo_type','!=','loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="start_date" attrs="{'invisible':[('memo_type','!=', 'loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="invoice_id" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>
@@ -96,7 +97,7 @@
                                 <field name="date" attrs="{'readonly':[('state','in',['Done', 'Approve'])]}"/>
                                 <field name="user_ids" readonly="1" invisible="1"/>
                                 <field name="amountfig" string="Amount" attrs="{'required':[('memo_type','=','Payment')],'invisible':[('memo_type','!=','Payment')]}"/>
-                                <field name="project_id" attrs="{'readonly':[('state','not in',['submit'])]}"/>
+                                <field name="project_id" attrs="{'readonly':[('state','not in',['submit'])]}" invisible="1"/>
                                 <field widget="binary" height="64" name="file_upload" filename="file_namex" required="0" invisible="1" string="Upload File" />
                                 <field name="file_namex" invisible="1"/> 
                                 <field name = "partner_id" string="Notification Reciepients" widget="many2many_tags" invisible="1" readonly="1"/> 
