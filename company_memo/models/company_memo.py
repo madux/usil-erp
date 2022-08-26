@@ -256,7 +256,7 @@ class Memo_Model(models.Model):
         type = "loan request" if self.memo_type == "loan" else "memo"
         Beneficiary = self.employee_id.name or self.user_ids.name
         body_msg = f"""Dear {self.direct_employee_id.name}, \n \
-        </br>I wish to notify you that a {type} with description, {self.name},\ 
+        </br>I wish to notify you that a {type} with description, {self.name},</br>  
         from {Beneficiary} (Department: {self.employee_id.department_id.name or "-"}) \
         was sent to you for review / approval. </br> </br>Kindly {self.get_url(self.id, self._name)} \
         </br> Yours Faithfully</br>{self.env.user.name}""" 
@@ -369,8 +369,9 @@ class Memo_Model(models.Model):
                 'context': {
                         'default_amount': self.amountfig,
                         'default_payment_type': 'outbound',
-                        'default_partner_id':self.vendor_id.id, 
+                        'default_partner_id':self.vendor_id.id or self.employee_id.user_id.partner_id.id, 
                         'default_memo_reference': self.id,
+                        'default_communication': self.name,
                 },
                 'target': 'current'
                 }
@@ -455,7 +456,7 @@ class Memo_Model(models.Model):
             elif order.state == "Done":
                 order.status_progress = random.randint(98, 100)
             else:
-                order.status_progress = random.randint(100) # 100 / len(order.state)
+                order.status_progress = random.randint(99, 100) # 100 / len(order.state)
 
     def unlink(self):
         for delete in self.filtered(lambda delete: delete.state in ['Sent','Approve2', 'Approve']):

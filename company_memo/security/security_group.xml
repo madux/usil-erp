@@ -28,7 +28,7 @@
         <record id="mainmemo_account" model="res.groups">
             <field name="name">Memo Account Manager</field>
             <field name="category_id" ref="category_main_memo_app_group"/>
-            <field name="users" eval="[(4, ref('base.group_system'),ref('account.group_account_manager'))]"/>
+            <field name="users" eval="[(4, ref('base.group_system'),ref('account.group_account_manager'),ref('account.group_account_invoice'))]"/>
         </record>
  
 

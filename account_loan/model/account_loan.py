@@ -362,11 +362,11 @@ class AccountLoan(models.Model):
     def get_default_name(self, vals):
         return self.env["ir.sequence"].next_by_code("account.loan") or "/"
 
-    @api.model
-    def create(self, vals):
-        if vals.get("name", "/") == "/":
-            vals["name"] = self.get_default_name(vals)
-        return super().create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get("name", "/") == "/":
+    #         vals["name"] = self.get_default_name(vals)
+    #     return super().create(vals)
 
     def post(self):
         self.ensure_one()

@@ -13,7 +13,13 @@ class AccountPayment(models.Model):
     memo_reference = fields.Many2one('memo.model', string="Memo Reference")
     
     def post(self):
-        res = super(account_payment, self).post()
+        res = super(AccountPayment, self).post()
+        if self.memo_reference:
+            self.memo_reference.state = "Done"
+        return res
+
+    def action_post(self):
+        res = super(AccountPayment, self).action_post()
         if self.memo_reference:
             self.memo_reference.state = "Done"
         return res
