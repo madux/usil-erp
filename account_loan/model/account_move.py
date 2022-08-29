@@ -16,8 +16,6 @@ class AccountMove(models.Model):
 
     def post(self):
         res = super().post()
-        memo_ref = self.env['memo.model'].search([('name', '=', self.name)], limit=1)        
-        memo_ref.loan_reference = self.id
         for record in self:
             loan_line_id = record.loan_line_id
             if loan_line_id:
@@ -28,7 +26,4 @@ class AccountMove(models.Model):
                 record.loan_line_id.loan_id.compute_posted_lines()
                 if record.loan_line_id.sequence == record.loan_id.periods:
                     record.loan_id.close()
-        for rec in memo_ref:
-            if memo_ref:
-                rec.write({"state": "Done"})
         return res
