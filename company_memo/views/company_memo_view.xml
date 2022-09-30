@@ -92,6 +92,7 @@
                                 <field name="vendor_id" string="Vendor" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>
                                 <field name = "users_followers" widget="many2many_tags" required="0" readonly="1"/>
                                 <field name = "res_users" widget="many2many_tags" required="0" readonly="1"/>  
+                                <field name="active" invisible="1"/>
                             </group> 
                             <group> 
                                 <field name="date" attrs="{'readonly':[('state','not in',['submit'])]}"/>

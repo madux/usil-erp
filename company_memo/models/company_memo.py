@@ -141,6 +141,7 @@ class Memo_Model(models.Model):
         copy=False,
     )
     loan_reference = fields.Integer(string="Loan Ref")
+    active = fields.Boolean('Active', default=True)
     
     @api.model
     def fields_view_get(self, view_id='company_memo.memo_model_form_view_3', view_type='form', toolbar=False, submenu=False):
