@@ -375,8 +375,12 @@ class AccountLoan(models.Model):
             self.start_date = fields.Date.today()
         self.compute_draft_lines()
         self.write({"state": "posted"})
-        memo_ref = self.env['memo.model'].search([('name', '=', self.name)], limit=1)
+        memo_ref = self.env['memo.model'].search([('code', '=', self.name)], limit=1)        
         memo_ref.loan_reference = self.id
+        for rec in memo_ref:
+            if memo_ref:
+                rec.write({"state": "Done"})
+            
 
     def close(self):
         self.write({"state": "closed"})
