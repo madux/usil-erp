@@ -20,6 +20,7 @@ except (ImportError, IOError) as err:
 class AccountLoan(models.Model):
     _name = "account.loan"
     _description = "Loan"
+    _order = "id desc"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     def _default_company(self):
