@@ -11,8 +11,8 @@
                 <form string="Memo Record">
                 <header>
                     <button name="forward_memo" id="forward_memo" string="Forward" icon="fa-forward" attrs="{'invisible':[('state','in',['Approve','Done','refuse'])]}" type="object" class="oe_highlight fwm"/>
-                    <button name="approve_memo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent','Approve2','Done','refuse'])]}" string="Approve" type="object" class="oe_highlight" groups="company_memo.mainmemo_manager"/>
-                    <button name="return_memo" id="return_id" string="Reject Memo" icon="fa-redo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent','Approve2','Done','refuse'])]}"  type="object" groups="company_memo.mainmemo_account,account.group_account_manager"/>
+                    <button name="approve_memo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','in',['submit', 'Approve','Done','refuse'])]}" string="Approve" type="object" class="oe_highlight" groups="company_memo.mainmemo_manager"/>
+                    <button name="return_memo" id="return_id" string="Return Memo" icon="fa-redo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent'])]}"  type="object"/>
                     <button name="Register_Payment" string="Register Payment" type="object" class="oe_highlight" confirm="Are you sure you want to make Payment?" groups="company_memo.mainmemo_account,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']), ('memo_type','not in',['Payment'])]}"/>
                     <button name="generate_loan_entries" string="Generate Loan Entry" type="object" class="oe_highlight" confirm="Are you sure you want to generate a loan entry?" groups="company_memo.mainmemo_account,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']),('memo_type','not in',['loan'])]}"/>
 
@@ -40,7 +40,7 @@
                                     groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
                                 </button>
                                 <button name="return_memo"
-                                    class="btn-danger oe_stat_button"
+                                    class="btn-danger oe_stat_button sm"
                                     icon="fa-redo"
                                     attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
                                     type="object" string="Return Memo"
@@ -88,8 +88,9 @@
                                 <field name="method_period" attrs="{'invisible':[('memo_type','!=','loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="start_date" attrs="{'invisible':[('memo_type','!=', 'loan')],'required':[('memo_type','=','loan')]}"/>
                                 <field name="currency_id" invisible="1"/>
-                                <field name="invoice_id" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>
-                                <field name="vendor_id" string="Vendor" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>
+                                <field name="invoice_id" attrs="{'invisible':[('memo_type','!=','Payment')]}"
+                                options="{&quot;no_create&quot;: True}"/>
+                                <field name="vendor_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" string="Vendor" attrs="{'invisible':[('memo_type','!=','Payment')]}"/>
                                 <field name = "users_followers" widget="many2many_tags" required="0" readonly="1"/>
                                 <field name = "res_users" widget="many2many_tags" required="0" readonly="1"/>  
                                 <field name="active" invisible="1"/>
@@ -251,6 +252,16 @@
         <menuitem id="account_loan_request_menu" name="Loan Request" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account,company_memo.mainmemo_officer,base.group_user" sequence = "10" web_icon="company_memo,static/description/loan_icon.png"/>
             <menuitem id="account_loan_request_menu_node1" name="Request(s)"
             parent="account_loan_request_menu" sequence= "1" action = "loan_request_action" />
+
+        <menuitem
+                id="company_memo_generated_loan_menu"
+                parent="company_memo.account_loan_request_menu"
+                sequence="20"
+                name="View Generated Loans"
+                action="account_loan.account_loan_action"
+                groups="account.group_account_user,account.group_account_invoice,account.group_account_manager,base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account"
+
+            />
 
         <menuitem id="internal_memo_menu_model_1" name="Office Memo Type"
             parent="internal_memo_menu_model_main2" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account,company_memo.mainmemo_officer"/>

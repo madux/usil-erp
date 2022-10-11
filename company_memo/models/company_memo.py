@@ -25,7 +25,7 @@ class Memo_Model(models.Model):
         return super(Memo_Model, self).create(vals)
 
     def _compute_attachment_number(self):
-        attachment_data = self.env['ir.attachment'].read_group([
+        attachment_data = self.env['ir.attachment'].sudo().read_group([
             ('res_model', '=', 'memo.model'), 
             ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
         attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
@@ -34,7 +34,8 @@ class Memo_Model(models.Model):
 
     def action_get_attachment_view(self):
         self.ensure_one()
-        res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        # res = self.env['ir.actions.act_window'].xml_id('base', 'action_attachment')
+        res = self.sudo().env.ref('base.action_attachment')
         res['domain'] = [('res_model', '=', 'memo.model'), ('res_id', 'in', self.ids)]
         res['context'] = {'default_res_model': 'memo.model', 'default_res_id': self.id}
         return res
@@ -85,7 +86,12 @@ class Memo_Model(models.Model):
                              required=True,
                              help='Request Report state')
     date = fields.Datetime('Request Date', default=fields.Datetime.now())
-    invoice_id = fields.Many2one('account.move', string='Invoice', store=True)
+    invoice_id = fields.Many2one(
+        'account.move', 
+        string='Invoice', 
+        store=True,
+        domain="[('move_type', '=', 'in_invoice'), ('state', '!=', 'cancel')]"
+        )
     status_progress = fields.Float(string="Progress(%)", compute='_progress_state')
     users_followers = fields.Many2many('hr.employee', string='Add followers') #, default=_default_employee)
     res_users = fields.Many2many('res.users', string='Approvers') #, default=_default_employee)
@@ -163,8 +169,15 @@ class Memo_Model(models.Model):
 
     @api.onchange('invoice_id')
     def get_amount(self):
-        if self.invoice_id:
-            self.amountfig = self.invoice_id.amount_total
+        if self.invoice_id and self.invoice_id.state in ['posted', 'cancel']:
+            self.invoice_id = False 
+            return {
+                'warning': {
+                    'title': "Validation",
+                    'message': "You selected an invoice that is either cancelled or posted already",
+                }
+            }
+        self.amountfig = self.invoice_id.amount_total
          
     @api.depends('set_staff')
     def get_user_staff(self):
@@ -198,8 +211,19 @@ class Memo_Model(models.Model):
             rec.write({'state': "Done"})
      
     def Cancel(self):
+        if self.employee_id.user_id.id != self.env.uid:
+            raise ValidationError('Sorry!!! you are not allowed to cancel a memo not initiated by you.') 
+        
+        if self.state not in ['refuse', 'Sent']:
+            raise ValidationError('You cannot cancel a memo that is currently undergoing management approval')
         for rec in self:
-            rec.write({'state': "submit", 'direct_employee_id': False, 'partner_id':False, 'users_followers': False})
+            rec.write({
+                'state': "submit", 
+                'direct_employee_id': False, 
+                'partner_id':False, 
+                'users_followers': False,
+                'set_staff': False,
+                })
 
     def get_url(self, id, name):
         base_url = http.request.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -219,13 +243,18 @@ class Memo_Model(models.Model):
     else: it opens the wizard"""
 
     def validator(self, msg):
-        users = self.env['res.users'].browse([self.env.uid])
-        manager = users.has_group("company_memo.mainmemo_manager")
-        usr = self.mapped('res_users').filtered(lambda x: x.id == self.env.user.id)
-        if usr:
-            raise ValidationError(msg)
+        if self.employee_id.user_id.id == self.env.user.id:
+            raise ValidationError("Sorry you are not allowed to reject /  return you own initiated memo") 
+        # users = self.env['res.users'].browse([self.env.uid])
+         
+        # usr = self.mapped('res_users').filtered(lambda x: x.id == self.env.user.id)
+        # if usr:
+        #     raise ValidationError(msg)
 
     def forward_memo(self): 
+        if self.state == "submit":
+            if not self.env.user.id == self.employee_id.user_id.id:#  or self.env.uid != self.create_uid:
+                raise ValidationError('You cannot forward a memo at draft state because you are not the initiator')
         users = self.env['res.users'].browse([self.env.uid])
         manager = users.has_group("company_memo.mainmemo_manager")
         admin = users.has_group("base.group_system")
@@ -442,8 +471,8 @@ class Memo_Model(models.Model):
     # Depending on any field change (ORM or Form), the function is triggered.
     def _progress_state(self):
         for order in self:
-            if order.state == "submit":
-                order.status_progress = random.randint(0, 20)
+            if order.state in ["submit", "refuse"]:
+                order.status_progress = random.randint(0, 5)
 
             elif order.state == "Sent":
                 order.status_progress = random.randint(20, 60)

@@ -241,9 +241,8 @@ class AccountLoanLine(models.Model):
 
     def move_line_vals(self):
         vals = []
-        with_company(company)
-        partner = self.loan_id.partner_id.with_context(self.loan_id.company_id.id
-        )
+        # with_company(company)
+        partner = self.loan_id.partner_id#.with_context(self.loan_id.company_id.id)
         vals.append(
             {
                 "account_id": partner.property_account_payable_id.id,

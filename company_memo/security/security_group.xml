@@ -37,31 +37,42 @@
             <field name="model_id" ref="model_memo_model"/>
             <field name="groups" eval="[(6, 0, [ref('mainmemo_manager'),ref('mainmemo_officer')])]"/>
 
-            <field name="domain_force">['|', '|', ('users_followers.user_id','in', [user.id]), ('employee_id.user_id.id','=', user.id), ('direct_employee_id.user_id.id','=', user.id)]</field>
+            <field name="domain_force">['|', '|', ('users_followers.user_id','=', user.id), ('employee_id.user_id.id','=', user.id), ('direct_employee_id.user_id.id','=', user.id)]</field>
             <!-- <field name="groups" eval="[(4, [ref('group_memo_xx_emp'), ref('group_memo_xx_manager'),ref('group_memo_xx_direct'), ref('group_memo_xx_coo'),ref('group_memo_xx_ed'),ref('group_memo_xx_account')])]"/> -->
             
         </record>
         <record id="account_memo_see_account_record" model="ir.rule">
             <field name="name">Memo Account Users See Records in Account</field>
             <field name="model_id" ref="model_memo_model"/>
-            <field name="groups" eval="[(6, 0, [ref('mainmemo_account')])]"/>
-            <field name="domain_force"> ['|','|',('users_followers.user_id','in', [user.id]), ('direct_employee_id.user_id.id','=', user.id),('state','in', ['Approve'])]</field>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_account'),ref('mainmemo_manager')])]"/>
+            <field name="domain_force"> [
+            '|','|','|',('users_followers.user_id','=', user.id), 
+            ('direct_employee_id.user_id.id','=', user.id),
+             ('employee_id.user_id.id','=', user.id),
+            ('state','in', ['Approve'])]</field>
         </record> 
         
 	<record id="audit_see_done_records" model="ir.rule">
             <field name="name">Memo Audit See Records in Done</field>
             <field name="model_id" ref="model_memo_model"/>
-            <field name="groups" eval="[(6, 0, [ref('mainmemo_audit')])]"/>
-            <field name="domain_force"> [('state','in', ['Done'])]</field>
+            <field name="groups" eval="[(6, 0, [ref('mainmemo_audit'),ref('mainmemo_manager'),])]"/>
+            <field name="domain_force"> [
+            '|','|','|',('users_followers.user_id','=', user.id), 
+            ('direct_employee_id.user_id.id','=', user.id),
+             ('employee_id.user_id.id','=', user.id),
+            ('state','in', ['Done'])]</field>
         </record> 
-	<!-- <record id="memo_user_see_own_rule" model="ir.rule">
+	<record id="memo_user_see_own_rule" model="ir.rule">
             <field name="name">Memo User See Own Record</field>
             <field name="model_id" ref="model_memo_model"/>
-            <field name="groups" eval="[(4 , [ref('mainmemo_officer')])]"/>
-            <field name="domain_force">['|','|',('direct_employee_id.user_id.id','=', user.id),('employee_id.user_id.id','=', user.id),('users_followers.user_id','in', [user.id])]</field>
+            <field name="groups" eval="[(6, 0, [ref('base.group_user')])]"/>
+            <field name="domain_force">[
+            '|','|',('direct_employee_id.user_id.id','=', user.id),
+            ('employee_id.user_id.id','=', user.id),
+            ('users_followers.user_id','=', user.id)]</field>
         </record>
 
-        <record id="account_memo_see_account_record" model="ir.rule">
+       <!--  <record id="account_memo_see_account_record" model="ir.rule">
             <field name="name">Memo Account Users See Records in Account</field>
             <field name="model_id" ref="model_memo_model"/>
             <field name="groups" eval="[(6, 0, [ref('mainmemo_account')])]"/>

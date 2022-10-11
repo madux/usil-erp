@@ -27,7 +27,11 @@ class Send_Memo_back(models.Model):
         if self.reason:
             msg_body = "Dear Sir/Madam, </br>We wish to notify you that a Memo request from {} has been refused / returned. </br>\
              </br>Kindly {} to Review</br> </br>Thanks".format(self.memo_record.employee_id.name, self.get_url(self.id, self._name))
-            get_state.write({'state':'refuse', 'users_followers': [(4, self.direct_employee_id.id)]})
+            get_state.write({
+                'state':'refuse', 
+                'users_followers': [(4, self.direct_employee_id.id)],
+                'set_staff': self.direct_employee_id.id
+                })
             for rec in get_state.res_users:
                 if get_state.user_ids.id == rec.id:
                     get_state.res_users = [(3, rec.id)]
