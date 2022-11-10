@@ -10,8 +10,32 @@
         attachment_use="True"
     />
     <template id="memomodel_print_template">
+      <t t-call="web.html_container">
+          <t t-foreach="docs" t-as="o">
+              <t t-call="company_memo.memomodel_print_template_id"/>
+          </t>
+      </t>
+    </template>
+    <template id="memomodel_print_template_id">
       <t t-call="web.external_layout">
         <t t-foreach="docs" t-as="o">
+          <!-- <header>
+            <div style="margin-top: 1px;">
+              <div class="col-6">
+                  <p style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:14px;">
+                    <span>Urban Shelther Infrastructural Limited</span><br/>
+                    <span t-esc="o.create_uid.company_id.street"/><br/>
+                    <span t-esc="o.create_uid.state_id.name"/><br/>
+                    <span t-esc="o.create_uid.country_id.name"/><br/>
+                    <span t-esc="o.create_uid.company_id.website"/>
+                  </p>
+              </div>
+              <div class="col-2 offset-4 float-right">
+                  <img class="banner table-responsive" style="height: 90px; width: auto; margin-left: 10px;" src="https://i.postimg.cc/hGKVQHc2/USIL-LOGO.png"/>
+              </div>
+            </div>
+          </header> -->
+          
             <!-- <div class="header">
               <div class="row">
                 <div class="col-xs-3" style="font-size: 9px;"> 
@@ -69,38 +93,35 @@
               <br /><br />
               <h4 style="font-weight: bold; text-align: center;font-size: 18px;"><u>Memo Notification For <span t-field="o.memo_type"/> </u></h4>
               <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Memo Subject:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.name"/>
-              <p/>
             
               <t t-if="o.description">
                   <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Description:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.description"/>
-                  <p/>
               </t>
 
               <t t-if="o.reason_back">
                   <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Refusal Reason: </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.reason_back"/>
-                  <p/>
               </t>
 
               <t t-if="o.comments"> 
                   <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Comments:  </strong><br/><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.comments"/><br/>
-              <p/>
               </t>
 
               <t t-if="o.memo_type=='Payment'">
-              <table style="width: 100%; text-align: left;">
-                  <tr>
-                      <th>VENDOR</th>
-                      <th>INVOICE REF</th>
-                      <th>DATE</th>
-                      <th>AMOUNT</th>
-                  </tr>
-                  <tr>
-                      <td><t t-esc="o.vendor_id.name"/></td>
-                      <td><t t-esc="o.invoice_id.name"/></td>
-                      <td><t t-esc="o.date" /></td>
-                      <td>N<t t-esc="'{0:,}'.format(float(o.amountfig))" /></td>
-                  </tr>
-              </table>  </t><br /><br />
+                <table style="width: 100%; text-align: left;">
+                    <tr>
+                        <th>VENDOR</th>
+                        <th>INVOICE REF</th>
+                        <th>DATE</th>
+                        <th>AMOUNT</th>
+                    </tr>
+                    <tr>
+                        <td><t t-esc="o.vendor_id.name"/></td>
+                        <td><t t-esc="o.invoice_id.name"/></td>
+                        <td><t t-esc="o.date" /></td>
+                        <td>N<t t-esc="'{0:,}'.format(float(o.amountfig))" /></td>
+                    </tr>
+                </table>  
+              </t><br/>
               <strong style="font-size: 13px;">Memo Followers:</strong><u/> <br />
               <t t-foreach="o.users_followers" t-as="user">
                   
