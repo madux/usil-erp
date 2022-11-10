@@ -14,22 +14,19 @@
         <t t-foreach="docs" t-as="o">
             <div class="header">
               <div class="row">
-                <!-- <div class="col-xs-3" style="font-size: 9px;"> 
-                              <h3><b><span> Urban Shelther Limited</span></b></h3><br/>
+                <div class="col-xs-3" style="font-size: 9px;"> 
+                              <h3><b><span> Urban Shelther Infrastructural Limited</span></b></h3><br/>
                                   <b><span t-esc="o.create_uid.company_id.street"/></b>,<br/><span t-esc="o.create_uid.company_id.street2"/><br/>
                                   <b><span t-esc="o.create_uid.state_id.name"/></b>, <b><span t-esc="o.create_uid.country_id.name"/></b><br/>
-                                  <b><span t-esc="o.create_uid.company_id.website"/></b><br/>
-                </div> -->
-                <!-- <div class="col-xs-offset-2 text-right">
-                      
+                                  <b><span t-esc="o.create_uid.company_id.website"/></b>
+                </div>
+                <div class="col-xs-offset-2 text-right">       
                       <img t-if="o.create_uid.company_id.logo" style="max-height:80px;max-width:60px;" t-att-src="'data:image/png;base64,%s' %o.create_uid.company_id.logo"/>
-                </div> -->
+                </div>
               
-                <!-- <div class="col-xs-offset-2 text-right">
+                <div class="col-xs-offset-2 text-right">
                   <img src="/company_memo/static/img/usl.png" style="max-height:250px;max-width:170px;"/>
-                </div>                -->
-              
-
+                </div>               
               </div>
             </div>
             <div class="page" style="padding-top: 100px;">
