@@ -118,11 +118,13 @@
                     </tr>
                 </table>  
               </t>
-              <div class="row">
-                <t t-if="o.description">
+              
+              <t t-if="o.description">
+                <div class="row">
                   <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 14px;">Description:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:14px;" t-raw="o.description"/>
-                </t>
-              </div>
+                </div>
+              </t>
+             
               <!-- <strong style="font-size: 13px;">Memo Followers:</strong><u/> <br />
               <t t-foreach="o.users_followers" t-as="user">
                   
