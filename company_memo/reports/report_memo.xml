@@ -53,7 +53,7 @@
                 </div>               
               </div>
             </div> -->
-            <div class="page">
+            <div class="page" style="padding-top: 5px;">
               <style>
                 table {
                   border-collapse: collapse;
@@ -94,17 +94,13 @@
               <h4 style="font-weight: bold; text-align: center;font-size: 18px;"><u>Memo Notification For <span t-field="o.memo_type"/> </u></h4>
               <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Memo Subject:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-field="o.name"/>
             
-              <t t-if="o.description">
-                  <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Description:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.description"/>
-              </t>
-
-              <t t-if="o.reason_back">
+              <!-- <t t-if="o.reason_back">
                   <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Refusal Reason: </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.reason_back"/>
               </t>
 
               <t t-if="o.comments"> 
                   <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Comments:  </strong><br/><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.comments"/><br/>
-              </t>
+              </t> -->
 
               <t t-if="o.memo_type=='Payment'">
                 <table style="width: 100%; text-align: left;">
@@ -118,15 +114,19 @@
                         <td><t t-esc="o.vendor_id.name"/></td>
                         <td><t t-esc="o.invoice_id.name"/></td>
                         <td><t t-esc="o.date" /></td>
-                        <td>N<t t-esc="'{0:,}'.format(float(o.amountfig))" /></td>
+                        <td>NGN<t t-esc="'{0:,}'.format(float(o.amountfig))" /></td>
                     </tr>
                 </table>  
-              </t><br/>
-              <strong style="font-size: 13px;">Memo Followers:</strong><u/> <br />
+              </t>
+              <t t-if="o.description">
+                <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 14px;">Description:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.description"/>
+              </t>
+              <br/>
+              <!-- <strong style="font-size: 13px;">Memo Followers:</strong><u/> <br />
               <t t-foreach="o.users_followers" t-as="user">
                   
                 <strong style="font-size: 13px;"><t t-esc="user.name" />,</strong><p/>
-              </t>
+              </t> -->
               <!-- <div class="row">
                   <div class="col-xs-3" style="font-size: 17px;">
                       <strong>Signature: .....................</strong><br/>
