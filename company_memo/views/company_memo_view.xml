@@ -12,7 +12,7 @@
                 <header>
                     <button name="forward_memo" id="forward_memo" string="Forward" icon="fa-forward" attrs="{'invisible':[('state','in',['Approve','Done','refuse'])]}" type="object" class="oe_highlight fwm"/>
                     <button name="approve_memo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','in',['submit', 'Approve','Done','refuse'])]}" string="Approve" type="object" class="oe_highlight" groups="company_memo.mainmemo_manager"/>
-                    <button name="return_memo" id="return_id" string="Return Memo" icon="fa-redo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent'])]}"  type="object"/>
+                    <button name="return_memo" id="return_id" string="Return Memo" icon="fa-redo" attrs="{'invisible': ['|',('memo_type','not in',['loan', 'Payment']),('state','not in',['Sent'])]}"  type="object" groups="company_memo.mainmemo_manager,company_memo.mainmemo_audit"/>
                     <button name="Register_Payment" string="Register Payment" type="object" class="oe_highlight" confirm="Are you sure you want to make Payment?" groups="company_memo.mainmemo_account,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']), ('memo_type','not in',['Payment'])]}"/>
                     <button name="generate_loan_entries" string="Generate Loan Entry" type="object" class="oe_highlight" confirm="Are you sure you want to generate a loan entry?" groups="company_memo.mainmemo_account,account.group_account_manager" attrs="{'invisible':['|',('state','not in',['Approve']),('memo_type','not in',['loan'])]}"/>
 
@@ -37,14 +37,14 @@
                                     icon="fa-calendar" 
                                     attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
                                     type="object" confirm ="Are you sure you want to approve?" string="Approve Memo"
-                                    groups="base.group_system,company_memo.mainmemo_manager">
+                                    groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
                                 </button>
                                 <button name="return_memo"
                                     class="btn-danger oe_stat_button sm"
                                     icon="fa-redo"
                                     attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
                                     type="object" string="Return Memo"
-                                    groups="base.group_system,company_memo.mainmemo_manager">
+                                    groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
                             </button>
                             </div> 
                         </div>
