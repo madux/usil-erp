@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_import_record_wizard_id,accessimport_record_wizard_user,model_import_record_wizard,,1,1,1,1
+access_migration_confirm_dialog_id,access_migration_confirm_dialoguser,model_migration_confirm_dialog,,1,1,1,1

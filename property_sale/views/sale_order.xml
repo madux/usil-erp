@@ -148,8 +148,8 @@
                     <attribute name="attrs">{'invisible': [('sale_type','=','property')]}</attribute>
                     <attribute name="states"></attribute>
 
-                </xpath>
-
+                </xpath> 
+                
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="send_mail_officers" confirm="Are you sure you send this Mail?"
                     type="object" class="oe_stat_button" icon="fa-envelope" groups="property_sale.director,property_sale.officer,base.group_system"

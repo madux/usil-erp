@@ -174,27 +174,27 @@ class AccountPayment(models.Model):
     def action_post(self):
         res = super(AccountPayment, self).action_post()
         allocated = False
-        if self.reference:
-            sale_obj = self.env['sale.order'].search([('name','=', self.reference)])
-            if sale_obj:
-                amount = sale_obj.amount_paid + self.amount
-                prop_payment_count = sale_obj.prop_payment_count + 1
-                percent_amount = 0.3 * sale_obj.amount_total
-                if amount > percent_amount:
-                    allocated = True
-                sale_obj.write({
-                    # 'amount_paid': amount,
-                    'prop_payment_count': prop_payment_count,
-                    # 'payment_idss': [(4, self.id)],
-                    'sale_status': 'Allocated' if allocated else 'Sold',
-                    'state': 'sale',
-                })
-            else:
-                raise ValidationError('No Sale order reference found for the payment.')
-        
-        else:
-            pass
-        self.state = "posted"
+        for rec in self:
+            if rec.reference:
+                sale_obj = self.env['sale.order'].search([('name','=', rec.reference)])
+                if sale_obj:
+                    amount = sale_obj.amount_paid + rec.amount
+                    prop_payment_count = sale_obj.prop_payment_count + 1
+                    percent_amount = 0.3 * sale_obj.amount_total
+                    if amount > percent_amount:
+                        allocated = True
+                    sale_obj.write({
+                        # 'amount_paid': amount,
+                        'prop_payment_count': prop_payment_count,
+                        # 'payment_idss': [(4, self.id)],
+                        'sale_status': 'Allocated' if allocated else 'Sold',
+                        'state': 'sale',
+                    })
+                
+                else:
+                    raise ValidationError('No Sale order reference found for the payment.')
+            
+            self.state = "posted"
             # raise ValidationError('No reference')
         return res           
 

@@ -41,6 +41,13 @@ class SaleOrder(models.Model):
     discounts = fields.Float('Discount(%)',store=True,  compute="compute_discount_offer_price_building_type")
     buildingtype_id = fields.Many2one('building.type', string="Building", store=True, 
     compute="compute_discount_offer_price_building_type")
+    shop_type = fields.Char('Shop type')
+    shop_no = fields.Char('Shop No')
+    block_no = fields.Char('Block No')
+    form_number = fields.Char('Form No')
+    phase = fields.Char('Phase')
+    saletype = fields.Char('Saletype')
+    level = fields.Char('Level')
     migrated_number = fields.Char('Migration Number')
     phone_number = fields.Char('Phone No:', related="partner_id.phone")
     total_discount = fields.Float('Total Discount(%)', readonly=False, compute="discount_function")
@@ -124,7 +131,7 @@ class SaleOrder(models.Model):
     @api.onchange('location_project')
     def change_payment_term(self):
         if self.location_project:
-            if self.sale_type == "property":
+            if self.sale_type == "property" and self.state == 'draft':
                 self.payment_term_id = self.location_project.payment_term_id.id
                 self.order_line = False
 
@@ -134,17 +141,20 @@ class SaleOrder(models.Model):
         house_number = '{} {}'.format(str(buildingtype.prefix) ,str(lastgen))
         return str(house_number)
          
-    def confirm_offer(self): # visible when sale_type is property
+    def confirm_offer(self, date=False, restrict=False): # visible when sale_type is property
+        '''migration: allows migration without restriction'''
         buildinglineObj = self.env['building.type.model']
         for rec in self:
-            rec.restrict_sales()
+            if restrict:
+                rec.restrict_sales() # removed until data migration is
             lists = []
             for record in rec.order_line:
                 buildingtypeid = self.env['building.type'].sudo().search([('product_id', '=', record.product_id.id)], limit=1)
                 if buildingtypeid:
                     buildingtype = self.env['building.type'].browse([buildingtypeid.id])
                     lastgen = buildingtype.last_gen_no + 1
-                    house_number = '{} {}'.format(str(buildingtype.prefix) ,str(lastgen))
+                    prefix = buildingtype.prefix or ""
+                    house_number = '{} {}'.format(str(prefix) ,str(lastgen))
                     housenumber = record.house_number if record.house_number else house_number
                     # housenumber = record.house_number if record.house_number else self.generate_house_number(buildingtypeid.id),
                     vals = ({
@@ -154,16 +164,19 @@ class SaleOrder(models.Model):
                         'mark_sold': True,
                         'list_price': record.price_unit,
                         'customer_id': rec.partner_id.id,
-                        'purchase_date': datetime.now(), #datetimes if datetime else datetime.now(),
+                        'purchase_date': rec.date_order, #date if date else datetime.now(), #datetimes if datetime else datetime.now(),
                         'reference': rec.name,
                         'property_sale_order_id': rec.id,
                         'sales_team': rec.team_id.id,
                         'discount': record.discount,
                         'location_project': rec.location_project.id,
                         'house_number': housenumber,
-                    
                     })
-                    buildingtypeid.sudo().write({'building_sale_line': [(0,0, vals)], 'last_gen_no': buildingtypeid.last_gen_no + 1, 'units': buildingtype.units + 1})
+                    buildingtypeid.sudo().write({
+                        'building_sale_line': [(0,0, vals)], 
+                        'last_gen_no': buildingtypeid.last_gen_no + 1, 
+                        'units': buildingtype.units + 1
+                        })
                     record.house_number = housenumber # record.house_number if record.house_number else self.generate_house_number(buildingtypeid.id),
                     project_id = self.env['project.configs'].sudo().search([('id', '=', rec.location_project.id)], limit=1)
                     if project_id:
@@ -175,11 +188,12 @@ class SaleOrder(models.Model):
             rec.sale_status = "Sold"
             rec.invoice_status = "to invoice"
             rec.calculate_breakdown()
+            rec.action_confirm()
 
     def cancel_expired_allocation(self):
         if self.sale_type == "property" and self.date_validity:
-            date_validity = datetime.strptime(self.date_validity, "%Y-%m-%d %H:%M:%S")
-            if (date_validity > datetime.now()) and (self.amount_paid <= 0):
+            # date_validity = datetime.strptime(self.date_validity, "%Y-%m-%d %H:%M:%S")
+            if (self.date_validity > datetime.now()) and (self.amount_paid <= 0):
                 buildingsaleline = self.env['building.type.model'].search([('property_sale_order_id', '=', self.id)])
                 for rex in buildingsaleline:
                     rex.mark_sold = False
@@ -188,8 +202,7 @@ class SaleOrder(models.Model):
                 self.action_propertycancel()
                 self.update_transactions()
             else:
-                raise ValidationError("You cannot remove or cancel \
-                        this allocation because the customer has made payment!")
+                raise ValidationError("You cannot remove or cancel this allocation because the customer has made payment!")
 
     def action_propertycancel(self):
         self.sale_status = "Draft"
@@ -366,7 +379,7 @@ class SaleOrder(models.Model):
                         'default_partner_id':self.partner_id.id, 
                         'default_communication': self.name, 
                         'default_reference': self.name,
-                        'default_narration': name,
+                        'default_narration_text': name,
                         'default_is_property': True,
                         },
                 'target': 'new',

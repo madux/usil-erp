@@ -46,7 +46,7 @@ class productBuildType(models.Model):
     units =fields.Float('Total no. unit sale-able', default=1.0)
     reserved_units =fields.Integer('No. of units reserved ', default=0)
     reserved_units_stored = fields.Integer('Resrv. Units', default=0, readonly=True, store= True)
-    total_units = fields.Float('Total no of units', default=0, readonly=True, store= True) # , compute="caculate_total_unit")
+    total_units = fields.Float('Total no of units', default=0, readonly=False, store= True) #, compute="compute_property_details") # , compute="caculate_total_unit")
     count_sold = fields.Float('No. of Unit Sold', store=True, compute="compute_property_details")
     count_unsold = fields.Float('No. of UnSold Unit(s)', store=True, compute="compute_property_details")
     count_total = fields.Float('Total Units', store=True, compute="compute_property_details")
