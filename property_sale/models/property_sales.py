@@ -208,6 +208,18 @@ class SaleOrder(models.Model):
         self.sale_status = "Draft"
         self.state = "draft"
 
+    def action_reset_migration_to_draft(self):
+        """this is just for migration purpose on property sales only"""
+        for r in self:
+            r.action_cancel()
+            self.action_draft()
+            buildingsaleline = self.env['building.type.model'].search([('property_sale_order_id', '=', r.id)])
+            for rex in buildingsaleline:
+                rex.mark_sold = False
+                rex.unlink()
+            r.action_propertycancel()
+            r.update_transactions()
+
     def cron_check_expired_allocation(self):
         if self.sale_type == "property" and self.date_validity:
             if (self.date_validity > datetime.today()) and (self.amount_paid <= 0):

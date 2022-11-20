@@ -363,6 +363,16 @@
                     </p>
                 </field>
             </record>
+
+             <record id="model_sale_order_action_reset_so_draft" model="ir.actions.server">
+                <field name="name">Reset to Draft</field>
+                <field name="model_id" ref="sale.model_sale_order"/>
+                <field name="binding_model_id" ref="sale.model_sale_order"/>
+                <field name="binding_view_types">form,list</field>
+                <field name="state">code</field>
+                <field name="code">action = records.action_reset_migration_to_draft()</field>
+            </record>
+            
         <menuitem action="action_orders_property" name="Manage Offers"
             id="menu_manage_offers_property_sale" parent="menu_sub_property_sale"
             sequence="1" groups="property_sale.director,property_sale.officer,base.group_system"/>
