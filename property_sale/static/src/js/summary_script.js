@@ -1,4 +1,4 @@
-odoo.define('property_sale.dashboard_xxxxview', function (require) {
+odoo.define('property_sale.dashboard_summary_view', function (require) {
     'use strict';
   
     // var session = require('web.session');

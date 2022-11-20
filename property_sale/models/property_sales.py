@@ -387,15 +387,21 @@ class SaleOrder(models.Model):
         return ret
 
     def view_payment_history(self):
-        dummy, view_id = self.env['ir.model.data'].get_object_reference('account', 'view_account_payment_tree')
+        dummy, view_id = self.env['ir.model.data'].get_object_reference(
+            'account', 'view_account_payment_tree'
+            )
         for record in self:
+            payments = [rec.id for rec in record.payment_idss]
+            so_payments = self.env['account.payment'].search([('reference', '=', self.name)])
+            records = payments + [rec.id for rec in so_payments]
             return {
                     'name': _('Provision Allocation Payments'),
                     'view_mode': 'tree',
                     'view_id': view_id,
                     'type': 'ir.actions.act_window',
                     'res_model': 'account.payment',
-                    'domain': [('id', 'in', [rec.id for rec in record.payment_idss])], #['&',('partner_id', '=', record.partner_id.id),('reference', '=', self.name)],
+                    'domain': [('id', 'in', records)],
+                    #['&',('partner_id', '=', record.partner_id.id),('reference', '=', self.name)],
                     'target': 'new'
             }
             

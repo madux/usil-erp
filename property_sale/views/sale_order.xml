@@ -174,7 +174,6 @@
                     attrs="{'invisible': ['|', ('sale_type','!=','property'),('percentage_paid','&lt;', 1)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_text">View Payment</span>
-                            <span class="o_stat_text">Payments</span>
                         </div>
                     </button>
 
@@ -233,8 +232,7 @@
                         </div>
                     </button>
                  </xpath>
-
-    
+ 
                 <xpath expr="//button[@name='action_confirm']" position="before">
                     <button name="confirm_offer" string="Approve" confirm="Are you sure you want to confirm"
                         class="oe_highlight" type="object" groups="property_sale.director,property_sale.officer,base.group_system"

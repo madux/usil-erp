@@ -917,7 +917,7 @@ class ImportRecords(models.TransientModel):
                             'phase': phase,
                             'shop_no': shop_no,
                             'migrated_number': row[0],
-                            'location_project': project.id, 
+                            'location_project': project.id,
                             # 'payment_term_id': payment_plan_id.id,
                             'sale_status': 'Allocated',
                             'amount_paid': amount_paid,
@@ -948,7 +948,8 @@ class ImportRecords(models.TransientModel):
         domain = [('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]
         journal_id = None
         bnk_journal_id = self.env['account.journal'].sudo().search(domain, limit=1).id
-        company_journal = (self.env['account.move'].sudo().with_context(company_id=company_id or self.env.user.company_id.id).default_get(['journal_id'])['journal_id'])
+        company_journal = (self.env['account.move'].sudo().with_context(
+            company_id=company_id or self.env.user.company_id.id).default_get(['journal_id'])['journal_id'])
 
         if acquirer:
             journal_id = acquirer.journal_id.id
@@ -962,15 +963,13 @@ class ImportRecords(models.TransientModel):
         # inv = sale_order.sudo()._create_invoices()[0]
         # inv.action_post()
         sale_payment_method = self.env['account.payment.method'].sudo().search(
-                [
-                    ('code', '=', 'manual'), 
-                    ('payment_type', '=', 'inbound')], limit=1)
+                [('code', '=', 'manual'), ('payment_type', '=', 'inbound')], 
+                limit=1)
         account_journal = self.env['account.journal'].sudo()
         account_payment_obj = self.env['account.payment'].sudo()
         journal_id = self.journal_id(False)
         payment_method = account_journal.browse([journal_id]).inbound_payment_method_ids[0].id if account_journal.browse(
             [journal_id]).inbound_payment_method_ids else sale_payment_method.id if sale_payment_method else 1
-        
         acc_values = {
             # 'invoice_ids': [(6, 0, [inv.id])],
             'amount': sale_order.amount_paid,
@@ -987,6 +986,7 @@ class ImportRecords(models.TransientModel):
         }
         payment = account_payment_obj.create(acc_values)
         payment.action_post()
+        sale_order.payment_idss = [(6, 0, [payment.id])]
         
     def confirm_notification(self,popup_message):
         view = self.env.ref('migration_usil.migration_confirm_dialog_view')
@@ -1003,6 +1003,7 @@ class ImportRecords(models.TransientModel):
                 'target':'new',
                 'context':context,
                 }
+
 
 class MigrationDialogModel(models.TransientModel):
     _name="migration.confirm.dialog"
