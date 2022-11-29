@@ -251,7 +251,7 @@ class AccountLoan(models.Model):
         for rec in self:
             if rec.loan_amount and rec.payment_amount:
                 if rec.payment_amount >= rec.loan_amount:
-                    rec.loan_status = completed 
+                    rec.loan_status = 'completed' 
                 else:
                     rec.loan_status = 'running'
 
