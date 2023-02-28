@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="view_usl_kpi_template_search">
+			<field name="name">usl.appraisal.template.search</field>
+			<field name="model">usl.appraisal.template</field>
+			<field name="priority">50</field>
+			<field name="arch" type="xml">
+				<search string="Template">
+					<field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+					<field name = "is_attitude_appraisal" required ="0"/>
+				</search>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="usl_usl_appraisal_template_form_view">
+			<field name="name">Appraisal Template Form View</field>
+			<field name="model">usl.appraisal.template</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group string="-">
+							<group>
+								<field name = "is_attitude_appraisal"/>
+								<field name = "name" required ="1"/>
+								<field name = "hr_category_ids" widget="many2many_tags"/>
+							</group>
+							<group>
+								<field name = "total_weight" required ="1"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="BSC perspective">
+								<field name = "kpi_topic_lines" options="{'no_create': True, 'no_quick_create':True,'no_create_edit':True}">
+									<tree string="BSC perspective">
+										<field name = "name" required ="1"/>
+										<field name = "template_id" required ="1"/>
+										<field name = "input_percentage_of_task" required ="1"/>
+										<field name = "weight" required ="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+						</div>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="view_usl_appraisal_template_tree" model="ir.ui.view">
+			<field name="name">usl.appraisal.template.tree</field>
+			<field name="model">usl.appraisal.template</field>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name = "name" required ="1"/>
+					<field name = "is_attitude_appraisal"/>
+					<field name = "total_weight" required ="1"/>
+				</tree>
+			</field>
+		</record>
+        <record id="usl_appraisal_template_action" model="ir.actions.act_window">
+			<field name="name">Appraisal Template</field>
+			<field name="res_model">usl.appraisal.template</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+			  <p class="oe_view_nocontent_create">
+				Click to Add template.
+			  </p>
+			</field>
+		</record>
+		<menuitem id="usl_appraisal_template" name ="Appraisal Template" parent="maach_hr_appraisal.usl_appraisal_main_menu" sequence="4" action="usl_appraisal_template_action" groups="maach_hr_appraisal.group_appraisal_officer_id,maach_hr_appraisal.group_appraisal_manager_id"/>
+
+	</data>
+</odoo>

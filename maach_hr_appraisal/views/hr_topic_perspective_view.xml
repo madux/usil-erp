@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+        <record model="ir.ui.view" id="view_usl_kpi_topic_search">
+			<field name="name">usl.kpi.topic.search</field>
+			<field name="model">usl.kpi.topic</field>
+			<field name="priority">50</field>
+			<field name="arch" type="xml">
+				<search string="BSC Perpective Templates">
+					<field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+					<group  expand='0' string='Group by...'>
+						<filter name ="kpi_template_id_grp" string='Template' domain="[]" context="{'group_by' : 'template_id'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="usl_kpi_topic_form_view">
+			<field name="name">KPI Topic</field>
+			<field name="model">usl.kpi.topic</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group string="-">
+							<group>
+								<field name = "name" required ="1"/>
+								<field name = "template_id" required ="1"/>
+								<field name = "is_attitude_appraisal"/>
+								
+							</group>
+							<group>
+							<field name = "employee_free_text"/>
+								<field name = "max_line_number" attrs="{'invisible': [('employee_free_text', '=', False)], 'required': [('employee_free_text', '=', True)]}"/>
+								<field name = "state" invisible="1"/>
+								<field name = "input_percentage_of_task" required ="1"/>
+								<field name = "weight" required ="1"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="KPI Questions">
+								<field name = "kpi_question_lines" context="{'default_kpi_topic_id': active_id, 'default_template_id': template_id}">
+									<form>
+										<sheet>
+											<group string="Details">
+												<group>
+													<field name = "kpi_topic_id" required ="0" string = "BSC Perspective" />
+													<field name = "is_default"/>
+													<field name = "name" string="Enter question" attrs="{'invisible': [('is_default', '=', False)], 'required': ['|', ('state', '=', 'In progress'),('is_default', '=', True)]}"/>
+													<field name = "is_checkbox" attrs="{'invisible': [('is_text', '=', True)]}"/>
+													<field name = "answer_checkbox" attrs="{'invisible': [('is_checkbox', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/>
+													<field name = "is_text" attrs="{'invisible': [('is_checkbox', '=', True)]}"/>
+													<field name = "answer_text" attrs="{'invisible': [('is_text', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/>
+													<field name = "state" readonly="1"/>
+												</group>
+												<group>
+													<field name = "template_id"/>
+												</group>
+											</group>
+										</sheet>
+									</form>
+									<tree string="Questions">
+										<field name = "name"/>
+										<field name = "kpi_topic_id" invisible="1" string = "BSC Perspective"/>
+										<field name = "template_id" invisible="1"/>
+										<field name = "is_checkbox" invisible="0"/>
+										<field name = "answer_checkbox" invisible="1"/>
+										<!-- attrs="{'invisible': [('is_checkbox', '=', False)]}"/> -->
+										<field name = "is_text" invisible="0"/>
+										<field name = "answer_text" invisible="1"/>
+										 <!-- attrs="{'invisible': [('is_text', '=', False)]}"/> -->
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_usl_kpi_topic_tree" model="ir.ui.view">
+			<field name="name">usl.kpi.topic.tree</field>
+			<field name="model">usl.kpi.topic</field>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name = "name" required ="1"/>
+					<field name = "template_id" required ="1"/>
+					<field name = "input_percentage_of_task" required ="1"/>
+					<field name = "weight" required ="1"/>
+				</tree>
+			</field>
+		</record>
+
+        <record id="usl_kpi_topic_action" model="ir.actions.act_window">
+			<field name="name">BSC Perspective</field>
+			<field name="res_model">usl.kpi.topic</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_kpi_template_id_grp': 1}</field>
+			<field name="search_view_id" ref="view_usl_kpi_topic_search"/>
+			<field name="help" type="html">
+			  <p class="oe_view_nocontent_create">
+				Click to Add BSC Perspective.
+			  </p>
+			</field>
+		</record>
+		<menuitem id="usl_appraisal_topic_template" name ="BSC Perspective" parent="maach_hr_appraisal.usl_appraisal_setting_menu" sequence="2" action="usl_kpi_topic_action" groups="maach_hr_appraisal.group_appraisal_officer_id,maach_hr_appraisal.group_appraisal_manager_id"/>
+
+    </data>
+</odoo>

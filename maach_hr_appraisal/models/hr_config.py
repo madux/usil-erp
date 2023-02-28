@@ -111,9 +111,9 @@ class HrAppraisalConfig(models.Model):
                 subject = "Appraisal Notification"
                 email_to = employee.work_email
                 email_cc = [employee.work_email]
-                msg = """Dear {}, </br>I wish to notify you that your appraisal starts Now.
-                </br> </br>Kindly {} to review </br>\
-                Yours Faithfully</br>{}""".format(
+                msg = """Dear {}, <br/>I wish to notify you that your appraisal starts Now.
+                <br/> <br/>Kindly {} to review <br/>\
+                Yours Faithfully<br/>{}""".format(
                     employee.name,
                     emp_appraisal.get_url(emp_appraisal.id, emp_appraisal._name),
                     self.env.user.name)
@@ -125,12 +125,59 @@ class HrAppraisalConfig(models.Model):
         else:
             raise ValidationError('No Employee found under the Selected category - {} and job roles such as {}'.format(self.hr_category_id.name, [rec.name for rec in self.hr_category_id.job_roles]))
 
+    # def _prepare_assessment_line(self, employee):
+    #     assessment_list = []
+    #     if self.hr_category_id:
+    #         category_lines = self.hr_category_id.mapped('category_template_ids')
+    #         for cat_lines in category_lines:
+    #             topic_lines = cat_lines.mapped('hr_topic_ids')
+    #             for topc in topic_lines:
+    #                 vals = {
+    #                     'employee_id': employee.id,
+    #                     'kpi_topic_id': topc.id,
+    #                     }
+
+    #                 assessment = self.env['usl.kpi.assessment'].create(vals)
+    #                 assessment_list.append(assessment.id)
+
+    #                 question_lines = topc.mapped('kpi_question_lines')
+
+    #                 """Check which is default question and set it as default"""
+    #                 for ques in question_lines:
+    #                     if ques.is_default:
+    #                         line_val = {
+    #                                 'name': ques.name,
+    #                                 'is_default': ques.is_default,
+    #                                 'is_checkbox': ques.is_checkbox,
+    #                                 'is_text': ques.is_text,
+    #                                 'answer_text': ques.answer_text,
+    #                                 'kpi_topic_id': topc.id,
+    #                                 'template_id': topc.template_id.id,
+    #                                 'employee_free_text': topc.employee_free_text,
+    #                                 'kpi_answers_assessment_id': assessment.id
+    #                             }
+    #                         self.env['usl.kpi.answers'].create(line_val)
+    #         return assessment_list
+
     def _prepare_assessment_line(self, employee):
+        '''
+        DOCS: Fetches all appraisal template where the Categories 
+        exists the selected HR category
+        '''
         assessment_list = []
+        # get all templates that has the hr category id 
         if self.hr_category_id:
-            category_lines = self.hr_category_id.mapped('category_template_ids')
-            for cat_lines in category_lines:
-                topic_lines = cat_lines.mapped('hr_topic_ids')
+            template_ids = self.env['usl.appraisal.template'].search([])
+            templates = []
+            for temp in template_ids:
+                template_categories = temp.mapped('hr_category_ids').filtered(
+                    lambda cat: cat.id == self.hr_category_id.id
+                )
+                if template_categories:
+                    templates.append(temp)
+            # category_lines = self.hr_category_id.mapped('category_template_ids')
+            for tmp in templates:
+                topic_lines = tmp.mapped('kpi_topic_lines')
                 for topc in topic_lines:
                     vals = {
                         'employee_id': employee.id,
@@ -139,9 +186,7 @@ class HrAppraisalConfig(models.Model):
 
                     assessment = self.env['usl.kpi.assessment'].create(vals)
                     assessment_list.append(assessment.id)
-
                     question_lines = topc.mapped('kpi_question_lines')
-
                     """Check which is default question and set it as default"""
                     for ques in question_lines:
                         if ques.is_default:

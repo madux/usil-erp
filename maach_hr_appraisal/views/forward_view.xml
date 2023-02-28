@@ -6,7 +6,7 @@
             <field name="model">memo.appraisal.foward.wizard</field>
             <field name="arch" type="xml">
                 <form string="Forward">
-					<p style="color: red;">* User to direct to are users with Manager and supervisor roles</p>
+					<p style="color: red;">* User to direct to are users with Manager and supervisor roles. By default, it is set to your department manager</p>
                     <group>
                         <group>
                             <field name="memo_record" readonly="1"/> 

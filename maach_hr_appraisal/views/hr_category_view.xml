@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data> 
+		<record model="ir.ui.view" id="usl_url-category_form_view">
+			<field name="name">usl.hr.category</field>
+			<field name="model">usl.hr.category</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group string="-">
+							<group>
+								<field name = "name" required ="1"/>
+							</group>
+							<group>
+								<field name = "job_roles" widget="many2many_tags"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Templates and BSC Perspectives" invisible="1">
+								<field name = "category_template_ids" invisible="0" required ="1" context ="{'default_hr_category_id': active_id}">
+									<form>
+										<sheet>
+											<group string="-">
+												<group>
+													<field name = "hr_template_id" required ="1"/>
+													<field name = "hr_category_id" invisible ="0"/>
+												</group>
+												<group>
+												</group>
+											</group>
+											<notebook>
+												<page string="Templates and BSC Perspectives">
+													<field name = "hr_topic_ids" context ="{'default_template_id': hr_template_id}" domain="[('hr_category_id','=', hr_category_id)]">
+														<form>
+															<sheet>
+																<group string="-">
+																	<group>
+																		<field name = "name" required ="1"/>
+																		<field name = "template_id" required ="0" invisible="1"/>
+																		<field name = "employee_free_text"/>
+																		<field name = "max_line_number" attrs="{'invisible': [('employee_free_text', '=', False)], 'required': [('employee_free_text', '=', True)]}"/>
+
+																	</group>
+																	<group>
+																		<field name = "state" invisible="1"/>
+																		<field name = "input_percentage_of_task" required ="1"/>
+																		<field name = "weight" required ="1"/>
+																		<field name = "hr_category_id" invisible="0"/>
+
+																	</group>
+																</group>
+																<notebook>
+																	<page string="KPI Questions">
+																		<field name = "kpi_question_lines" required ="1" context="{'default_kpi_topic_id': active_id, 'default_hr_template_id': template_id}">
+																			<form>
+																				<sheet>
+																					<group string="Details">
+																						<group>
+																							<field name = "kpi_topic_id" required ="0" string = "BSC Perspective" invisible="1"/>
+																							<field name = "is_default"/>
+																							<field name = "name" string="Enter question" attrs="{'invisible': [('is_default', '=', False)], 'required': ['|', ('state', '=', 'In progress'),('is_default', '=', True)]}"/>
+																							<field name = "is_checkbox" attrs="{'invisible': [('is_text', '=', True)]}"/>
+																							<field name = "answer_checkbox" attrs="{'invisible': [('is_checkbox', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/>
+																							<field name = "is_text" attrs="{'invisible': [('is_checkbox', '=', True)]}"/>
+																							<field name = "answer_text" attrs="{'invisible': [('is_text', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/>
+																						</group>
+																						<group>
+																							<field name = "template_id" invisible="1"/>
+																							<field name = "state" readonly="1" invisible="1"/>
+
+																						</group>
+																					</group>
+																				</sheet>
+																			</form>
+
+																			<tree string="Questions">
+																				<field name = "name"/>
+																				<field name = "kpi_topic_id" invisible="1" string = "BSC Perspective"/>
+																				<field name = "template_id" invisible="1"/>
+																				<field name = "is_checkbox" invisible="0"/>
+																				<field name = "answer_checkbox" invisible="1"/>
+																				<!-- attrs="{'invisible': [('is_checkbox', '=', False)]}"/> -->
+																				<field name = "is_text" invisible="0"/>
+																				<field name = "answer_text" invisible="1"/>
+																				<!-- attrs="{'invisible': [('is_text', '=', False)]}"/> -->
+																			</tree>
+																		</field>
+																	</page>
+																</notebook>
+															</sheet>
+														</form>
+													</field>
+												</page>
+											</notebook>
+										</sheet>
+									</form>
+									<tree string="Templates and BSC Perspectives">
+										<field name = "hr_topic_ids" string = "BSC Perspective" invisible="0" required ="1"/>
+										<field name = "hr_template_id" required ="1" string="Relate template"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="view_usl_hr_category_tree" model="ir.ui.view">
+			<field name="name">usl.hr.category.tree</field>
+			<field name="model">usl.hr.category</field>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name = "name" required ="1"/>
+					<field name = "job_roles" widget="many2many_tags"/>
+				</tree>
+			</field>
+		</record>
+ 
+		<record id="usl_hr_category_action" model="ir.actions.act_window">
+			<field name="name">HR Category</field>
+			<field name="res_model">usl.hr.category</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+			  <p class="oe_view_nocontent_create">
+				Click to Add Category.
+			  </p>
+			</field>
+		</record>
+		<menuitem id="usl_appraisal_catogory" name ="HR Category" parent="maach_hr_appraisal.usl_appraisal_setting_menu" sequence="3" action="usl_hr_category_action" groups="maach_hr_appraisal.group_appraisal_officer_id,maach_hr_appraisal.group_appraisal_manager_id"/>
+	</data>
+</odoo>

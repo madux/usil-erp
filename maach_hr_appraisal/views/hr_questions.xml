@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="usl_kpi_questions_form_view">
+			<field name="name">KPI Questions</field>
+			<field name="model">usl.kpi.questions</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group string="Details">
+							<group>
+								<field name = "kpi_topic_id" required ="1" string = "BSC Perspective"/>
+								<field name = "is_default"/>
+								<field name = "name" string="Enter question" attrs="{'invisible': [('is_default', '=', False)], 'required': ['|', ('state', '=', 'In progress'),('is_default', '=', True)]}"/>
+								<field name = "is_checkbox" attrs="{'invisible': [('is_text', '=', True)]}"/>
+								<field name = "answer_checkbox" attrs="{'invisible': [('is_checkbox', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/>
+								<field name = "state" invisible="1" readonly="1"/>
+							</group>
+							<group>
+							    <field name = "is_text" attrs="{'invisible': [('is_checkbox', '=', True)]}"/>
+								<field name = "answer_text" attrs="{'invisible': [('is_text', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/>
+								<field name = "template_id" invisible="1"/>
+								<!-- <field name = "answer_checkbox" attrs="{'invisible': [('is_checkbox', '=', False)], 'required': [('state', '=', 'In progress'), ('is_text', '=', True)]}"/> -->
+								<!-- <field name = "state" readonly="1"/> -->
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_usl_kpi_questions_tree" model="ir.ui.view">
+			<field name="name">usl.kpi.questions.tree</field>
+			<field name="model">usl.kpi.questions</field>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name = "name"/>
+					<field name = "kpi_topic_id" string = "BSC Perspective"/>
+					<field name = "is_checkbox" invisible="1"/>
+					<field name = "answer_checkbox" attrs="{'invisible': [('is_checkbox', '=', False)]}"/>
+					<field name = "is_text" invisible="1"/>
+					<field name = "answer_text" attrs="{'invisible': [('is_text', '=', False)]}"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_usl_kpi_questions_search">
+			<field name="name">usl.kpi.questions.search</field>
+			<field name="model">usl.kpi.questions</field>
+			<field name="priority">50</field>
+			<field name="arch" type="xml">
+				<search string="BSC Perspective Question">
+					<field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+					<group  expand='0' string='Group by...'>
+						<filter name ="kpi_question_id_grp" string = "BSC Perspective" domain="[]" context="{'group_by' : 'kpi_topic_id'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+ 
+		<record id="usl_kpi_questions_action" model="ir.actions.act_window">
+			<field name="name">usl kpi questions</field>
+			<field name="res_model">usl.kpi.questions</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_kpi_question_id_grp': 1}</field>
+			<field name="search_view_id" ref="view_usl_kpi_questions_search"/>
+			<field name="help" type="html">
+			  <p class="oe_view_nocontent_create">
+				Click to Add Questions.
+			  </p>
+			</field>
+		</record>
+		<!-- <menuitem id="usl_appraisal_questions" name ="Set Defaults Questions" parent="maach_hr_appraisal.usl_appraisal_setting_menu" sequence="9" action="usl_kpi_questions_action" groups="maach_hr_appraisal.group_appraisal_officer_id,maach_hr_appraisal.group_appraisal_manager_id"/> -->
+	</data>
+</odoo>

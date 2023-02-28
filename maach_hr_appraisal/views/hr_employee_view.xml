@@ -20,7 +20,7 @@
                             </div>
                         </button>
   
-                        <button name="stat_button_query" type="object" groups="hr.group_hr_user" string="Queries: " class="oe_stat_button" icon="fa-archive">
+                        <button name="stat_button_query" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="number_queries" readonly="1" force_save="1"/>

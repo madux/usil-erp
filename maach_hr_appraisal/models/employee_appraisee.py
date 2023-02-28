@@ -28,10 +28,10 @@ class HrEmployeeAppraisal(models.Model):
     department_id = fields.Many2one('hr.department', string="Department",readonly=True)
     unit_id = fields.Char(string="Unit", readonly=True)
     directed_user_id = fields.Many2one('res.users', string="Appraisal with ?", readonly=True)
-    job_title = fields.Many2one('hr.job', string="Job title", readonly=True )
+    job_title = fields.Many2one('hr.job', string="Job title", readonly=True)
     date_from = fields.Date(string="Date From", readonly=True, store=True)
     date_end = fields.Date(string="Date End", readonly=True)
-    deadline = fields.Date(string="Deadline Date", compute="get_appraisal_deadline")
+    deadline = fields.Date(string="Deadline Date", compute="get_appraisal_deadline", store=True)
     key_strength = fields.Text(string="Key Strengths to Continue")
     key_development = fields.Text(string="Key Development Opportunites")
     training_needs = fields.Text(string="Appraisee's training needs")
@@ -55,7 +55,8 @@ class HrEmployeeAppraisal(models.Model):
     balance_score = fields.Float(
         string="Balance Score", 
         compute="_compute_assessment_score", 
-        help="Sum of balance score Total percentage in line"
+        help="Sum of balance score Total percentage in line",
+        store=True
         )
     attitude_appraisal_score = fields.Float(
         string="Attitude Appraisal Score",
@@ -64,7 +65,9 @@ class HrEmployeeAppraisal(models.Model):
         )
     overall_total = fields.Float(
         string="Overall Total", 
-        compute="_compute_overall_total"
+        compute="_compute_overall_total",
+        store=True
+
         )
     days_remaining = fields.Integer(
         string="Days remaining", 
@@ -122,7 +125,10 @@ class HrEmployeeAppraisal(models.Model):
     number_warning = fields.Integer(string="Warning")
     number_absent = fields.Integer(string="Absent")
     number_appraisal = fields.Integer(string="Appraisal")
-    appraisal_year = fields.Char(string="Appraisal year", compute="compute_appraisal_year") 
+    appraisal_year = fields.Char(
+        string="Appraisal year", 
+        compute="compute_appraisal_year",
+        store=True) 
 
     @api.depends('date_from')
     def compute_appraisal_year(self):
@@ -154,7 +160,7 @@ class HrEmployeeAppraisal(models.Model):
 
     def action_accepted(self):
         if not self.employee_id.user_id.id == self.env.uid:
-            raise ValidationError('Sorry!!! you are only allowed to accepted your own approved Appraisal')
+            raise ValidationError('Sorry!!! you are only allowed to accept your own approved Appraisal')
         self.acceptance_status = 'Accepted'
 
     def _check_validation(self):
@@ -200,11 +206,12 @@ class HrEmployeeAppraisal(models.Model):
     @api.depends('kpi_assessment_lines')
     def _compute_assessment_score(self):
         for rec in self:
-            balance_tasks = rec.mapped('kpi_assessment_lines').filtered(lambda x: x.kpi_topic_id.template_id.is_attitude_appraisal == False)
+            # balance_tasks = rec.mapped('kpi_assessment_lines').filtered(lambda x: x.kpi_topic_id.template_id.is_attitude_appraisal == False)
+            balance_tasks = rec.mapped('kpi_assessment_lines').filtered(lambda x: x.kpi_topic_id.is_attitude_appraisal == False)
             balance_total = sum([it.total_percentage for it in balance_tasks])
             rec.balance_score = balance_total * 0.6
 
-            attitude_tasks = rec.mapped('kpi_assessment_lines').filtered(lambda x: x.kpi_topic_id.template_id.is_attitude_appraisal == True)
+            attitude_tasks = rec.mapped('kpi_assessment_lines').filtered(lambda x: x.kpi_topic_id.is_attitude_appraisal == True)
             attitude_total = sum([it.total_percentage for it in attitude_tasks])
             rec.attitude_appraisal_score = (attitude_total / 100) * 40
 
@@ -252,9 +259,9 @@ class HrEmployeeAppraisal(models.Model):
         subject = "Appraisal Notification"
         email_to = self.employee_id.work_email
         email_cc = [rec.work_email for rec in self.approver_ids]
-        msg = "Dear {}, </br>I wish to notify you that an appraisal with description, {} \
-        by {} has been approved.</br> </br>Kindly {} to review </br>\
-        Yours Faithfully</br>{}".format(
+        msg = "Dear {}, <br/>I wish to notify you that an appraisal with description, {} \
+        by {} has been approved.<br/> <br/>Kindly {} to review <br/>\
+        Yours Faithfully<br/>{}".format(
             self.employee_id.name,
             self.sequence, self.employee_id.name,
             self.get_url(self.id, self._name),
@@ -286,8 +293,8 @@ class HrEmployeeAppraisal(models.Model):
                 'email_cc': reciepients,
                 'body_html': msg
             }
-        mail_id = self.env['mail.mail'].create(mail_data)
-        self.env['mail.mail'].send(mail_id)
+        mail_id = self.env['mail.mail'].sudo().create(mail_data)
+        self.env['mail.mail'].sudo().send(mail_id)
         self.message_post(body=msg)
 
     def stat_button_query(self):
@@ -323,6 +330,7 @@ class HrEmployeeAppraisal(models.Model):
                     'default_memo_record': self.id,
                     'default_resp': self.env.uid,
                     'default_type': "forward",
+                    'default_directed_user_id': self.employee_id.department_id.manager_id.user_id.id or self.employee_id.parent_id.user_id.id,
                 },
             }
 

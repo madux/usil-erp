@@ -111,6 +111,7 @@ class HrKPITopic(models.Model):
     _order = "id desc"
 
     name = fields.Char(string="Name", required=False)
+    is_attitude_appraisal = fields.Boolean(string="Is Attitude Appraisal", default=False)
     kpi_question_lines = fields.One2many(
         'usl.kpi.questions', 
         'kpi_topic_id', 
@@ -133,7 +134,8 @@ class HrKPITopic(models.Model):
     @api.constrains('kpi_question_lines', 'weight')
     def _check_lines(self):
         if not self.employee_free_text and not self.mapped('kpi_question_lines'):
-            raise ValidationError('You must provide at least one KPI Question for these topic')
+            # raise ValidationError('You must provide at least one KPI Question for these topic')
+            pass
         if self.weight < 1:
             raise ValidationError('Weight must be greater than 0')
 
@@ -156,8 +158,8 @@ class UslHrCategoryTemplate(models.Model):
             raise ValidationError('You must assign at least one job role')
 
         if not self.mapped('category_template_ids'):
-            raise ValidationError('You must select a template')
-
+            # raise ValidationError('You must select a template')
+            pass
 
 class HrCategoryTemplate(models.Model):
     _name = "usl.category.template.line"
