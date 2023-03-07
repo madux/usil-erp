@@ -251,6 +251,22 @@ class Memo_Model(models.Model):
         # if usr:
         #     raise ValidationError(msg)
 
+    def determine_user_role(self):
+        '''Checks if the  user is employee/administration / Memo manager / memo gm/ memo auditor / memo account
+        returns true to be used to set the To field in wizard to the person's manager'''
+        user_id = self.env['res.users'].browse([self.env.uid])
+        sys_admin = user_id.has_group("base.group_system")
+        hr_admin = user_id.has_group("hr.group_hr_manager")
+        memo_manager = user_id.has_group("company_memo.mainmemo_manager")
+        memo_audit = user_id.has_group("company_memo.mainmemo_audit")
+        memo_account = user_id.has_group("company_memo.mainmemo_account")
+        if any([sys_admin, hr_admin, memo_audit, memo_manager, memo_account]):
+            return False 
+        else:
+            if not self.employee_id.parent_id:
+                raise ValidationError('Please ensure you have a unit manager / head manager assigned to your record !')
+            return True
+
     def forward_memo(self): 
         if self.state == "submit":
             if not self.env.user.id == self.employee_id.user_id.id:#  or self.env.uid != self.create_uid:
@@ -259,6 +275,8 @@ class Memo_Model(models.Model):
         manager = users.has_group("company_memo.mainmemo_manager")
         admin = users.has_group("base.group_system")
         dummy, view_id = self.env['ir.model.data'].get_object_reference('company_memo', 'memo_model_forward_wizard')
+        is_officer = self.determine_user_role() # returns true or false 
+
         #usr = self.mapped('res_users').filtered(lambda x: x.id == self.env.user.id)
         #if usr:
          #   raise ValidationError('You have initially forwarded this document. Kindly reject, cancel or Wait for aproval')
@@ -274,7 +292,9 @@ class Memo_Model(models.Model):
                 'context': {
                     'default_memo_record': self.id,
                     # 'default_date': self.date, 
-                    'default_resp': self.env.uid,  
+                    'default_resp': self.env.uid,
+                    'default_direct_employee_id': self.employee_id.parent_id.id,
+                    'default_is_officer': is_officer,
                 },
             }
     """The wizard action passes the employee whom the memo was director to this function."""

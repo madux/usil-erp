@@ -12,6 +12,7 @@ class Forward_Wizard(models.TransientModel):
     direct_employee_id = fields.Many2one('hr.employee', 'Direct To')
     # amountfig = fields.Float('Budget Amount', store=True)
     users_followers = fields.Many2many('hr.employee', string='Add followers')
+    is_officer = fields.Boolean(string="Is Officer")
 
     def forward_memo(self):  # Always available,
         if self.memo_record.memo_type == "Payment":
