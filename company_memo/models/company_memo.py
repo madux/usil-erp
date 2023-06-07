@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class Memo_Model(models.Model):
     _name = "memo.model"
+    _description = "Internal Memo"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = "name"
     _order = "id desc"
@@ -98,6 +99,8 @@ class Memo_Model(models.Model):
     comments = fields.Text('Comments', default="-")
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='No. Attachments')
     partner_id = fields.Many2many('res.partner', string='Related Partners')
+    approver_id = fields.Many2one('hr.employee', 'Approver')
+    user_is_approver = fields.Boolean(string="User is approver", compute="compute_user_is_approver")
 
     # Loan fields
     loan_type = fields.Selection(
@@ -148,6 +151,13 @@ class Memo_Model(models.Model):
     )
     loan_reference = fields.Integer(string="Loan Ref")
     active = fields.Boolean('Active', default=True)
+
+    @api.depends('approver_id')
+    def compute_user_is_approver(self):
+        if self.approver_id and self.approver_id.user_id.id == self.env.user.id:
+            self.user_is_approver = True
+        else:
+            self.user_is_approver = False
     
     @api.model
     def fields_view_get(self, view_id='company_memo.memo_model_form_view_3', view_type='form', toolbar=False, submenu=False):
@@ -293,7 +303,7 @@ class Memo_Model(models.Model):
                     'default_memo_record': self.id,
                     # 'default_date': self.date, 
                     'default_resp': self.env.uid,
-                    'default_direct_employee_id': self.employee_id.parent_id.id,
+                    # 'default_direct_employee_id': self.employee_id.parent_id.id,
                     'default_is_officer': is_officer,
                 },
             }

@@ -14,7 +14,7 @@
         'security/security_group.xml', 
         'sequence/sequence.xml',
         'views/company_memo_view.xml',
-        # 'views/res_users.xml',
+        'views/res_users.xml',
         'views/memo_forward_view.xml',
         'wizard/return_memo_wizard_view.xml',
         'reports/report_memo.xml',

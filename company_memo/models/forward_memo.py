@@ -10,10 +10,17 @@ class Forward_Wizard(models.TransientModel):
     description_two = fields.Text('Comment')
     date = fields.Datetime('Date', default=lambda self: fields.datetime.now())#, default=fields.Datetime.now())
     direct_employee_id = fields.Many2one('hr.employee', 'Direct To')
+    is_approver = fields.Selection([('yes', 'Yes'),('no', 'No')],default="", string="Is Approver")
     # amountfig = fields.Float('Budget Amount', store=True)
     users_followers = fields.Many2many('hr.employee', string='Add followers')
     is_officer = fields.Boolean(string="Is Officer")
 
+    @api.onchange('direct_employee_id')
+    def onchange_direct_employer_id(self):
+        if self.direct_employee_id:
+            if self.env.user.id == self.direct_employee_id.user_id.id:
+                raise ValidationError('You cannot forward this memo to your self')
+        
     def forward_memo(self):  # Always available,
         if self.memo_record.memo_type == "Payment":
             if self.memo_record.amountfig < 0:
@@ -31,10 +38,12 @@ class Forward_Wizard(models.TransientModel):
             if memo.comments:
                 comment_msg = memo.comments if memo.comments else "-"
             memo.write({
-                'res_users': [(4, self.env.uid)],
-                        'set_staff': self.direct_employee_id.id, 'direct_employee_id': self.direct_employee_id.id, 'state': 'Sent',
-                        'users_followers': [(4, self.direct_employee_id.id)],
-                        'comments': comment_msg +' '+body,})
+                    'res_users': [(4, self.env.uid)],
+                    'set_staff': self.direct_employee_id.id, 'direct_employee_id': self.direct_employee_id.id, 'state': 'Sent',
+                    'users_followers': [(4, self.direct_employee_id.id)],
+                    'approver_id': self.direct_employee_id.id if self.is_approver == "yes" else False,
+                    'comments': comment_msg +' '+body
+                    })
             # return{'type': 'ir.actions.act_window_close'}
             
         else:

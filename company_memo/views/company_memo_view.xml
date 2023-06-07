@@ -32,20 +32,22 @@
                         <div class="row">
                                 <!-- <center><img src="/company_memo/static/img/usl.png" style="max-height:180px;max-width:400px;"/></center> -->
                             <div class="col-xs-4 pull-left mt8">
-                                <button name="user_approve_memo"
+                                <!-- <button name="user_approve_memo"
                                     class="oe_stat_button oe_highlight"
                                     icon="fa-calendar" 
-                                    attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
+                                    attrs="{'invisible': ['|','|',('memo_type','!=','Internal'),('state','!=','Sent'),('user_is_approver','=', False)]}"
                                     type="object" confirm ="Are you sure you want to approve?" string="Approve Memo"
                                     groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
+                                </button> -->
+                                 <button name="user_approve_memo" class="oe_stat_button oe_highlight" icon="fa-calendar" attrs="{'invisible': ['|', '|',('memo_type','!=','Internal'),('state','!=','Sent'),('user_is_approver','!=', True)]}" type="object" confirm="Are you sure you want to approve?" string="Approve Memo">
                                 </button>
                                 <button name="return_memo"
                                     class="btn-danger oe_stat_button sm"
                                     icon="fa-redo"
-                                    attrs="{'invisible': ['|',('memo_type','!=','Internal'),('state','!=','Sent')]}"
-                                    type="object" string="Return Memo"
-                                    groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
+                                    attrs="{'invisible': ['|', '|',('memo_type','!=','Internal'),('state','!=','Sent'),('user_is_approver','!=', True)]}"
+                                    type="object" string="Return Memo">
                             </button>
+                            <!-- groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit" -->
                             </div> 
                         </div>
                         <br/>
@@ -94,6 +96,9 @@
                                 <field name = "users_followers" widget="many2many_tags" required="0" readonly="1"/>
                                 <field name = "res_users" widget="many2many_tags" required="0" readonly="1"/>  
                                 <field name="active" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+                                <field name="user_is_approver" invisible="1"/>
+
                             </group> 
                             <group> 
                                 <field name="date" attrs="{'readonly':[('state','not in',['submit'])]}"/>

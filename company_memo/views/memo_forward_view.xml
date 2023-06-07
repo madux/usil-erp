@@ -9,14 +9,14 @@
                 <form string="Forward Memo">
                     <group>
                         <group>
-                            <field name="memo_record" readonly="1"/> 
-                            <field name="resp" readonly="1" invisible="0"/>
+                            <field name="memo_record" readonly="1" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/> 
+                            <field name="resp" readonly="1" invisible="0" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             <field name="is_officer" invisible="1"/> 
                             <field name="direct_employee_id" string="To" required="1" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
                             attrs="{'readonly': [('is_officer', '=', True)]}"/> 
                             <!-- <field name = "users_followers" widget="many2many_tags" required="0"/> -->
-
                             <!-- <field name="amountfig"/> -->
+                            <field name="is_approver"/>
                             <field name="date"/>
                         </group>
                         <group> 
