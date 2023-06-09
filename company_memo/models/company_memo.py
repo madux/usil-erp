@@ -100,6 +100,7 @@ class Memo_Model(models.Model):
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='No. Attachments')
     partner_id = fields.Many2many('res.partner', string='Related Partners')
     approver_id = fields.Many2one('hr.employee', 'Approver')
+    approver_by = fields.Many2one('res.users', 'Approved by')
     user_is_approver = fields.Boolean(string="User is approver", compute="compute_user_is_approver")
 
     # Loan fields
@@ -374,10 +375,10 @@ class Memo_Model(models.Model):
         
         if self.memo_type in ["Payment", 'loan']:
             self.state = "Approve"
-            self.write({'res_users': [(4, users.id)]})
+            self.write({'res_users': [(4, users.id)], 'approver_by': users.id})
         elif self.memo_type == "Internal":
             self.state = "Done"
-            self.write({'res_users': [(4, users.id)]})
+            self.write({'res_users': [(4, users.id)], 'approver_by': users.id})
         self.mail_sending_direct(body_msg)
         self.follower_messages(body)
     

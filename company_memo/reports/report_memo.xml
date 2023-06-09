@@ -107,7 +107,7 @@
             <br/><br/>
             <div class="row">
               <div class="col-3 oe_right">
-                  <img t-if="user.user_signature" t-att-src="image_data_uri(user.user_signature)" style="max-height: 65px;max-width: 200px;" alt="Logo"/>
+                  <img t-if="o.approver_by.user_signature" t-att-src="image_data_uri(o.approver_by.user_signature)" style="max-height: 65px;max-width: 200px;" alt="Logo"/>
               </div>
             </div>
           </div>

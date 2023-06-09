@@ -39,7 +39,7 @@
                                     type="object" confirm ="Are you sure you want to approve?" string="Approve Memo"
                                     groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
                                 </button> -->
-                                 <button name="user_approve_memo" class="oe_stat_button oe_highlight" icon="fa-calendar" attrs="{'invisible': ['|', ('memo_type','!=','Internal'),('state','!=','Sent')]}" type="object" confirm="Are you sure you want to approve?" string="Approve Memo" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_audit">
+                                 <button name="user_approve_memo" class="oe_stat_button oe_highlight" icon="fa-calendar" attrs="{'invisible': ['|', ('memo_type','!=','Internal'),('state','!=','Sent')]}" type="object" confirm="Are you sure you want to approve?" string="Approve Memo" groups="base.group_system,company_memo.mainmemo_manager">
                                 </button>
                                 <button name="return_memo"
                                     class="btn-danger oe_stat_button sm"
