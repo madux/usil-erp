@@ -303,7 +303,7 @@ class Memo_Model(models.Model):
                     'default_memo_record': self.id,
                     # 'default_date': self.date, 
                     'default_resp': self.env.uid,
-                    # 'default_direct_employee_id': self.employee_id.parent_id.id,
+                    'default_direct_employee_id': self.employee_id.parent_id.id,
                     'default_is_officer': is_officer,
                 },
             }

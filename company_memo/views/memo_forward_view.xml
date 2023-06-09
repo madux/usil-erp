@@ -16,7 +16,7 @@
                             attrs="{'readonly': [('is_officer', '=', True)]}"/> 
                             <!-- <field name = "users_followers" widget="many2many_tags" required="0"/> -->
                             <!-- <field name="amountfig"/> -->
-                            <field name="is_approver"/>
+                            <field name="is_approver" invisible="1"/>
                             <field name="date"/>
                         </group>
                         <group> 
