@@ -15,11 +15,11 @@ class Forward_Wizard(models.TransientModel):
     users_followers = fields.Many2many('hr.employee', string='Add followers')
     is_officer = fields.Boolean(string="Is Officer")
 
-    @api.onchange('direct_employee_id')
-    def onchange_direct_employer_id(self):
-        if self.direct_employee_id:
-            if self.env.user.id == self.direct_employee_id.user_id.id:
-                raise ValidationError('You cannot forward this memo to your self')
+    # @api.onchange('direct_employee_id')
+    # def onchange_direct_employer_id(self):
+    #     if self.direct_employee_id:
+    #         if self.env.user.id == self.direct_employee_id.user_id.id:
+    #             raise ValidationError('You cannot forward this memo to your self')
         
     def forward_memo(self):  # Always available,
         if self.memo_record.memo_type == "Payment":
