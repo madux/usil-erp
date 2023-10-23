@@ -869,7 +869,7 @@ class ImportRecords(models.TransientModel):
                 shop_type = row[12] if self.property_type in ['Shop'] else False
                 shop_size = row[13] if self.property_type in ['Shop'] else False
                 plot_size = row[20] if self.property_type in ['Land'] else False
-                plot_no = row[10] if self.property_type in ['Land'] else row[7] if self.property_type in ['Shop'] else False
+                plot_no = row[6] if self.property_type in ['Land'] else row[11] if self.property_type in ['Shop'] else False
                 order_date = row[8] if self.property_type in ['Land'] else row[14] if self.property_type in ['Shop'] else False
                 unit_price = row[10] if self.property_type in ['Land'] else row[15] if self.property_type in ['Shop'] else 0 
                 discount = row[11] if self.property_type in ['Land'] else row[16] if self.property_type in ['Shop'] else False 
