@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_loan_summary">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <link rel='stylesheet' href="/osynx_loan/static/src/css/report_loan.css"/>
+                        <center>
+                            <h3 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold">
+                                Loan Summary Report
+                            </h3>
+                            <span style="font-weight:bold">As of:</span>
+                            <span style="margin-left:15px" t-field="o.date_to" t-options='{"format": "MMM d, yyyy"}'/>
+                        </center>
+
+                        <table class="table table-sm table-bordered" name="payout_table">
+                            <thead>
+                              <!--  <tr>
+                                    <th colspan="3" style="text-align:center">Account</th>
+                                    <th colspan="4" style="text-align:center">Earnings</th>
+                                    <th colspan="3" style="text-align:center">Deductions</th>
+                                    <th style="text-align:center">Total</th>
+                                </tr>-->
+                                <tr>
+                                    <th>#</th>
+                                    <th>Account</th>
+                                    <th>Borrower</th>
+                                    <th>Guarantor</th>
+                                    <th>Principal</th>
+                                    <th>Interest</th>
+                                    <th>Total Loan</th>
+                                    <th>Penalty</th>
+                                    <th>Total Payment</th>
+                                    <th>Principal Balance</th>
+                                    <th>Interest Balance</th>
+                                    <th>Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="count" t-value="0" />
+                                <tr t-foreach="loan_ids" t-as="rec">
+                                    <t t-set="count" t-value="count + 1"/>
+                                    <td><span t-esc="count"/></td>
+                                    <td t-esc="rec.name"/>
+                                    <td t-esc="rec.borrower_id.name"/>
+                                    <td t-esc="rec.guarantor_id.partner_id.name"/>
+                                    <td class="text-right" t-esc="rec.principal" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <td class="text-right" t-esc="rec.total_interest" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <td class="text-right" t-esc="rec.total_loan" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <td class="text-right" t-esc="rec.total_penalty" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <td class="text-right" t-esc="rec.total_payment" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <td class="text-right" t-esc="rec.total_balance_principal" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <td class="text-right" t-esc="rec.total_balance_interest" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    <th class="text-right" t-esc="rec.total_balance" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

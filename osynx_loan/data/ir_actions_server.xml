@@ -1,0 +1,119 @@
+<odoo>
+    <data noupdate="1">
+        <record model="ir.actions.server" id="action_validate">
+            <field name="name">Batch Validate</field>
+            <field name="model_id" ref="model_member_contribution"/>
+            <field name="binding_model_id" ref="model_member_contribution" />
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_validate()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_approve">
+            <field name="name">Batch Approve</field>
+            <field name="model_id" ref="model_loan_account"/>
+            <field name="binding_model_id" ref="model_loan_account" />
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_approve()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_validate_payment">
+            <field name="name">Batch Validate</field>
+            <field name="model_id" ref="model_loan_payment"/>
+            <field name="binding_model_id" ref="model_loan_payment" />
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_validate()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_set_type">
+            <field name="name">Set Type</field>
+            <field name="model_id" ref="model_loan_payment"/>
+            <field name="binding_model_id" ref="model_loan_payment" />
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.set_type()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_create_contribution_payment">
+            <field name="name">Create Contribution Payment</field>
+            <field name="model_id" ref="model_member_contribution"/>
+            <field name="binding_model_id" ref="model_member_contribution" />
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_create_contribution_payment()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_send_statements">
+            <field name="name">Send Statement</field>
+            <field name="model_id" ref="model_member_account"/>
+            <field name="binding_model_id" ref="model_member_account" />
+            <field name="binding_view_types">list</field>
+            <!--   <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>-->
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_send()
+            </field>
+        </record>
+
+         <record model="ir.actions.server" id="action_send_e_contracts">
+            <field name="name">Send E-Contract</field>
+            <field name="model_id" ref="model_member_account"/>
+            <field name="binding_model_id" ref="model_member_account" />
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_send_contract()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_send_loan_statements">
+            <field name="name">Send e-Soa</field>
+            <field name="model_id" ref="model_loan_account"/>
+            <field name="binding_model_id" ref="model_loan_account" />
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_send()
+            </field>
+        </record>
+
+         <record model="ir.actions.server" id="action_server_send_loan_agreement">
+            <field name="name">Send Loan Agreement</field>
+            <field name="model_id" ref="model_loan_account"/>
+            <field name="binding_model_id" ref="model_loan_account" />
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_send_loan_agreement()
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

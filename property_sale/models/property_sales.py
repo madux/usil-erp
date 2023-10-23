@@ -48,6 +48,18 @@ class SaleOrder(models.Model):
     phase = fields.Char('Phase')
     saletype = fields.Char('Saletype')
     level = fields.Char('Level')
+    shop_size = fields.Char('Shop size')
+    plot_type = fields.Char('Sale / Plot Type')
+    plot_size = fields.Char('Plot Size')
+    plot_no = fields.Char('Block / Plot No')
+    agent = fields.Char('Agent Fee')
+    agent_fee = fields.Char('Agent Fee')
+    agent_phone = fields.Char('Agent Phone')
+    agent_paid = fields.Char('Agent Paid')
+    sold_date = fields.Date('Sold Paid')
+
+
+    property_sale_person = fields.Char('Sale Person')
     migrated_number = fields.Char('Migration Number')
     phone_number = fields.Char('Phone No:', related="partner_id.phone")
     total_discount = fields.Float('Total Discount(%)', readonly=False, compute="discount_function")

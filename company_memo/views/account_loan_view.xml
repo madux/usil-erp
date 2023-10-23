@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <record id="loan_account_inherit" model="ir.ui.view">
+            <field name="name">Account Loan</field>
+            <field name="model">loan.account</field>
+            <field name="inherit_id" ref="account_loan.loan_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='total_guarantor_earning']" position="after">
+                    <field name="memo_id" readonly="1" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/> 
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="loan_payment_type_tree">
+      <field name="name">loan.payment.type.tree</field>
+      <field name="model">loan.payment.type</field>
+      <field name="arch" type="xml">
+        <tree editable="top">
+          <field name="name" required="1"/>
+          <field name="code"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="action_loan_payment_type">
+      <field name="name">Loan Payment Type</field>
+      <field name="res_model">loan.payment.type</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  </data>
+</odoo>

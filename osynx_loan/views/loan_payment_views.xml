@@ -1,0 +1,165 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="loan_account_payment_search">
+      <field name="name">loan.payment.search</field>
+      <field name="model">loan.payment</field>
+      <field name="arch" type="xml">
+        <search string="Search Reference Document">
+          <field name="name" string="Reference" filter_domain="['|',('loan_id','ilike',self),('name','ilike',self)]"/>
+          <field name="member_id" string="Member" filter_domain="[('member_id','ilike',self)]"/>
+          <separator/>
+
+          <filter string="Contribution Payment" name="contribution_payment" domain="[('payment_type_id.code', '=', 'CONTRIBUTION')]"/>
+          <filter string="Principal Payment" name="principal_payment" domain="[('payment_type_id.code', '=', 'PRINCIPAL')]"/>
+          <filter string="Interest Payment" name="interest_payment" domain="[('payment_type_id.code', '=', 'INTEREST')]"/>
+          <filter string="Membership Payment" name="interest_payment" domain="[('payment_type_id.code', '=', 'MEMBERSHIP')]"/>
+          <filter string="Transaction Fee Payment" name="interest_payment" domain="[('payment_type_id.code', '=', 'TRANSACTION')]"/>
+          <filter string="Late Contribution Penalty" name="penalty_payment" domain="[('payment_type_id.code', '=', 'LATE_CONTRIBUTION')]"/>
+          <filter string="Expired Loan Penalty" name="penalty_payment" domain="[('payment_type_id.code', '=', 'EXPIRE_LOAN')]"/>
+          <filter string="To Validate" name="to_validate" domain="[('state', '=', 'process')]"/>
+          <separator/>
+          <filter name="current_month" string="Current Month" domain="[
+                    ('date', '&gt;=', (context_today()).strftime('%Y-%m-01')),
+                    ('date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+          <filter
+                  name="previous_month"
+                  string="Previous Month"
+                  domain="[('date', '&gt;=', (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-01')), ('date', '&lt;', datetime.date.today().strftime('%Y-%m-01'))]"
+          />
+          <!-- <filter string="Last Month" name="last_month"
+                   domain="[('date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>-->
+
+          <separator/>
+          <group expand="1" string="Group By">
+            <filter name="group_by_member_id" context="{'group_by' : 'member_id'}" string="Member"/>
+            <filter name="group_by_loan" context="{'group_by' : 'loan_id'}" string="Loan Account"/>
+            <filter name="group_by_payment_type_id" context="{'group_by' : 'payment_type_id'}" string="Payment Type"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="loan_account_payment_tree">
+      <field name="name">loan.payment.tree</field>
+      <field name="model">loan.payment</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="date"/>
+          <field name="payment_type_id"/>
+          <field name="contribution_month" optional="hide"/>
+          <field name="loan_id" optional="hide"/>
+          <field name="member_id"/>
+          <field name="account_id"/>
+          <field name="company_earning" sum="Total" optional="hide"/>
+          <field name="member_earning" sum="Total" optional="hide"/>
+          <field name="amount" sum="Total Amount"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="loan_account_payment_form">
+      <field name="name">loan.payment.form</field>
+      <field name="model">loan.payment</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+            <button name="action_submit" string="Submit" type="object" class="btn-primary"  states="draft"/>
+            <button name="action_validate" string="Validate" type="object" class="btn-primary"  states="process"/>
+          </header>
+          <sheet>
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only"/>
+              <h1>
+                <field name="name" placeholder="00001" readonly="1"/>
+              </h1>
+            </div>
+            <group>
+              <group>
+                <field name="payment_type_code"  invisible="1"/>
+                <field name="member_id"
+                       domain="[('is_company','=',False)]"
+                       attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+                       options="{'no_create': True, 'no_edit': True}"/>
+                <field name="payment_type_id" attrs="{'readonly': [('state', 'not in', ['draft'])]}"
+                       options="{'no_create': True, 'no_edit': True}"/>
+
+                <field name="account_id" attrs="{'readonly': [('state', 'not in', ['draft'])],'invisible': [('payment_type_code', 'in', ['MEMBERSHIP'])]}"
+                       options="{'no_create': True, 'no_edit': True}"/>
+
+
+
+
+              </group>
+              <group>
+                <field name="date" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+
+                <field name="contribution_month"
+                       attrs="{'readonly': [('state', 'not in', ['draft'])],'invisible': [('payment_type_code', 'not in', ['CONTRIBUTION','TRANSACTION'])]}"/>
+                <field name="loan_id"
+                       attrs="{'invisible': [('payment_type_code', 'not in', ['PRINCIPAL','INTEREST','EXPIRE_LOAN'])], 'readonly': [('state', 'not in', ['draft'])]}"
+                       options="{'no_create': True, 'no_edit': True}"/>
+                <field name="penalty_id" domain="[('member_id','=',member_id),('state','=','validate')]"
+                       attrs="{'invisible': [('payment_type_code', 'not in', ['EXPIRE_LOAN','LATE_CONTRIBUTION'])],'readonly': [('state', 'not in', ['draft'])]}"
+                       options="{'no_create': True, 'no_edit': True}"/>
+
+                <field name="amount" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+
+              </group>
+            </group>
+            <notebook>
+              <page string="Loan Details" attrs="{'invisible': [('payment_type_code', 'not in', ['INTEREST','PRINCIPAL'])]}">
+                <group>
+                  <group>
+
+                    <field name="monthly_interest"/>
+                    <field name="company_earning"/>
+                    <field name="member_earning"/>
+                  </group>
+                  <group>
+                    <field name="principal"/>
+                    <field name="total_balance_principal"/>
+                    <field name="total_interest"/>
+                    <field name="total_balance_interest"/>
+
+
+                  </group>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="o_attachment_preview"/>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" groups="base.group_user"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="action_loan_account_payment">
+      <field name="name">Payments</field>
+      <field name="res_model">loan.payment</field>
+      <field name="view_mode">tree,form,search</field>
+      <field name="context">{
+        'search_default_group_by_payment_type_id': True,
+        }</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_loan_account_payment_to_validate">
+      <field name="name">To Validate</field>
+      <field name="res_model">loan.payment</field>
+      <field name="view_mode">tree,form,search</field>
+      <field name="context">{
+        'search_default_to_validate': True,
+        'search_default_group_by_member_id': True,
+        }</field>
+    </record>
+
+  </data>
+</odoo>

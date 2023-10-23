@@ -27,9 +27,30 @@
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="sale_type" string="Operation Type" invisible="1"/>
                 </xpath>
-                <xpath expr="//field[@name='team_id']" position="before">
-                    <field name="team_id"/>
+                <!-- <xpath expr="//field[@name='team_id']" position="before">
+                    <field name="team_id" />
+                </xpath>-->
+                <xpath expr="//field[@name='team_id']" position="after">
+                    <field name="plot_size" string="Plot size"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
+
+                    <field name="plot_no" string="Plot No"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
+                    <field name="agent" string="Agent"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
+                    <field name="agent_fee" string="Agent Fee"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
+
+                    <field name="agent_phone" string="Agent Phone"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
+
+                    <field name="agent_paid" string="Agent Paid"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
+                    <field name="sold_date" string="Sold date"
+                    attrs="{'invisible': [('sale_type', '!=','property')]}"/>
                 </xpath>
+
+                
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="location_project" string="Project" options="{'no_create': True, 'no_open': True}"
                     attrs="{'invisible': [('sale_type', '!=','property')],
@@ -50,6 +71,9 @@
                     <field name="buildingtype_id" invisible="0" options="{'no_create': True, 'no_open': True}"/>
                     <field name="offer_price" invisible="0"/>
                     <field name="discounts" invisible="0"/>
+                    <field name="property_sale_person" invisible="0" readonly="1"/>
+                    <field name="saletype" invisible="0" readonly="1"/>
+
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="replace">
@@ -92,6 +116,7 @@
                     <field name="sale_status" widget="statusbar" class="oe_right"
                     attrs="{'invisible': [('sale_type', '!=','property')], 'readonly': ['|', ('state', 'in', ['sale', 'done']),('sale_status','!=','Sold')]}"
                         />
+
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="replace">
                     <field name="product_id" options="{'no_create': True, 'no_open': True}"

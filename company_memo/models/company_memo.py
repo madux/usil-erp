@@ -437,38 +437,83 @@ class Memo_Model(models.Model):
                 'target': 'current'
                 }
         return ret
-
+    
     def generate_loan_entries(self):
-        if self.loan_reference:
-            raise ValidationError("You have generated a loan already for this record")
-        # view_id = self.env['ir.model.data'].get_object_reference('account_loan', 'account_loan_form')
-        view_id = self.env.ref('account_loan.account_loan_form')
+        loan_reference = self.env['loan.account'].search([('memo_id', '=', self.id)], limit=1)
+        view_id = self.env.ref('osynx_loan.loan_account_form')
         if (self.memo_type != "loan") or (self.loan_amount < 1):
             raise ValidationError("Check validation: \n (1) Memo type must be 'loan request'\n (2) Loan Amount must be greater than one to proceed with loan request")
-        # try:
-        ret = {
-            'name':'Generate loan request',
-            'view_mode': 'form',
-            'view_id': view_id.id,
-            'view_type': 'form',
-            'res_model': 'account.loan',
-            'type': 'ir.actions.act_window',
-            'domain': [],
-            'context': {
-                    'default_loan_type': self.loan_type,
-                    'default_loan_amount': self.loan_amount,
-                    'default_periods':self.periods or 12,  
-                    'default_partner_id':self.employee_id.user_id.partner_id.id,  
-                    'default_method_period':self.method_period,  
-                    'default_rate': 15, 
-                    'default_start_date':self.start_date, 
-                    'default_name': self.code,
-            },
-            'target': 'current'
+        if loan_reference:
+            response = {
+                'type': 'ir.actions.act_window',
+                'name': _('Reference'),
+                'res_model': 'loan.account',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'new',
+                'res_id': loan_reference.id
             }
-        return ret
-        # except Exception as e:
-        #     _logger.info(f"Issue with Account loan ==> {e}") 
+        else: 
+            response = {
+                'name':'Generate loan request',
+                'view_mode': 'form',
+                'view_id': view_id.id,
+                'view_type': 'form',
+                'res_model': 'loan.account',
+                'type': 'ir.actions.act_window',
+                'context': {
+                        # 'default_loan_type': self.loan_type,
+                        'default_principal': self.loan_amount,
+                        'default_term': self.periods or 12,
+                        'default_borrower_id': self.employee_id.user_id.partner_id.id,  
+                        'default_interest_id': self.env['loan.interest'].search([
+                            ('type', '=', 'member')], limit=1).id,  
+                        # 'default_rate': 15, 
+                        'default_start_date':self.date_from, 
+                        'default_name': self.code,
+                        'default_memo_id': self.id,
+                },
+                'target': 'current'
+                }
+        return response 
+
+    # def generate_loan_entries(self):
+    #     loan_reference = self.env['account.loan'].search([('memo_id', '=', self.id)], limit=1)
+    #     view_id = self.env.ref('account_loan.account_loan_form')
+    #     if (self.memo_type != "loan") or (self.loan_amount < 1):
+    #         raise ValidationError("Check validation: \n (1) Memo type must be 'loan request'\n (2) Loan Amount must be greater than one to proceed with loan request")
+    #     if loan_reference:
+    #         response = {
+    #             'type': 'ir.actions.act_window',
+    #             'name': _('Reference'),
+    #             'res_model': 'account.loan',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'target': 'new',
+    #             'res_id': loan_reference.id
+    #         }
+    #     else:
+    #         response = {
+    #             'name':'Generate loan request',
+    #             'view_mode': 'form',
+    #             'view_id': view_id.id,
+    #             'view_type': 'form',
+    #             'res_model': 'account.loan',
+    #             'type': 'ir.actions.act_window',
+    #             'context': {
+    #                     'default_loan_type': self.loan_type,
+    #                     'default_loan_amount': self.loan_amount,
+    #                     'default_periods':self.periods or 12,  
+    #                     'default_partner_id':self.employee_id.user_id.partner_id.id,  
+    #                     'default_method_period':self.method_period,  
+    #                     'default_rate': 15, 
+    #                     'default_start_date':self.start_date, 
+    #                     'default_name': self.code,
+    #                     'default_memo_id': self.id,
+    #             },
+    #             'target': 'current'
+    #             }
+    #     return response 
 
     def migrate_records(self):
         account_ref = self.env['account.payment'].search([])

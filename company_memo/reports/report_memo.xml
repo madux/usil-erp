@@ -25,7 +25,11 @@
                 border-collapse: collapse;
                 margin-bottom: 20px;
               }
-
+             
+            p {
+                margin-bottom: 2px;
+              }
+              
               th {
                 background-color: #333;
                 color: #fff;
@@ -52,12 +56,12 @@
                 color: red;
               }
             </style>
-            <p style="text-align: right; font-weight: bold; font-size: 14px;">From: <span t-esc="o.employee_id.name"/></p>
-            <p style="text-align: right; font-weight: bold; font-size: 16px;"><t t-esc="datetime.datetime.now().strftime('%B %d, %Y')"/></p>
-            <p style="text-align: right; font-weight: bold; font-size: 16px;">Memo Number: <t t-esc="o.code"/></p>
-            <p style="text-align: left; font-weight: bold; font-size: 16px;"><b>Dear, </b> <span t-field="o.set_staff.name"/></p>
-            <h4 style="font-weight: bold; text-align: center;font-size: 16px;"><u>Notification For <span t-field="o.memo_type"/> </u></h4>
-            <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 16px;">Memo Subject:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:16px;" t-field="o.name"/><br/>
+            <p style="text-align: right; font-weight: bold; font-size: 14px;"><b>From: </b> <span t-field="o.employee_id.name"/></p>
+            <p style="text-align: right; font-weight: bold; font-size: 14px;"><t t-esc="datetime.datetime.now().strftime('%B %d, %Y')"/></p>
+            <p style="text-align: right; font-weight: bold; font-size: 14px;">Memo Number: <t t-esc="o.code"/></p>
+            <p style="text-align: left; font-weight: bold; font-size: 14px;"><b>Dear, </b> <span t-field="o.set_staff.name"/></p>
+            <h4 style="font-weight: bold; text-align: center;font-size: 14px;"><u>Notification For <span t-field="o.memo_type"/> </u></h4>
+            <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 14px;">Memo Subject:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:16px;" t-field="o.name"/><br/>
           
             <!-- <t t-if="o.reason_back">
                 <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Refusal Reason: </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:18px;" t-raw="o.reason_back"/>
@@ -82,30 +86,17 @@
                       <td>NGN<t t-esc="'{0:,}'.format(float(o.amountfig))"/></td>
                   </tr>
               </table>  
-            </t>
-            
+            </t> 
             <t t-if="o.description"> 
-              <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 14px;">Description:  </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:14px;" t-raw="o.description"/>
+              <strong style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 14px;">Description:  
+              </strong><span style="text-align: justify; font-family: 'Times New Roman', Times, serif; font-size:14px;" t-raw="o.description"/>
             </t>
-            <!-- <strong style="font-size: 13px;">Memo Followers:</strong><u/> <br />
-            <t t-foreach="o.users_followers" t-as="user">
-              <strong style="font-size: 13px;"><t t-esc="user.name" />,</strong><p/>
-            </t> -->
-            <!-- <div class="row">
-                <div class="col-xs-3" style="font-size: 17px;">
-                    <strong>Signature: .....................</strong><br/>
-                    <strong>Sender</strong>
-                </div>
-                <div class="col-xs-4 pull-right mt8" name ="right_name" style="font-size: 17px;">
-                    <strong>Signature: .....................</strong><br/>
-                    <strong>Manager</strong>
-                </div>
-            </div>  -->
+             
             <br/><br/>
             <div class="row">
-              <div class="col-3 oe_right">
+              <div class="oe_right">
+                  <p style="text-align: right; font-weight: bold; font-size: 14px;">Approve by: <t t-esc="o.approver_by.name"/></p>
                   <img t-if="o.approver_by.user_signature" t-att-src="image_data_uri(o.approver_by.user_signature)" style="max-height: 65px;max-width: 200px;" alt="Logo"/>
-                  Approved by: <t t-esc="o.approver_by.name"/>
               </div>
             </div>
           </div>

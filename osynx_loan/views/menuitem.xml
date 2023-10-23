@@ -1,0 +1,124 @@
+<odoo>
+  <data>
+    <menuitem
+            id="menu_loan"
+            name="Loan"
+            sequence="2"
+            web_icon="osynx_loan,static/description/icon.png"
+    />
+
+    <menuitem
+            id="menu_loan_loan_payment"
+            name="Payments"
+            sequence="2"
+            parent="menu_loan"
+    />
+
+
+    <menuitem
+            id="menu_loan_loan_payments"
+            name="Payments"
+            sequence="1"
+            parent="menu_loan_loan_payment"
+            action="action_loan_account_payment"
+    />
+
+    <menuitem
+            id="menu_loan_loan_payment_manager"
+            name="Manager"
+            sequence="2"
+            parent="menu_loan_loan_payment"
+            groups="osynx_loan.group_loan_manager"
+    />
+
+    <menuitem
+            id="menu_loan_loan_payment_manager_to_validate"
+            name="To Validate"
+            sequence="2"
+            parent="menu_loan_loan_payment_manager"
+            action="action_loan_account_payment_to_validate"
+            groups="osynx_loan.group_loan_manager"
+    />
+
+    <menuitem
+            id="menu_loan_member"
+            name="Member"
+            sequence="1"
+            parent="menu_loan"
+    />
+
+    <menuitem
+            id="menu_loan_members"
+            name="Members"
+            sequence="1"
+            parent="menu_loan_member"
+            action="contacts.action_contacts"
+    />
+
+    <menuitem
+            id="menu_loan_member_account"
+            name="Accounts"
+            sequence="2"
+            parent="menu_loan_member"
+            action="action_member_account"
+    />
+    <menuitem
+            id="menu_loan_member_contribution"
+            name="Contribution"
+            sequence="2"
+            parent="menu_loan_member"
+            action="action_member_contribution"
+    />
+
+    <menuitem
+            id="menu_loan_penalty"
+            name="Penalty"
+            sequence="3"
+            parent="menu_loan_member"
+            action="action_loan_penalty"
+    />
+
+    <menuitem
+            id="menu_loan_loans"
+            name="Loans"
+            sequence="2"
+            parent="menu_loan"
+    />
+
+    <menuitem
+            id="menu_loan_loan_account"
+            name="Loan Account"
+            sequence="1"
+            parent="menu_loan_loans"
+            action="action_loan_account"
+    />
+    <menuitem
+            id="menu_loan_configuration"
+            name="Configuration"
+            sequence="10"
+            parent="menu_loan"
+    />
+    <menuitem
+            id="menu_loan_configuration_interest"
+            name="Interest"
+            sequence="10"
+            parent="menu_loan_configuration"
+            action="action_loan_interest"
+    />
+    <menuitem
+            id="menu_loan_configuration_payment_typet"
+            name="Payment Type"
+            sequence="15"
+            parent="menu_loan_configuration"
+            action="action_loan_payment_type"
+    />
+
+    <menuitem
+            id="menu_loan_reports"
+            name="Reports"
+            sequence="5"
+            parent="menu_loan"
+            action="action_loan_report_wizard"
+    />
+  </data>
+</odoo>

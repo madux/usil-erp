@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_loan_account">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <link rel='stylesheet' href="/osynx_loan/static/src/css/report_loan.css"/>
+                        <center>
+                            <h4 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold">
+                                Loan E-Statement of Account
+                            </h4>
+                            <span style="font-weight:bold">As of:</span>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                        </center>
+                        <h5 style="font-weight: bold; font-family: Bahnschrift SemiBold; text-align:right; color:gray">
+                            <span t-esc="o.name"/>
+                        </h5>
+
+                        <table class="table table-sm table-bordered" name="statement_header">
+                            <tr>
+                                <th style="width:40%">
+                                    Borrower
+                                </th>
+                                <th style="width:60%">
+                                    <span t-esc="o.borrower_id.name"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="width:40%">
+                                    Guarantor
+                                </th>
+                                <th style="width:60%">
+                                    <span t-esc="o.guarantor_id.partner_id.name"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Period
+                                </th>
+                                <th>
+                                    <span t-field="o.date_from" t-options='{"format": "MMM d, yyyy"}'/>
+                                    - <span t-field="o.date_to" t-options='{"format": "MMM d, yyyy"}'/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Loan Principal
+                                </th>
+                                <th>
+                                    <span t-esc="o.principal"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Interest Rate
+                                </th>
+                                <th>
+                                    <span t-esc="o.interest_id.name"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Term
+                                </th>
+                                <th>
+                                    <span t-esc="o.term"/> Month/s
+                                </th>
+                            </tr>
+                        </table>
+
+                        <t t-set="loan_receivable" t-value="0.00"/>
+                        <table class="table table-sm mt-3" name="loans">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th class="text-right">Principal</th>
+                                    <th class="text-right">Interest</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="loan_receivable" t-value="0"/>
+                                <tr style="background-color:#e6e6e6">
+                                    <th><span t-esc="o.name"/></th>
+                                    <th class="text-right">
+                                        <span t-esc="o.principal"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </th>
+                                    <th class="text-right">
+                                        <span t-esc="o.total_interest"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </th>
+                                    <th class="text-right">
+                                        <span t-esc="o.total_loan"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </th>
+                                </tr>
+
+                                <t t-set="total_penalty" t-value="0.00"/>
+                                <tr t-foreach="o.penalty_ids" t-as="penalty">
+                                    <t t-set="total_penalty"
+                                       t-value="total_penalty + penalty.amount"/>
+
+                                    <td colspan="2"><span t-field="penalty.type"/> - <span t-esc="penalty.date.strftime('%B %d, %Y')"/></td>
+                                    <td/>
+                                    <td class="text-right">
+                                        <span t-esc="penalty.amount"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                </tr>
+
+                                <t t-set="loan_balance" t-value="o.total_loan + total_penalty"/>
+                                <tr t-foreach="o.payment_ids" t-as="payment">
+                                    <t t-set="loan_balance" t-value="loan_balance - payment.amount"/>
+
+                                    <td colspan="2" style="padding-left: 20px"><span t-esc="payment.name"/> - <span t-field="payment.payment_type_id.name"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="payment.member_earning"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                    <td class="text-right">
+                                        - <span t-esc="payment.amount"
+                                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <td colspan="3">Principal Balance</td>
+                                    <td class="text-right">
+                                        <span t-esc="o.total_balance_principal"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr><tr>
+                                    <td colspan="3">Interest Balance</td>
+                                    <td class="text-right">
+                                        <span t-esc="o.total_balance_interest"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr><tr>
+                                    <th colspan="3">Balance</th>
+                                    <th class="text-right">
+                                        <span t-esc="loan_balance"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <!-- <t t-set="total_unpaid_penalty" t-value="0.00"/>
+                         <table class="table table-sm mt-3" name="member_penalties" t-if="o.penalty_ids">
+                             <thead>
+                                 <tr class="text-center">
+                                     <th colspan="4">Penalties</th>
+                                 </tr>
+                                 <tr>
+                                     <th>Description</th>
+                                     <th>Date</th>
+                                     <th>Status</th>
+                                     <th class="text-right">Amount</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <tr t-foreach="o.penalty_ids" t-as="penalty">
+                                     <t t-set="total_unpaid_penalty"
+                                        t-value="total_unpaid_penalty + penalty.amount"
+                                        t-if="penalty.state != 'paid'"/>
+
+                                     <td><span t-field="penalty.type"/></td>
+                                     <td><span t-esc="penalty.date.strftime('%B %d, %Y')"/></td>
+                                     <td><span t-field="penalty.state"/></td>
+                                     <td class="text-right">
+                                         <span t-esc="penalty.amount"
+                                               t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                 </tr>
+                             </tbody>
+                             <thead>
+                                 <tr>
+                                     <th colspan="3">Unpaid Penalties</th>
+                                     <th class="text-right">
+                                         <span t-esc="total_unpaid_penalty"
+                                               t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                     </th>
+                                 </tr>
+                             </thead>
+                         </table>-->
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -279,25 +279,25 @@ class AccountLoan(models.Model):
         for record in self:
             if record.loan_type == "fixed-annuity":
                 raise ValidationError('Currently we do not support and fixed-annuity for now')
-                record.fixed_amount = -record.currency_id.round(
-                    numpy_financial.pmt(
-                        record.loan_rate() / 100,
-                        record.fixed_periods,
-                        record.fixed_loan_amount,
-                        -record.residual_amount,
-                    )
-                )
+                # record.fixed_amount = -record.currency_id.round(
+                #     numpy_financial.pmt(
+                #         record.loan_rate() / 100,
+                #         record.fixed_periods,
+                #         record.fixed_loan_amount,
+                #         -record.residual_amount,
+                #     )
+                # )
             elif record.loan_type == "fixed-annuity-begin":
                 raise ValidationError('Currently we do not support fixed-annuity-begin for now')
-                record.fixed_amount = -record.currency_id.round(
-                    numpy_financial.pmt(
-                        record.loan_rate() / 100,
-                        record.fixed_periods,
-                        record.fixed_loan_amount,
-                        -record.residual_amount,
-                        when="begin",
-                    )
-                )
+                # record.fixed_amount = -record.currency_id.round(
+                #     numpy_financial.pmt(
+                #         record.loan_rate() / 100,
+                #         record.fixed_periods,
+                #         record.fixed_loan_amount,
+                #         -record.residual_amount,
+                #         when="begin",
+                #     )
+                # )
             elif record.loan_type == "fixed-principal":
                 record.fixed_amount = record.currency_id.round(
                     (record.fixed_loan_amount - record.residual_amount)

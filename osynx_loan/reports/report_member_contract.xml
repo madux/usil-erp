@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_member_contract">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <link rel='stylesheet' href="/osynx_loan/static/src/css/report_loan.css"/>
+                        <center>
+                            <h2 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold">
+                                CONTRACT
+                            </h2>
+                        </center>
+                        <h5 style="font-weight: bold; font-family: Bahnschrift SemiBold; text-align:right; color:gray">
+                            <span t-esc="o.name"/>
+                        </h5>
+                        <table class="table table-sm table-bordered" name="statement_header">
+                            <tr>
+                                <th style="width:40%">
+                                    Member
+                                </th>
+                                <th style="width:60%">
+                                    <span t-esc="o.partner_id.name"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Contract
+                                </th>
+                                <th>
+                                    <span t-field="o.date_from" t-options='{"format": "MMM d, yyyy"}'/> - <span t-field="o.date_to" t-options='{"format": "MMM d, yyyy"}'/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="width:40%">
+                                    Contact Details
+                                </th>
+                                <th style="width:60%">
+                                    <!--<span t-esc="o.partner_id.name"
+                                          t-options='{"widget": "contact", "fields": ["address", "name", "mobile"], "no_marker": True, "phone_icons": True}'/>-->
+                                    <div t-field="o.partner_id"
+                                         t-options='{"widget": "contact", "fields": ["address", "mobile"], "no_marker": True, "phone_icons": True}'/>
+
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Monthly Contribution
+                                </th>
+                                <th>
+                                    <span t-field="o.monthly_contribution"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Dividends
+                                </th>
+                                <th>
+                                    *** Equally Distributed ***
+                                </th>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <center>
+                            <h4 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold"> POLICY</h4>
+                        </center>
+                        <div style="margin: 50px; text-align: justify;">
+                            <ol>
+                                <li>
+                                    All members upon joining the coop must pay 300 pesos for the membership fee to become a valid member of the said coop.
+                                </li>
+                                <li>
+                                    All members must have Gcash Account. All transaction will be gcash to gcash basis only. (You can also use the gcash of your friend) <br/>
+                                    <span class="font-italic">*** Member can also use the CIMB cash in method. ***</span>
+                                </li>
+                                <li>
+                                    All members at the start of year must pay 1 month advance payment, 1 month contribution and the membership fee. The total payment for the month of january will be 2,300 per account.
+                                </li>
+                                <li>
+                                    All members must pay <span style="font-weight:bold"> 1,000 </span> pesos contribution monthly,
+                                    failure to pay within the month and with 5 days extension/grace period shall be penalize with 50 pesos per month. (Due date: last day of the month 31/30)
+                                </li>
+                                <li>
+                                    All members must pay additional monthly fee of 20 pesos per account  for the purposes of the maintenance of technical, support staff and other working bodies.
+                                </li>
+                                <li>
+                                    All members upon paying the first contribution of the year are expected to contribute until the last month of the year. In cases when someone pull out or withdraw its account/ one of its account, the said member will only get the 70 % of his/her contribution without interest regardless of its duration.
+                                </li>
+                                <li>
+                                    All members must comply with the updating requirements in group chat.
+                                    <p class="font-bold" style="text-indent:50px; font-weight:bold">
+                                        <br/>Purpose: Monthly contri/loan/paying loan or interest
+                                        <br/>Name:
+                                        <br/>Guarantor:
+                                        <br/>If paying interest pls indicate:
+                                        <br/>Total Amount:
+                                    </p>
+
+                                </li>
+                                <li>
+                                    If a members need a personal loan,the interest is 7% and if not member 10% monthly 9% will go to the coop and 1%will go to guarantor. <br/>
+                                    <span class="font-italic">
+                                        Note: Members are limited to use the personal loan for the maximum of 6 times in a year except for severe reasons.
+                                    </span>
+                                </li>
+                                <li>
+                                    If loan exceeds in 1 month and 5 days the interest rate is 10%, <br/>
+                                    if 1 month and 6 days to 20 days the interest 15% and; <br/>
+                                    if 1 month and 21 days up to the first 5 days of the suceeding month shall be 20%. <br/>
+
+                                    However if loan does not exceed in 1 month or only 1 to 15 days shall pay 5% only and if exceeds on the 15th day of the month they shall pay 10%.
+
+                                </li>
+                                <li>
+                                    The member or guarantor has the responsibility to update the borrower and the coop of its due date.
+
+                                </li>
+                                <li>
+                                    If the loanable amount needs transaction fee/ transfer fee the guarantor must make sure that the fee will be added/deducted into the borrowers loanable amount.
+
+                                </li>
+                                <li>
+                                    All members must first fill up the LOAN AGREEMENT FORM before getting the loanable money. No money will be release until there will be no proof was sent in the gc duly sign by the debtor and the guarantor.
+                                </li>
+                                <li>
+                                    The guarantor must also make sure that the borrower knows the loan policy of the coop and will pay the loan before the end of the year.
+                                </li>
+                                <li>
+                                    At the end of the year the guarantor has the responsibility to pay the amount of the loaned amount which exceded to its contribution.
+                                </li>
+                                <li>
+                                    At the end of the year before pay out, all must be accounted. All unpaid loans and contribution must be settled first before the pay out. It is not allowed to deduct your unpaid account to ur recievable amount.
+                                </li>
+                                <li>
+                                    At the end of the year the coop book/system must be clear and closed.
+                                </li>
+                                <li>
+                                    Member dividends are mainly from the loan payments and interest only.
+                                </li>
+                                <li>
+                                    Penalties from late contribution and loan expiry are excluded to members dividend.
+                                </li>
+                            </ol>
+                        </div>
+                        <center>
+                            <h4 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold">ADVANCE PAYMENT POLICY</h4>
+                        </center>
+                        <div style="margin: 50px; text-align: justify;">
+                            <ol>
+                                <li>
+                                    Advance payment will be credited a 5% or 50 pesos per account only once regardless to the month intended, to be claim at the end of the year.
+                                </li>
+                                <li>
+                                    Advance payment will be acknowledge if members will pay the contribution with minimum of 15 days ahead by the preceeding month (first 1-15 days of the calendar).
+                                </li>
+                                <li>
+                                    Advance payment will be a CASE TO CASE BASIS ONLY. If there will be a queue for reserve loan the advance payment perks shall be open. However if a member made a payment w/o the queue of loan reserve, the advance payment will not be entitled of any perks.
+                                </li>
+                            </ol>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

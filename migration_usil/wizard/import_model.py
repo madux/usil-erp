@@ -36,6 +36,15 @@ class ImportRecords(models.TransientModel):
         copy=True, default='all',
         track_visibility='onchange'
     )
+    property_type = fields.Selection([
+            ('Land', 'Land'),
+            ('Building', 'Building'),
+            ('Shop', 'Shop'),
+        ],
+        string='Property type', required=True, index=True,
+        copy=True, default='',
+        track_visibility='onchange'
+    )
     location_project = fields.Many2one('project.configs', string="Project")
     buildingtype_id = fields.Many2one('building.type', string='ID', ondelete='cascade')
     building_name = fields.Char("Building Name")
@@ -842,100 +851,127 @@ class ImportRecords(models.TransientModel):
         unsuccess_records = []
         errors = ['The Following messages occurred']
         for row in file_data:
-            _logger.info(f'PRINTING === {row[0]}')
-            # try:
-            # project_name = row[1]
-            customer_name = row[2]
-            email = row[3]
-            telephone = row[4]
-            form_number = row[5]
-            saletype = row[6]
-            phase = row[7]
-            level = row[8]
-            block_no = row[9]
-            shop_no = row[10]
-            shop_type = row[11]
-            building = row[12]
-            order_date = row[13]
-            unit_price = row[14]
-            discount = row[15]
-            net_amount = row[16]
-            amount_paid = row[17]
-            balance = row[18] 
-            discount_percentage = 0
-            if discount and int(discount) > 0:
-                perc_disc= discount / unit_price
-                discount_percentage =  perc_disc * 100
-            # create partner
-            already_exiting_so = self.env['sale.order'].search([('migrated_number', '=', row[0])], limit=1)
-            if not already_exiting_so:
-                if customer_name and order_date:
-                    _logger.info(f'CUSTOMER2 === {customer_name}')
-                    partner = Partner.create({
-                        'name': customer_name, 'phone': telephone, 'email': email, 
-                    })
-                    # project = Project.search([('name', '=', project_name)], limit=1)
-                    project = self.location_project
-                    if not project:
-                        raise ValidationError(f"Please Select location")
-                    # building is in the form of LOCKUP SHOP (A) GF
-                    # if shop_type and level and block_no:
-                        # building_name = f"{shop_type.upper()} SHOP ({block_no}) {level}"
-                    # building_name = self.building_name
-                    # building_id = project.mapped('unit_line').filtered(lambda s: s.name == building_name)
-                    building = self.buildingtype_id
-                    if not building:
-                        raise ValidationError(f"Please configure a building type for selected project")
-                        # building = Building.create({
-                        #     'name': building_name, 
-                        #     'location_project': project.id,
-                        #     'list_price': unit_price,
-                        #     'count_unsold': 1
-                        # })
-                        # building.validate_building()
-                    project.write({'unit_line': [(6,0, [building.id])]})
-                    uom_id = self.env['uom.uom'].search([('name', '=', 'Unit(s)')])
-                    date = datetime(*xlrd.xldate_as_tuple(order_date, 0))
-                    values = {
-                            'product_id': building.product_id.id,
-                            'name': building.product_id.name or building.name,
-                            'product_uom_qty': uom_id.id or 1,
-                            'price_unit': unit_price,
-                            'house_number': int(shop_no) if shop_no else shop_no,
-                            'price_subtotal': net_amount,
-                            'discount': discount_percentage,
-                            }
-                    vals= {
-                            'partner_id': partner.id,
-                            'date_order': date,
-                            'sale_type': 'property',
-                            'shop_type': shop_type,
-                            'block_no': block_no,
-                            'form_number': form_number,
-                            'saletype': saletype,
-                            'level': level,
-                            'phase': phase,
-                            'shop_no': shop_no,
-                            'migrated_number': row[0],
-                            'location_project': project.id,
-                            # 'payment_term_id': payment_plan_id.id,
-                            'sale_status': 'Allocated',
-                            'amount_paid': amount_paid,
-                            'discounts': discount_percentage,
-                            'outstanding': balance,
-                            'order_line': [(0,0, values)],
-                            'percentage_paid': (amount_paid / unit_price) * 100
-                        }
+            if row[0]:
+                
+                _logger.info(f'PRINTING === {row[0]}')
+                # try:
+                # project_name = row[1]
+                customer_name = row[1]
+                email = row[2]
+                telephone = row[3]
+                form_number = row[4]
+                plot_type = row[5] if self.property_type in ['Land'] else False
+                saletype = row[5] if self.property_type in ['Shop'] else False
+                level = row[8] if self.property_type in ['Shop'] else False
+                phase = row[6] if self.property_type in ['Building', 'Shop'] else False
+                block_no = row[9] if self.property_type in ['Shop'] else False
+                shop_no = row[11] if self.property_type in ['Shop'] else False
+                shop_type = row[12] if self.property_type in ['Shop'] else False
+                shop_size = row[13] if self.property_type in ['Shop'] else False
+                plot_size = row[20] if self.property_type in ['Land'] else False
+                plot_no = row[10] if self.property_type in ['Land'] else row[7] if self.property_type in ['Shop'] else False
+                order_date = row[8] if self.property_type in ['Land'] else row[14] if self.property_type in ['Shop'] else False
+                unit_price = row[10] if self.property_type in ['Land'] else row[15] if self.property_type in ['Shop'] else 0 
+                discount = row[11] if self.property_type in ['Land'] else row[16] if self.property_type in ['Shop'] else False 
+                net_amount = row[12] if self.property_type in ['Land'] else row[17] if self.property_type in ['Shop'] else 0 
+                amount_paid = row[13] if self.property_type in ['Land'] else row[18] if self.property_type in ['Shop'] else 0 
+                balance = row[14] if self.property_type in ['Land'] else row[19] if self.property_type in ['Shop'] else 0 
+                discount_percentage = 0
+                agent = row[15] if self.property_type in ['Land'] else row[20] if self.property_type in ['Shop'] else False
+                agent_fee = row[16] if self.property_type in ['Land'] else row[21] if self.property_type in ['Shop'] else False
+                agent_phone = row[17] if self.property_type in ['Land'] else row[22] if self.property_type in ['Shop'] else False
+                agent_paid = row[18] if self.property_type in ['Land'] else row[23] if self.property_type in ['Shop'] else False
+                if discount and int(discount) > 0:
+                    perc_disc= discount / unit_price
+                    discount_percentage =  perc_disc * 100
+                # create partner
+                
+                already_exiting_so = self.env['sale.order'].search([('migrated_number', '=', row[0])], limit=1)
+                if not already_exiting_so:
+                    if customer_name and order_date:
+                        _logger.info(f'CUSTOMER2 === {customer_name}')
+                        partner = Partner.create({
+                            'name': customer_name, 'phone': telephone, 'email': email, 
+                        })
+                        # project = Project.search([('name', '=', project_name)], limit=1)
+                        project = self.location_project
+                        if not project:
+                            raise ValidationError(f"Please Select location")
+                        # building is in the form of LOCKUP SHOP (A) GF
+                        # if shop_type and level and block_no:
+                            # building_name = f"{shop_type.upper()} SHOP ({block_no}) {level}"
+                        # building_name = self.building_name
+                        # building_id = project.mapped('unit_line').filtered(lambda s: s.name == building_name)
+                        building = self.buildingtype_id
+                        # if not self.property_type in ['Building'] and not building:
+                        if not building:
+                            raise ValidationError(f"Please configure a building type for selected project")
+                            # building = Building.create({
+                            #     'name': building_name, 
+                            #     'location_project': project.id,
+                            #     'list_price': unit_price,
+                            #     'count_unsold': 1
+                            # })
+                            # building.validate_building()
+                        
+                        project.write({'unit_line': [(6,0, [building.id])]})
+                        # uom_id = self.env['uom.uom'].search([('name', '=', 'Unit(s)')])
+                        date = datetime(*xlrd.xldate_as_tuple(order_date, 0))
+                        dt = datetime.strftime(date, "%Y-%m-%d")
+                        # raise ValidationError(dt.strptime())
 
-                    # create property sale
-                    create_sobj = self.env['sale.order'].create(vals)
-                    _logger.info(f'SO CREATED IS === {create_sobj.id}')
-                    create_sobj.action_confirm()
-                    create_sobj.confirm_offer()
-                    self.generate_invoice_and_payment(create_sobj)
-                    count += 1
-                    # success_records.append(fullname)
-                    errors.append('Successful Import(s): '+str(count)+' Record(s):')
+
+                        values = {
+                                'product_id': building.product_id.id if building.product_id else False,
+                                'name': f"{shop_type} {shop_size}" if self.property_type in ['Shop'] else f"{row[5]} {row[7]}",
+                                'product_uom_qty': 1,
+                                'price_unit': row[15] if self.property_type in ['Shop'] else row[10] or 1,
+                                'house_number': int(shop_no) if shop_no else shop_no,
+                                'price_subtotal': net_amount or 0,
+                                'discount': discount_percentage,
+                                }
+                        vals= {
+                                'partner_id': partner.id,
+                                'date_order': dt or date,
+                                'sold_date': date,
+                                'sale_type': 'property',
+                                'shop_type': shop_type,
+                                'shop_size': shop_size,
+                                'saletype': saletype,
+                                'block_no': block_no,
+                                'form_number': form_number,
+                                'plot_type': plot_type,
+                                'level': level,
+                                'phase': phase,
+                                'shop_no': shop_no,
+                                'migrated_number': row[0],
+                                'location_project': project.id,
+                                # 'payment_term_id': payment_plan_id.id,
+                                'sale_status': 'Allocated',
+                                'amount_paid': amount_paid or 0,
+                                'discounts': discount_percentage,
+                                'outstanding': balance,
+                                'order_line': [(0,0, values)],
+                                'percentage_paid': (float(amount_paid) / float(unit_price)) * 100,
+                                'plot_size': plot_size,
+                                'plot_no': plot_no,
+                                'agent': agent,
+                                'agent_fee': agent_fee,
+                                'agent_phone': agent_phone,
+                                'agent_paid': agent_paid or 0,
+                            }
+
+                        # create property sale
+                        create_sobj = self.env['sale.order'].create(vals)
+                        _logger.info(f'SO CREATED IS === {create_sobj.id}')
+                        create_sobj.action_confirm()
+                        create_sobj.confirm_offer()
+                        self.generate_invoice_and_payment(create_sobj)
+                        count += 1
+                        # success_records.append(fullname)
+                        errors.append('Successful Import(s): '+str(count)+' Record(s):')
+            else:
+                break
             # except Exception as error:
             #     unsuccess_records.append(str(row[0]))
             # errors.append('Unsuccessful Import(s): '+str(unsuccess_records)+' Record(s)')

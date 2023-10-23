@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_loan_agreement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <link rel='stylesheet' href="/osynx_loan/static/src/css/report_loan.css"/>
+                    <center>
+                        <h4 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold">
+                            PERSONAL LOAN AGREEMENT
+                        </h4>
+                        <h5 style="font-weight: bold; font-family: Bahnschrift SemiBold; color:gray;">
+                            <span t-esc="o.name"/>
+                        </h5>
+                    </center>
+                    <p style="font-weight: bold">
+                        KNOW ALL MEN BY THESE PRESENTS:
+                    </p>
+                    <p style="text-indent: 50px">
+                        I, <span style="text-decoration: underline; font-weight: bold"
+                                 t-esc="o.borrower_id.name"/> <span style="font-style:italic"> (Borrower)</span>, with contact details below:
+                        <div style="text-align:center" t-field="o.borrower_id"
+                             t-options='{"widget": "contact", "fields": ["address", "phone","mobile","email"], "no_marker": True, "phone_icons": True}'/>
+                    </p>
+                    <p>
+                        will borrow a total sum of money <span t-esc="o.total_loan_words" style="text-decoration: underline; font-weight: bold"/>
+                        (<span t-esc="o.principal"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' style="font-weight: bold"/>)
+                        with <span t-esc="o.interest_id.name" style="font-weight: bold"/> monthly interest.  Payments will be made over a period of <span t-esc="o.term" style="font-weight: bold"/> Months,
+                        starting on <span t-esc="o.date_from.strftime('%B %d')" style="font-weight: bold"/>,
+                        until  <span t-esc="o.date_to.strftime('%B %d, %Y')" style="font-weight: bold"/>.
+
+                    </p>
+                    <!-- <p>
+                         Payments will be made over a period of <span t-esc="o.term" style="font-weight: bold"/> Months,
+                         starting on <span t-esc="o.date_from.strftime('%B %d')" style="font-weight: bold"/>,
+                         until  <span t-esc="o.date_to.strftime('%B %d, %Y')" style="font-weight: bold"/>.
+                     </p>-->
+                    <div id="row" style="margin-top:20px">
+                        <div id="column2">
+                            <center>
+                                <hr/>
+                                <span t-esc="o.guarantor_id.partner_id.name"/><br/>
+                                <span style="font-weight: bold;">GUARANTOR</span>
+                            </center>
+                        </div>
+                        <div id="column2">
+                            <center>
+                                <hr/>
+                                <span t-esc="o.borrower_id.name"/><br/>
+                                <span style="font-weight: bold;">BORROWER</span>
+                            </center>
+                        </div>
+                    </div>
+
+                    <p style="page-break-after:always"/>
+                    <br/><br/>
+                    <center>
+                        <h4 style="text-transform: uppercase; font-weight: bold; font-family: Bahnschrift SemiBold">
+                            ACKNOWLEDGEMENT RECEIPT
+                        </h4>
+                        <h5 style="font-weight: bold; font-family: Bahnschrift SemiBold; color:gray;">
+                            <span t-esc="o.name"/>
+                        </h5>
+                    </center>
+                    <p style="text-indent: 50px">
+                        I, <span style="text-decoration: underline; font-weight: bold"
+                                 t-esc="o.borrower_id.name"/><span style="font-style:italic"> (Borrower)</span>, do hereby acknowledge the receipt of an amount of
+                        <span t-esc="o.total_loan_words" style="text-decoration: underline; font-weight: bold"/> (<span t-esc="o.principal"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' style="font-weight: bold"/>)
+                        as a personal loan.
+                    </p>
+                    <p style="text-indent: 50px">
+                        In favor of  <span t-esc="o.guarantor_id.partner_id.name"
+                                           style="text-decoration: underline; font-weight: bold"/> <span style="font-style:italic">(Guarantor)</span>, <span t-esc="datetime.datetime.now().strftime('%B %d, %Y')"/>, with contact details below:
+
+                        <div style="text-align:center" t-field="o.guarantor_id.partner_id"
+                             t-options='{"widget": "contact", "fields": ["address", "phone","mobile","email"], "no_marker": True, "phone_icons": True}'/>
+                    </p>
+                    <div id="row" style="margin-top:20px">
+                        <div id="column2">
+                            <center>
+                                <hr/>
+                                <span t-esc="o.borrower_id.name"/><br/>
+                                <span style="font-weight: bold;">BORROWER</span>
+                            </center>
+                        </div>
+                        <div id="column2">
+                            <center>
+                                <hr/>
+                                <span t-esc="o.guarantor_id.partner_id.name"/><br/>
+                                <span style="font-weight: bold;">GUARANTOR</span>
+                            </center>
+                        </div>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

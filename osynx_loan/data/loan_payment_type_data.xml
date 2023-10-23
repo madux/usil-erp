@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="loan_payment_type_contribution" model="loan.payment.type">
+            <field name="name">Monthly Contribution</field>
+            <field name="code">CONTRIBUTION</field>
+        </record>
+        <record id="loan_payment_type_loan_interest" model="loan.payment.type">
+            <field name="name">Loan Interest</field>
+            <field name="code">INTEREST</field>
+        </record>
+
+        <record id="loan_payment_type_loan_principal" model="loan.payment.type">
+            <field name="name">Loan Principal</field>
+            <field name="code">PRINCIPAL</field>
+        </record>
+
+        <record id="loan_payment_type_loan_membership_fee" model="loan.payment.type">
+            <field name="name">Membership Fee</field>
+            <field name="code">MEMBERSHIP</field>
+        </record>
+        <record id="loan_payment_type_loan_transaction_fee" model="loan.payment.type">
+            <field name="name">Transaction Fee</field>
+            <field name="code">TRANSACTION</field>
+        </record>
+        <record id="loan_payment_type_loan_expired_loan_penalty" model="loan.payment.type">
+            <field name="name">Expired Loan Penalty</field>
+            <field name="code">EXPIRE_LOAN</field>
+        </record>
+        <record id="loan_payment_type_loan_contribution_fee" model="loan.payment.type">
+            <field name="name">Late Contribution Penalty</field>
+            <field name="code">LATE_CONTRIBUTION</field>
+        </record>
+    </data>
+</odoo>

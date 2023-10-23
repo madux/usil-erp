@@ -9,7 +9,7 @@
     'category': 'Base',
     # 'live_test_url': "https://www.youtube.com/watch?v=KEjxieAoGeA&feature=youtu.be",
 
-    'depends': ['base', 'account', 'account_loan', 'mail', 'hr'],
+    'depends': ['base', 'account', 'osynx_loan', 'account_loan', 'mail', 'hr'],
     'data': [
         'security/security_group.xml', 
         'sequence/sequence.xml',
@@ -19,6 +19,7 @@
         'wizard/return_memo_wizard_view.xml',
         'reports/report_memo.xml',
         'views/assets.xml',
+        'views/account_loan_view.xml',
         'security/ir.model.access.csv'
     ],
     # 'qweb': [

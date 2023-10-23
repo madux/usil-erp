@@ -23,7 +23,6 @@
                     <button name="user_done_memo" class="oe_stat_button oe_highlight" icon="fa-calendar" states="Approve2" help="Click to move to Done." type="object" confirm="Are you sure you want to Complete?" string="Complete"/>
                     <button name="print_memo" string="Print Memo" icon="fa-print" attrs="{'invisible':[('state','in',['submit','refuse'])]}" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="submit,Sent,Approve,Done"/><!--statusbar_visible="draft,reported,done,refused"-->
-
                 </header>
                     <sheet>
                     <!-- https://i.imgur.com/ezqLtzV.jpg -->
@@ -255,19 +254,18 @@
         </record>
 
         <menuitem id="internal_memo_menu_model_main2" name="Office Memo" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account,company_memo.mainmemo_officer" action = "internal_memo_model_action" sequence = "2" web_icon="company_memo,static/description/icon.png"/>
-        <menuitem id="account_loan_request_menu" name="Loan Request" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account,company_memo.mainmemo_officer,base.group_user" sequence = "10" web_icon="company_memo,static/description/loan_icon.png"/>
+        <!-- <menuitem id="account_loan_request_menu" name="Loan Request" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account,company_memo.mainmemo_officer,base.group_user" sequence = "10" web_icon="company_memo,static/description/loan_icon.png"/>
             <menuitem id="account_loan_request_menu_node1" name="Request(s)"
-            parent="account_loan_request_menu" sequence= "1" action = "loan_request_action" />
+            parent="account_loan_request_menu" sequence= "1" action = "loan_request_action" /> -->
 
-        <menuitem
-                id="company_memo_generated_loan_menu"
+        <!-- <menuitem
+                id="view_generated_loan_menu"
                 parent="company_memo.account_loan_request_menu"
-                sequence="20"
+                sequence="30"
                 name="View Generated Loans"
                 action="account_loan.account_loan_action"
                 groups="account.group_account_user,account.group_account_invoice,account.group_account_manager,base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account"
-
-            />
+            /> -->
 
         <menuitem id="internal_memo_menu_model_1" name="Office Memo Type"
             parent="internal_memo_menu_model_main2" groups="base.group_system,company_memo.mainmemo_manager,company_memo.mainmemo_account,company_memo.mainmemo_officer"/>

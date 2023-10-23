@@ -1,0 +1,109 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="loan_penalty_search">
+      <field name="name">loan.penalty.search</field>
+      <field name="model">loan.penalty</field>
+      <field name="arch" type="xml">
+        <search>
+          <field name="name"/>
+          <field name="loan_id"/>
+          <separator/>
+          <filter name="current_month" string="Current Month" domain="[
+                    ('date', '&gt;=', (context_today()).strftime('%Y-%m-01')),
+                    ('date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+          <separator/>
+          <filter
+                  name="previous_month"
+                  string="Previous Month"
+                  domain="[('date', '&gt;=', (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-01')), ('date', '&lt;', datetime.date.today().strftime('%Y-%m-01'))]"
+          />
+          <!--<filter string="Last Month" name="last_month"
+                  domain="[('date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>-->
+          <separator/>
+          <filter string="Late Contribution" name="late_contribution"
+                  domain="[('type','=','late_contribution')]"/>
+          <separator/>
+          <filter string="Expired Loan" name="expired_loan"
+                  domain="[('type','=','loan_expired')]"/>
+
+          <separator/>
+          <group expand='0' string='Group by...'>
+            <filter string='Date' name="group_by_date" context="{'group_by': 'date:month'}"/>
+            <filter string='Member' name="group_by_name" context="{'group_by': 'name'}"/>
+            <filter string='Status' name="group_by_state" context="{'group_by': 'state'}"/>
+            <filter string='Type' name="group_by_type" context="{'group_by': 'type'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="loan_penalty_tree">
+      <field name="name">loan.penalty.tree</field>
+      <field name="model">loan.penalty</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="member_id"/>
+          <field name="loan_id"/>
+          <field name="date"/>
+          <field name="type"/>
+          <field name="amount" sum="Total"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="loan_penalty_form">
+      <field name="name">loan.penalty.form</field>
+      <field name="model">loan.penalty</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <field name="state" widget="statusbar" clickable="1"/>
+            <button name="action_submit" string="Submit" type="object" class="btn-primary"  states="draft"/>
+            <button name="action_validate" string="Validate" type="object" class="btn-primary"  states="process"/>
+            <button name="action_paid" string="Paid" type="object" class="btn-primary"  states="validate"/>
+          </header>
+          <sheet>
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only"/>
+              <h1>
+                <field name="name" placeholder="00001" readonly="1"/>
+              </h1>
+            </div>
+            <group>
+              <group>
+                <field name="member_id" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                <field name="type" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                <field name="loan_id" domain="[('guarantor_id','=',member_id)]"
+                       attrs="{'readonly': [('state', 'not in', ['draft'])],'invisible': [('type', '!=', 'loan_expired')]}"/>
+
+              </group>
+              <group>
+                <field name="date" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                <field name="amount" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                <field name="remarks" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+              </group>
+
+            </group>
+          </sheet>
+          <div class="o_attachment_preview"/>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" groups="base.group_user"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="action_loan_penalty">
+      <field name="name">Penalty</field>
+      <field name="res_model">loan.penalty</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  </data>
+</odoo>
