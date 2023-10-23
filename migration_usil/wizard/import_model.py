@@ -63,7 +63,7 @@ class ImportRecords(models.TransientModel):
 
     def excel_reader(self, index=0):
         if self.data_file:
-            file_datas = base64.decodestring(self.data_file)
+            file_datas = base64.decodebytes(self.data_file)
             workbook = xlrd.open_workbook(file_contents=file_datas)
             sheet = workbook.sheet_by_index(index)
             data = [[sheet.cell_value(r, c) for c in range(sheet.ncols)] for r in range(sheet.nrows)]
@@ -442,7 +442,7 @@ class ImportRecords(models.TransientModel):
 
     def import_contacts(self, index, sheet_type):
         if self.data_file:
-            file_datas = base64.decodestring(self.data_file)
+            file_datas = base64.decodebytes(self.data_file)
             workbook = xlrd.open_workbook(file_contents=file_datas)
             sheet_contact = workbook.sheet_by_index(index)
             data1 = [[sheet_contact.cell_value(r, c) for c in range(sheet_contact.ncols)] for r in range(sheet_contact.nrows)]
@@ -614,7 +614,7 @@ class ImportRecords(models.TransientModel):
         
     def import_records_action(self):
         if self.data_file:
-            file_datas = base64.decodestring(self.data_file)
+            file_datas = base64.decodebytes(self.data_file)
             workbook = xlrd.open_workbook(file_contents=file_datas)
             sheet = workbook.sheet_by_index(0)
             data = [[sheet.cell_value(r, c) for c in range(sheet.ncols)] for r in range(sheet.nrows)]
