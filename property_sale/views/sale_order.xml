@@ -68,12 +68,11 @@
                     <attribute name="attrs">{'readonly': [('state', 'in', ['sale', 'done'])]}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
-                    <field name="buildingtype_id" invisible="0" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="buildingtype_id" invisible="0" string="Building / Plot Type" options="{'no_create': True, 'no_open': True}"/>
                     <field name="offer_price" invisible="0"/>
                     <field name="discounts" invisible="0"/>
                     <field name="property_sale_person" invisible="0" readonly="1"/>
                     <field name="saletype" invisible="0" readonly="1"/>
-
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="replace">
