@@ -924,7 +924,7 @@ class ImportRecords(models.TransientModel):
                         values = {
                                 'product_id': building.product_id.id if building.product_id else False,
                                 'name': f"{shop_type} {shop_size}" if self.property_type in ['Shop'] else f"{row[5]} {row[7]}",
-                                'product_uom_qty': row[7] if self.property_type in ['Land'] else 1,
+                                'product_uom_qty': row[7] if self.property_type in ['Land'] else row[13],
                                 'price_unit': row[15] if self.property_type in ['Shop'] else row[9] or 1,
                                 'house_number': int(shop_no) if shop_no else shop_no,
                                 'price_subtotal': net_amount or 0,
